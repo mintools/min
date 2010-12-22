@@ -1,0 +1,166 @@
+#{if task}
+
+<li id="task-${task.id}" class="element task ${editing ? 'edit' : 'view'}">
+
+  #{if !editing}
+
+    <div class="owner">${task.owner?.username}</div>
+    <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
+    <div class="title">${task.title}</div>
+
+    #{if task.tags}
+        <span class="tags">
+            Tags:
+            #{list items:task.tags, as:'tag'}
+                <a class="tag selected" href="@{Tasks.listTagged(tag.name)}">${tag}</a>
+            #{/list}
+        </span>
+    #{/if}
+
+    <div class="content">${task.content.nl2br()}</div>
+
+    #{if task.attachments}
+    <div class="heading">Attachments</div>
+    <div class="attachments">
+        #{list task.attachments, as:'attachment'}
+          #{include 'Attachments/_show.html'/}
+        #{/list}
+    </div>
+    #{/if}
+
+    <div class="actions">
+        <a href="@{show(task.id)}&editing=true" class="edit">Edit</a>
+        <a href="@{delete(task.id)}" class="delete">Delete</a>
+    </div>
+
+    <script type="text/javascript">
+        $(function() {
+          var uid = '#task-${task.id}';
+
+          $(uid + ' .edit').click(function(e) {
+            $.get($(this).attr('href'), function(data, status, xhr) {
+              $(uid).replaceWith(data);
+            });
+            return false;
+          });
+          $(uid + ' .delete').click(function(e) {
+            $.ajax({
+              url:$(this).attr('href'),
+              type:'delete',
+              success:function(data, status, xhr) {
+                $(uid).fadeOut(600, function() {
+                  $(this).remove();
+                });
+              }
+            });
+            return false;
+          });
+        });
+      </script>
+  #{/if}
+
+  #{else}
+    #{ifErrors}
+        <p class="error">
+            Please fix the validation errors
+        </p>
+    #{/ifErrors}
+    
+    #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }
+        <input type="hidden" name="task.id" value="${task.id}"/>
+
+        <div class="title">
+            <input type="text" name="task.title" value="${task.title}"/>
+            <span class="error">${errors.forKey('task.title')}</span>
+        </div>
+
+        <div class="tags">
+            Tags:
+
+            #{list items:models.Tag.findAll(), as:'tag'}
+               <span id="${tag}" onclick="toggle(this)" class="tagSelector tag ${task.tags?.contains(tag) ? 'selected' : ''}">
+                   ${tag}
+                   <input type="hidden" name="selectedTags" value="${task.tags?.contains(tag) ? tag : ''}" />
+               </span>
+            #{/list}
+        </div>    
+
+        <div class="content">
+            <textarea cols="70" rows="6" name="task.content">${task.content}</textarea>
+            <span class="error">${errors.forKey('task.content')}</span>
+        </div>
+
+        <div class="heading">Attachments</div>
+        <div class="attachments">
+            #{list task.attachments, as:'attachment'}
+              #{include 'Attachments/_show.html'/}
+            #{/list}
+        </div>
+    <hr>
+        <input type="file" name="attachments" class="multi"/>
+
+        <div class="actions">
+            <a href="javascript:void(0);" class="cancel">Cancel</a>
+            <input type="submit" name="action" value="Save"/>
+        </div>
+
+        <script type="text/javascript">
+            $(function() {
+              // replace file input with a multifile input
+              $('input:file').MultiFile();
+
+              var uid = '#task-${task.id}-form';
+
+              var form = $(uid);
+
+              // tag selection
+              $(".tagSelector").click(function() {
+                var tagId = $(this).attr('id');
+                var hiddenField = $(this).children("input");
+
+                  if ($(this).hasClass('selected')) {
+                      $(this).removeClass('selected');
+                      hiddenField.val('');
+                  }
+                  else {
+                      $(this).addClass('selected');
+                      hiddenField.val(tagId);
+                  }
+              });
+                
+              // cancel action
+              $(uid + ' .cancel').click(function(e) {
+                #{if task.id}
+                  $.get('@{show(task.id)}', function(data, status, xhr) {
+                    $('#task-' + '${task.id}').replaceWith(data);
+                  });
+                #{/if}
+                #{else}
+                  $('#task-' + '${task.id}').remove();
+                #{/else}
+                return false;
+              });
+
+              // submit action
+              form.ajaxForm({success: function(data) {
+                  $('#task-' + '${task.id}').replaceWith(data);
+              }
+              });
+//
+//
+//              form.submit(function() {
+////                $.fn.MultiFile.disableEmpty();
+//                $.post(form.attr('action'), form.serialize(), function(data, status, xhr) {
+//                  $('#task-' + '${task.id}').replaceWith(data);
+//                });
+////                $.fn.MultiFile.reEnableEmpty();
+//                return false;
+//              });
+
+            });
+          </script>
+    #{/form}
+  #{/else}
+
+</li>
+#{/if}

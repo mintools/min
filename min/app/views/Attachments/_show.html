@@ -1,0 +1,13 @@
+<div class="attachment">
+    <div class="icon">
+        #{if "image".equals(attachment?.type)}
+            <img class="preview" id="preview" src="/public/files/thumbnail_${attachment.name}.png" alt=""/>
+        #{/if}
+        #{else}
+            <img src="/public/images/unknownFile.png" alt="">
+        #{/else}
+    </div>
+    <a href="/public/files/${attachment.filename}" target="_blank"  class="title">
+        ${attachment.filename}
+    </a>
+</div>

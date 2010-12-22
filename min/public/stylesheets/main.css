@@ -1,0 +1,90 @@
+html {
+    font-family: sans-serif;
+    font-size: 10pt;
+}
+
+li.task {
+    list-style: none;
+    margin: 10px;
+    width: 600px;
+    border: #cccccc solid thin;
+    padding: 5px 10px;
+}
+
+li.task .title {
+    font-size: 14pt;
+    color: #0066ff;
+    margin-bottom: 10px;
+}
+
+li.task .content {
+    margin: 5px 0px;
+    font-size: 10pt;
+    color: #333333;
+}
+
+li.task .createdDate {
+    float: right;
+    color: gray;
+}
+
+.error {
+    color: red;
+    font-size: 10pt;
+}
+
+a {
+    text-decoration:none;
+    font-size: 10pt;
+    color: gray;
+}
+
+.heading {
+    color: #3399ff;
+    font-size: 14px;
+    margin: 15px 0px 5px 0px;
+}
+
+.actions {
+    text-align: right;
+}
+
+.tags {
+    font-size: 10pt;
+    color: #cccccc;
+}
+
+.tags .tag {
+    cursor: pointer;
+    padding: 1px 10px;
+    margin: 2px;
+}
+
+.tags .selected {
+    background: #91b9f2;
+    color: #fff;
+}
+
+.attachments {
+    padding: 5px;
+    font-size: 10pt;
+    text-align: left;
+}
+
+.attachments .attachment {
+}
+
+.attachments .attachment .icon {
+    margin: 5px;
+}
+
+.attachments .attachment .preview {
+    border: #cccccc solid thin;
+    width: 50px;
+    height: 50px;
+}
+
+.attachments .attachment .title {
+    font-size: 10pt;
+    color: gray;
+}
