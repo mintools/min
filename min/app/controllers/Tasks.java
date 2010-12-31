@@ -59,9 +59,11 @@ public class Tasks extends Controller {
 
             // get selected tags
             String[] selectedTags = params.getAll("selectedTags");
-            for (String selectedTagName : selectedTags) {
-                if (!StringUtils.isEmpty(selectedTagName)) {
-                    task.tagItWith(selectedTagName);
+            if (selectedTags != null) {
+                for (String selectedTagName : selectedTags) {
+                    if (!StringUtils.isEmpty(selectedTagName)) {
+                        task.tagItWith(selectedTagName);
+                    }
                 }
             }
 

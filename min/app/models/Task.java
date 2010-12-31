@@ -14,6 +14,8 @@ import java.util.*;
 @Entity
 public class Task extends Model {
     public Date createdDate;
+
+    @ManyToOne(optional = false)
     public Member owner;
 
     public Boolean isActive;

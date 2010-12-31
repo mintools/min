@@ -1,3 +1,4 @@
+import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.test.Fixtures;
@@ -6,9 +7,10 @@ import play.test.Fixtures;
 public class Bootstrap extends Job {
 
     public void doJob() throws Exception {
-
-        // setup database
-        Fixtures.deleteAll();
-        Fixtures.load("../data/test.yml");
+        // add some dummy data if using in-memory database
+        if ("mem".equalsIgnoreCase(Play.configuration.getProperty("db"))) {
+            Fixtures.deleteAll();
+            Fixtures.load("../data/test.yml");
+        }
     }
 }
