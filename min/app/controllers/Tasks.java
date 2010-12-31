@@ -6,6 +6,7 @@ import models.Member;
 import models.Tag;
 import models.Task;
 import org.apache.commons.lang.StringUtils;
+import play.Play;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Before;
@@ -26,7 +27,7 @@ import java.util.*;
  */
 @With(Secure.class)
 public class Tasks extends Controller {
-    private static final String HOME_DIR = "/tools/play-1.1/min";
+    private static final String HOME_DIR = Play.configuration.getProperty("fileStorage.location"); 
     private static final String FILES_DIR = HOME_DIR + "/public/files";
 
     public static void index() {
