@@ -1,27 +1,28 @@
 #{if task}
 
 <li id="task-${task.id}" class="element task ${editing ? 'edit' : 'view'}">
-
   #{if !editing}
 
-    <div class="owner">${task.owner?.username}</div>
-    <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
-    <div class="title">${task.title}</div>
+    <div class="main">
+        <span class="dragHandle">[+]</span>
+        <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
+        <div class="title">${task.title}</div>
 
-    #{if task.tags}
-        <span class="tags">
-            Tags:
-            #{list items:task.tags, as:'tag'}
-                <a class="tag selected" href="@{Tasks.listTagged(tag.name)}">${tag}</a>
-            #{/list}
-        </span>
-    #{/if}
+        #{if task.tags}
+            <span class="tags">
+                Tags:
+                #{list items:task.tags, as:'tag'}
+                    <a class="tag selected" href="@{Tasks.listTagged(tag.name)}">${tag}</a>
+                #{/list}
+            </span>
+        #{/if}
 
-    <div class="content">${task.content.nl2br()}</div>
+        <div class="content">${task.content.nl2br()}</div>
+    </div>
 
     #{if task.attachments}
-    <div class="heading">Attachments</div>
     <div class="attachments">
+        <div class="heading">Attachments</div>
         #{list task.attachments, as:'attachment'}
           #{include 'Attachments/_show.html'/}
         #{/list}
@@ -65,7 +66,7 @@
             Please fix the validation errors
         </p>
     #{/ifErrors}
-    
+
     #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }
         <input type="hidden" name="task.id" value="${task.id}"/>
 
@@ -83,10 +84,10 @@
                    <input type="hidden" name="selectedTags" value="${task.tags?.contains(tag) ? tag : ''}" />
                </span>
             #{/list}
-        </div>    
+        </div>
 
         <div class="content">
-            <textarea cols="70" rows="6" name="task.content">${task.content}</textarea>
+            <textarea cols="80" rows="6" name="task.content">${task.content}</textarea>
             <span class="error">${errors.forKey('task.content')}</span>
         </div>
 
@@ -127,7 +128,7 @@
                       hiddenField.val(tagId);
                   }
               });
-                
+
               // cancel action
               $(uid + ' .cancel').click(function(e) {
                 #{if task.id}

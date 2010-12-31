@@ -17,6 +17,7 @@ public class Task extends Model {
     public Member owner;
 
     public Boolean isActive;
+    public Integer sortOrder;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     public Set<Tag> tags = new HashSet<Tag>();
@@ -53,5 +54,11 @@ public class Task extends Model {
 
     public static boolean deleteById(Long id) {
         return delete("id = ?", id) > 0;
+    }
+
+    public static List<Task> findTaggedWith(String[] tags) {
+        return Task.find(
+                "select distinct t from Task t join t.tags as tg where tg.name in (:tags) group by t.id having count(g.id) = :size"
+        ).bind("tags", tags).bind("size", tags.length).fetch();
     }
 }

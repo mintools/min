@@ -2,8 +2,13 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+*       /                                       module:secure
+
 # Home page
-GET     /                                       Application.index
+GET     /                                       Tasks.index
+
+GET     /login                                  Secure.login
+GET     /logout                                 Secure.logout
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/files                           staticDir:public/files

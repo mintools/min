@@ -1,9 +1,9 @@
 Member(Member1):
-  username:         member1
+  username:         Andrew
   password:         password
 
 Member(Member2):
-  username:         member2
+  username:         SOY
   password:         password
 
 Tag(Tag1):

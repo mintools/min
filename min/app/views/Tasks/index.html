@@ -1,9 +1,26 @@
 #{extends 'main.html' /}
 #{set title:'Tasks' /}
 
+#{set 'moreScripts' }
 <script type="text/javascript">
-  var template;
-  $(document).ready(function() {
+    var template;
+    $(document).ready(function() {
+    $("#tasksList").sortable({
+        handle: ".dragHandle",
+        update: function(event, ui) {
+            var taskOrder = $(this).sortable('toArray').toString();
+            $.post('@{Tasks.sort}', {order:taskOrder}, function() {
+                // todo: perhaps stop a spinning progress indicator or something
+                $("#notifications").text("saved");
+                $("#notifications").show();
+                $("#notifications").fadeOut(2000);
+            });
+        }
+    });
+    //$("#tasksList").disableSelection();
+
+
+
     var uid = '#task-${task.id}';
     template = $('#tasks ' + uid).remove();
     $('#addTask a').click(function(e) {
@@ -11,15 +28,22 @@
       return false;
     });
   });
-</script>        
+</script>
+#{/set}
 
-#{if tag}
-  Filtered on ${tag} (<a href="@{Tasks.index()}">Show all</a>)      
+#{if models.Member.connected()}
+    <div class="header">Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)</div>
 #{/if}
 
-<div id="tasks">
+#{if tag}
+  Filtered on ${tag} (<a href="@{Tasks.index()}">Show all</a>)
+#{/if}
+
+<div id="tasks" class="left">
+    <div id="notifications"></div>   
+
 #{set editing:true/}
-  #{include 'Tasks/_show.html'/}      
+  #{include 'Tasks/_show.html'/}
 #{set editing:false/}
 
 <p id="addTask" #{if errors}style="display:none"#{/if}"><a href="#" class="button">Add Task</a></p>
@@ -30,3 +54,17 @@
     #{/list}
   </ul>
 </div>
+
+<!--
+<div class="right">
+    <h3>Filters</h3>
+    <div class="filters">
+        #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
+            #{list items:models.Tag.findAll(), as:'tag'}
+                <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+            #{/list}
+            <input type="submit" name="action" value="Filter"/>
+        #{/form}
+    </div>
+</div>
+-->

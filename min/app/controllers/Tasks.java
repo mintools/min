@@ -2,12 +2,15 @@ package controllers;
 
 import com.mortennobel.imagescaling.ResampleOp;
 import models.Attachment;
+import models.Member;
 import models.Tag;
 import models.Task;
 import org.apache.commons.lang.StringUtils;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
+import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.With;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,22 +18,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * User: soyoung
  * Date: Dec 21, 2010
  */
+@With(Secure.class)
 public class Tasks extends Controller {
-    private static final String HOME_DIR = "/soy/play-1.1/min";
+    private static final String HOME_DIR = "/tools/play-1.1/min";
     private static final String FILES_DIR = HOME_DIR + "/public/files";
 
     public static void index() {
-        List<Task> tasks = Task.find("from Task t where t.isActive = true order by createdDate desc").fetch();
+        List<Task> tasks = Task.find("from Task t where t.isActive = true order by sortOrder").fetch();
 
-        // a placeholder for a new task 
+        // a placeholder for a new task
         Task task = new Task();
 
         render(tasks, task);
@@ -43,6 +45,10 @@ public class Tasks extends Controller {
     }
 
     public static void save(@Valid Task task, File[] attachments) throws Exception {
+        Member loggedInUser = Member.connected();
+
+        notFoundIfNull(loggedInUser);
+
         if (Validation.hasErrors()) {
             boolean editing = true;
             renderTemplate("Tasks/_show.html", task, editing);
@@ -61,6 +67,8 @@ public class Tasks extends Controller {
             if (task.createdDate == null) {
                 task.createdDate = new Date();
             }
+
+            task.owner = loggedInUser;
 
             // add attachments
             if (attachments != null) {
@@ -141,11 +149,42 @@ public class Tasks extends Controller {
     }
 
     public static void trash() {
-        List<Task> tasks = Task.find("from Task t where t.isActive = false order by createdDate desc").fetch();
+        List<Task> tasks = Task.find("from Task t where t.isActive = false order by sortOrder").fetch();
 
         // a placeholder for a new task
         Task task = new Task();
 
         renderTemplate("Tasks/index.html", tasks, task);
+    }
+
+    public static void filter(String[] checkedTags) {
+        List<Task> tasks = Task.findAll();
+
+        // a placeholder for a new task
+        Task task = new Task();
+
+        renderTemplate("Tasks/index.html", checkedTags, tasks, task);
+    }
+
+    public static void sort(String order) {
+        // order will come in the form: task-3,task-2,task-1
+        StringTokenizer taskTokens = new StringTokenizer(order, ",", false);
+
+        int index = 0;
+
+        while (taskTokens.hasMoreTokens()) {
+            String taskToken = taskTokens.nextToken();
+
+            // get the task id from the token
+            String taskId = taskToken.substring(taskToken.lastIndexOf('-') + 1);
+
+            Task task = Task.findById(Long.parseLong(taskId));
+
+            task.sortOrder = index;
+
+            task.save();
+
+            index++;
+        }
     }
 }

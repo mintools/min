@@ -3,10 +3,19 @@ html {
     font-size: 10pt;
 }
 
+body.main {
+    width: 980px;
+    margin: 0 auto;
+}
+
+ul {
+    padding: 0;
+}
+
+
 li.task {
     list-style: none;
-    margin: 10px;
-    width: 600px;
+    margin: 10px 0;
     border: #cccccc solid thin;
     padding: 5px 10px;
 }
@@ -49,7 +58,7 @@ a {
     text-align: right;
 }
 
-.tags {
+div.tags {
     font-size: 10pt;
     color: #cccccc;
 }
@@ -65,10 +74,7 @@ a {
     color: #fff;
 }
 
-.attachments {
-    padding: 5px;
-    font-size: 10pt;
-    text-align: left;
+div.attachments {
 }
 
 .attachments .attachment {
@@ -87,4 +93,32 @@ a {
 .attachments .attachment .title {
     font-size: 10pt;
     color: gray;
+}
+
+div.header {
+    text-align:center;
+}
+
+div.left {
+    float: left;
+    margin: 0;
+    width: 70%;
+}
+
+div.right {
+    float: right;
+    margin: 0;
+    width: 28%;
+}
+
+div.filters {
+    border: #cccccc solid thin;
+    padding: 10px;
+}
+
+#notifications {
+    float: none;
+    width: 100%;
+    background-color: red;
+    color: white;
 }
