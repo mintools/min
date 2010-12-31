@@ -18,6 +18,9 @@ public class Task extends Model {
     @ManyToOne(optional = false)
     public Member owner;
 
+    @ManyToOne(optional = true)
+    public Member assignedTo;
+
     public Boolean isActive;
     public Integer sortOrder;
 

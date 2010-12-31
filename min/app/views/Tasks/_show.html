@@ -8,6 +8,19 @@
         <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
         <div class="title">${task.title}</div>
 
+        <div class="owner">
+            Raised by: <a href="@{Members.show(task.owner.id)}">${task.owner}</a>
+        </div>
+
+        <div class="assignedTo">
+        #{if task.assignedTo}
+            Assigned to: <a href="@{Members.show(task.assignedTo.id)}">${task.assignedTo}</a>
+        #{/if}
+        #{else}
+            Unassigned
+        #{/else}
+        </div>
+
         #{if task.tags}
             <span class="tags">
                 Tags:
@@ -30,8 +43,8 @@
     #{/if}
 
     <div class="actions">
-        <a href="@{show(task.id)}&editing=true" class="edit">Edit</a>
-        <a href="@{delete(task.id)}" class="delete">Delete</a>
+        <a href="@{Tasks.show(task.id)}&editing=true" class="edit">Edit</a>
+        <a href="@{Tasks.delete(task.id)}" class="delete">Delete</a>
     </div>
 
     <script type="text/javascript">
@@ -73,6 +86,13 @@
         <div class="title">
             <input type="text" name="task.title" value="${task.title}"/>
             <span class="error">${errors.forKey('task.title')}</span>
+        </div>
+
+        <div class="assignedTo">
+            Assigned to:
+            #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task.assignedTo?.id, labelProperty:'username'}
+                #{option} Unassigned #{/option}
+            #{/select}
         </div>
 
         <div class="tags">

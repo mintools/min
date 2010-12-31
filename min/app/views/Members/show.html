@@ -1,0 +1,11 @@
+#{extends 'main.html' /}
+
+<h2>Tasks raised by ${member.username}</h2>
+    #{list member.raisedTasks, as: "task"}
+        #{include 'Tasks/_show.html'/}
+    #{/list}
+
+<h2>Tasks assigned to ${member.username}</h2>
+    #{list member.assignedTasks, as: "task"}
+        #{include 'Tasks/_show.html'/}
+    #{/list}

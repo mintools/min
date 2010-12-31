@@ -46,6 +46,7 @@ public class Tasks extends Controller {
     }
 
     public static void save(@Valid Task task, File[] attachments) throws Exception {
+
         Member loggedInUser = Member.connected();
 
         notFoundIfNull(loggedInUser);

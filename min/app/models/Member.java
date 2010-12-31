@@ -1,6 +1,7 @@
 package models;
 
 import org.apache.commons.lang.StringUtils;
+import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.mvc.Scope;
 
@@ -16,11 +17,20 @@ import java.util.List;
  */
 @Entity
 public class Member extends Model {
+    @Required
     public String username;
+    @Required
     public String password;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
-    public List<Task> tasks = new ArrayList<Task>();
+    public List<Task> raisedTasks = new ArrayList<Task>();
+
+    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
+    public List<Task> assignedTasks = new ArrayList<Task>();
+
+    public String toString() {
+        return username;
+    }
 
     public static Member connect(String username, String password) {
         return Member.find("from Member m where m.username = ? and m.password = ?", username, password).first();
