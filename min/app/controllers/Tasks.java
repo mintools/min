@@ -27,8 +27,7 @@ import java.util.*;
  */
 @With(Secure.class)
 public class Tasks extends Controller {
-    private static final String HOME_DIR = Play.configuration.getProperty("fileStorage.location"); 
-    private static final String FILES_DIR = HOME_DIR + "/public/files";
+    private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
     public static void index() {
         List<Task> tasks = Task.find("from Task t where t.isActive = true order by sortOrder").fetch();
