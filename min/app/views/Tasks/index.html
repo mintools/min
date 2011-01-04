@@ -1,70 +1,33 @@
 #{extends 'main.html' /}
 #{set title:'Tasks' /}
-
 #{set 'moreScripts' }
-<script type="text/javascript">
-    var template;
-    $(document).ready(function() {
-    $("#tasksList").sortable({
-        handle: ".dragHandle",
-        update: function(event, ui) {
-            var taskOrder = $(this).sortable('toArray').toString();
-            $.post('@{Tasks.sort}', {order:taskOrder}, function() {
-                // todo: perhaps stop a spinning progress indicator or something
-                $("#notifications").text("saved");
-                $("#notifications").show();
-                $("#notifications").fadeOut(2000);
-            });
-        }
-    });
-    //$("#tasksList").disableSelection();
-
-
-
-    var uid = '#task-${task.id}';
-    template = $('#tasks ' + uid).remove();
-    $('#addTask a').click(function(e) {
-      template.clone().prependTo($('#tasksList'));
-      return false;
-    });
-  });
+<script type="text/javascript" src="@{'/public/js/tasks.js'}">
 </script>
 #{/set}
-
 #{if models.Member.connected()}
-    <div class="header">Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)</div>
-#{/if}
-
-#{if tag}
-  Filtered on ${tag} (<a href="@{Tasks.index()}">Show all</a>)
-#{/if}
-
-<div id="tasks" class="left">
-    <div id="notifications"></div>   
-
-#{set editing:true/}
-  #{include 'Tasks/_show.html'/}
-#{set editing:false/}
-
-<p id="addTask" #{if errors}style="display:none"#{/if}"><a href="#" class="button">Add Task</a></p>
-
-  <ul id="tasksList" class="elements">
-    #{list tasks, as:'task'}
-      #{include 'Tasks/_show.html'/}
-    #{/list}
-  </ul>
+<div class="header right">
+    Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)
 </div>
-
-<!--
-<div class="right">
-    <h3>Filters</h3>
-    <div class="filters">
-        #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
-            #{list items:models.Tag.findAll(), as:'tag'}
-                <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
-            #{/list}
-            <input type="submit" name="action" value="Filter"/>
-        #{/form}
+<div class="header left">
+    <h1>Min Task Manager</h1>
+</div>
+#{/if}
+<div class="previews">
+    <div id="image_blue_hills" class="preview" style="display:none">
+        <img src="@{'/public/files/blue_hills.jpg'}">
     </div>
 </div>
--->
+<div class="tasks">
+    #{list tasks, as:'task'}
+    #{include 'Tasks/task.html'/}
+    #{/list}
+</div>
+<div class="filters">
+    <h3>Filters</h3>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rhoncus auctor dolor quis volutpat. Morbi eget venenatis arcu. Aenean fringilla, diam sed interdum suscipit, ante ligula luctus enim, nec sagittis dolor massa nec augue. Phasellus sed orci ipsum, hendrerit gravida dolor. Phasellus sed velit eu leo scelerisque ultrices. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam varius semper ante in eleifend. Proin et eros id metus tristique mollis. Etiam felis velit, fringilla id blandit nec, vestibulum sed dolor. Duis egestas turpis et justo fermentum eu ornare urna consectetur. Donec eu tellus eget magna viverra malesuada. In vel ante et lorem hendrerit ultrices. Fusce felis lorem, sollicitudin ut convallis eget, vestibulum vel lorem. Nunc tellus felis, cursus eget viverra eu, interdum ac velit. Nullam viverra euismod suscipit. Integer eu massa lobortis magna pellentesque porta eget vel neque. Suspendisse potenti. 
+        Vestibulum eget urna id magna congue dictum vel vitae arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar risus id diam pellentesque sit amet commodo elit egestas. Aliquam id libero neque, id malesuada enim. Cras nec massa a ligula fringilla cursus. Curabitur dapibus urna pharetra quam dictum et pellentesque tellus ultricies. Vestibulum fringilla vestibulum turpis, volutpat auctor lorem cursus sit amet. Nulla sit amet leo eu libero molestie ornare at at est. Nulla placerat libero vitae neque mattis pellentesque. Mauris eros justo, congue nec condimentum id, luctus eget lectus. Nam venenatis dui sed lorem fermentum varius. Vivamus risus felis, rhoncus id rhoncus vitae, posuere facilisis nibh. Quisque augue sapien, feugiat vitae pretium a, rutrum non mauris. In ac quam vel diam imperdiet dapibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin in mattis tortor. Nulla aliquet lobortis fringilla. Nam sollicitudin libero a ligula sodales dapibus. 
+    </p>
+</div>
+<div id="mask">
+</div>

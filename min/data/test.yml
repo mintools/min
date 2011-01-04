@@ -5,6 +5,10 @@ Member(Member1):
 Member(Member2):
   username:         SOY
   password:         password
+  
+Member(Member3):
+  username:         Simon
+  password:         password
 
 Tag(Tag1):
     name:           tag1
