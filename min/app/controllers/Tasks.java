@@ -133,7 +133,7 @@ public class Tasks extends Controller {
 
             task.isActive = true;
             task.save();
-            renderTemplate("Tasks/_show.html", task);
+            renderTemplate("Tasks/task.html", task);
         }
     }
 

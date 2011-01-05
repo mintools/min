@@ -1,7 +1,5 @@
 <div class="hide properties">
-	#{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }
-    <input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>
-	#{/form}
+    #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>#{/form}
 </div>
 <div>
     <div class="display">
@@ -11,9 +9,7 @@
         </div>
         <div class="main">
             <div class="description descriptionSummary">
-                <p>
-                    ${task.content.raw()} 
-                </p>
+                ${task.content.raw()} 
             </div>
             <div class="tags">
                 <ul class="tagContainer">
@@ -32,7 +28,7 @@
     <div class="editingButtons">
         <a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
         <a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
-		<a href="" class="saveButton button ui-state-default ui-corner-all right hide">Save</a>
+        <a href="" class="saveButton button ui-state-default ui-corner-all right hide">Save</a>
         <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
         <div class="clear">
         </div>

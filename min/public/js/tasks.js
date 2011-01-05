@@ -80,8 +80,8 @@ function task(taskElement) {
 	this.edit = function() {
 		$(cTask).addClass('editMode');
 		current.showSaveButtons();
-		current.makeEditable();
 		current.showLongSummary();
+		current.makeEditable();
 	};
 
 	this.deleteT = function() {
@@ -91,23 +91,27 @@ function task(taskElement) {
 	this.save = function() {
 
 		$(cTask).removeClass('editMode');
-
+		
+		current.makeUnEditable();
 		current.showEditButtons();
-
+		
 		var data = current.getDataForPost();
 		data.action = "save";
 
 		// console.log(data);
 		$.post(current.actionUrl, data, function(data) {
-			$(cTask).replaceWith(data);
+			$(cTask).html(data);
+			current.init();
 		});
-
+		
+		
 	};
 
 	this.cancel = function() {
 
 		$(cTask).removeClass('editMode');
 		current.makeUnEditable();
+		current.showShortSummary();
 
 		$(".title h3", cTask).html(current.originalTitle);
 		$(".description", cTask).html(current.originalDesc);
