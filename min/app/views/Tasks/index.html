@@ -20,9 +20,11 @@
 <div class="tasks">
     #{list tasks, as:'task'}
     <div class="task">
-        #{include 'Tasks/task.html'/}
-    </div>
-    #{/list}
+        <div class="move">
+            <img src="@{'/public/images/arrow-move.png'}"/>
+        </div>
+		#{include 'Tasks/task.html'/}
+    </div>#{/list}
 </div>
 <div class="filters hide">
     <h3>Filters</h3>

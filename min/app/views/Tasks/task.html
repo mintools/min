@@ -1,7 +1,7 @@
-<div class="hide properties">
-    #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>#{/form}
-</div>
-<div>
+<div class="contents">
+    <div class="hide properties">
+        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>#{/form}
+    </div>
     <div class="display">
         <div class="title">
             <h3>${task.title.raw()}</h3>
@@ -15,9 +15,6 @@
                 <ul class="tagContainer">
                 </ul>
             </div>
-        </div>
-        <div class="move">
-            <img src="@{'/public/images/arrow-move.png'}"/>
         </div>
         <div class="thumbnails">
             <!--img src="@{'/public/files/blue_hills-thumb.jpg'}" title="" rel="#image_blue_hills" class="thumb"/-->

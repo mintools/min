@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
     <head>
         <title>#{get 'title' /}</title>
@@ -7,7 +6,6 @@
         <!--link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}"-->
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-        		
         <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/smoothness/jquery-ui-1.8.7.custom.css'}" media="screen"/>
         <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/jquery.ui.autocomplete.custom.css'}" />
         <link rel="stylesheet" type="text/css" href="@{'/public/css/tasks.css'}" media='screen'/>
@@ -17,16 +15,17 @@
         </script>
         <script type="text/javascript" src="@{'/public/js/jquery.tools.min.js'}">
         </script>
-		<script type="text/javascript" src="@{'/public/js/jquery.form.js'}">
+        <script type="text/javascript" src="@{'/public/js/jquery.form.js'}">
         </script>
         <script type="text/javascript" src="@{'/public/js/tag-it.js'}">
         </script>
-        
-		
-				
-		#{get 'moreScripts' /}
+		<script type="text/javascript" src="@{'/public/js/dialog.js'}">
+        </script>
+        #{get 'moreScripts' /}
     </head>
     <body class="main">
         #{doLayout /}
+        <div id="dialog">
+        </div>
     </body>
 </html>
