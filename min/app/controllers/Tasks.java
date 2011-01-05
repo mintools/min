@@ -142,6 +142,13 @@ public class Tasks extends Controller {
         task.deactivate();
     }
 
+    public static void undelete(Long taskId) {
+//        Task.deleteById(taskId);
+        Task task = Task.findById(taskId);
+        task.activate();
+    }    
+
+
     public static void listTagged(String tag) {
         List<Task> tasks = Task.findTaggedWith(tag);
 
@@ -157,7 +164,7 @@ public class Tasks extends Controller {
         // a placeholder for a new task
         Task task = new Task();
 
-        renderTemplate("Tasks/index.html", tasks, task);
+        render(tasks);
     }
 
     public static void filter(String[] checkedTags) {

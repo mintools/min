@@ -14,6 +14,10 @@
         #{get 'moreScripts' /}
     </head>
     <body class="main">
+        #{if models.Member.connected()}
+            <div class="header">Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)</div>
+        #{/if}
+
         #{doLayout /}
     </body>
 </html>

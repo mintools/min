@@ -51,3 +51,8 @@ Attachment(Attachment1):
   filename:         XYZ.pdf
   name:             XYZ
   task:             Task1
+
+TagGroup(TagGroup1):
+  tags:
+                    - Tag1
+                    - Tag3  

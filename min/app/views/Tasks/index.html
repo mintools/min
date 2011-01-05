@@ -31,9 +31,9 @@
 </script>
 #{/set}
 
-#{if models.Member.connected()}
-    <div class="header">Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)</div>
-#{/if}
+<div>
+    <a href="@{Tasks.trash()}">See Trash</a>        
+</div>
 
 #{if tag}
   Filtered on ${tag} (<a href="@{Tasks.index()}">Show all</a>)
