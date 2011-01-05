@@ -6,7 +6,7 @@
     <div class="main">
         <span class="dragHandle">[+]</span>
         <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
-        <div class="title">${task.title}</div>
+        <div class="title"><span class="id">Task ${task.id}</span>${task.title}</div>
 
         <div class="owner">
             Raised by: <a href="@{Members.show(task.owner.id)}">${task.owner}</a>

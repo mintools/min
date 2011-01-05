@@ -122,3 +122,7 @@ div.filters {
     background-color: red;
     color: white;
 }
+
+.task > .id {
+    font-size: 6pt;
+}
