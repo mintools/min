@@ -58,15 +58,17 @@
             return false;
           });
           $(uid + ' .delete').click(function(e) {
-            $.ajax({
-              url:$(this).attr('href'),
-              type:'delete',
-              success:function(data, status, xhr) {
-                $(uid).fadeOut(600, function() {
-                  $(this).remove();
+            if (confirm("Are you sure you want to delete the task?")) {                
+                $.ajax({
+                  url:$(this).attr('href'),
+                  type:'delete',
+                  success:function(data, status, xhr) {
+                    $(uid).fadeOut(600, function() {
+                      $(this).remove();
+                    });
+                  }
                 });
-              }
-            });
+            }
             return false;
           });
         });
