@@ -25,6 +25,7 @@ Tag(Tag4):
 Task(Task1):
   isActive:         true
   createdDate:      2010-12-01
+  sortOrder:        1
   owner:            Member1
   title:            Task1 Title
   content:          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis eros eu risus pulvinar elementum. Ut tortor nisl, rhoncus vel blandit nec, rutrum nec est. In hac habitasse platea dictumst. Quisque a libero in urna lacinia ultricies et et nunc. Ut vel nunc turpis, eget malesuada est.
@@ -35,6 +36,7 @@ Task(Task1):
 Task(Task2):
   isActive:         true
   createdDate:      2010-12-08
+  sortOrder:        2
   owner:            Member1
   title:            Task2 Title
   content:          Nulla aliquet, arcu eu sagittis fermentum, risus diam posuere ipsum, ac ornare sem turpis ac mi. Morbi at vehicula augue. Nam luctus, nisl in cursus venenatis, est eros sagittis nunc, nec adipiscing lorem lacus sed elit. Pellentesque adipiscing placerat laoreet.
@@ -46,6 +48,7 @@ Task(Task2):
 Task(Task3):
   isActive:         true
   createdDate:      2010-12-10
+  sortOrder:        3
   owner:            Member2
   title:            Task3 Title
   content:          Etiam volutpat, arcu vel sagittis pretium, dui elit mollis sapien, sit amet vulputate nisl elit vel lorem. Suspendisse ac quam tellus.

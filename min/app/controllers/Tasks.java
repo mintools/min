@@ -170,25 +170,43 @@ public class Tasks extends Controller {
         renderTemplate("Tasks/index.html", checkedTags, tasks, task);
     }
 
-    public static void sort(String order) {
-        // order will come in the form: task-3,task-2,task-1
-        StringTokenizer taskTokens = new StringTokenizer(order, ",", false);
+    public static void sort(Long[] order) {
 
-        int index = 0;
+        // work out ordering
+        List<Task> tasks = Task.find("select t from models.Task t where t.id in (:taskIds) order by t.sortOrder").bind("taskIds", order).fetch();
 
-        while (taskTokens.hasMoreTokens()) {
-            String taskToken = taskTokens.nextToken();
+        ArrayList<Integer> ordering = new ArrayList<Integer>();
+        for (Iterator<Task> iterator = tasks.iterator(); iterator.hasNext();) {
+            Task task = iterator.next();
 
-            // get the task id from the token
-            String taskId = taskToken.substring(taskToken.lastIndexOf('-') + 1);
-
-            Task task = Task.findById(Long.parseLong(taskId));
-
-            task.sortOrder = index;
-
-            task.save();
-
-            index++;
+            ordering.add(task.sortOrder);
         }
+
+        // assign ordering
+        for (int i = 0; i < order.length; i++) {
+            Task task = Task.findById(order[i]);
+            task.sortOrder = ordering.get(i);
+            task.save();
+        }
+
+//        // order will come in the form: task-3,task-2,task-1
+//        StringTokenizer taskTokens = new StringTokenizer(order, ",", false);
+//
+//        int index = 0;
+//
+//        while (taskTokens.hasMoreTokens()) {
+//            String taskToken = taskTokens.nextToken();
+//
+//            // get the task id from the token
+//            String taskId = taskToken.substring(taskToken.lastIndexOf('-') + 1);
+//
+//            Task task = Task.findById(Long.parseLong(taskId));
+//
+//            task.sortOrder = index;
+//
+//            task.save();
+//
+//            index++;
+//        }
     }
 }
