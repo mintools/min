@@ -14,9 +14,23 @@
         #{get 'moreScripts' /}
     </head>
     <body class="main">
-        #{if models.Member.connected()}
-            <div class="header">Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)</div>
-        #{/if}
+        <div class="header">
+            <div class="logo"><a href="@{Tasks.index()}">Min</a></div>
+            <div class="loggedInAs">
+            #{if models.Member.connected()}
+                Logged in as ${models.Member.connected().username}
+            #{/if}
+            </div>
+            <div class="actions">
+                #{if models.Member.connected()}
+                    <a href="@{Members.show(models.Member.connected().id)}">My Tasks</a>
+                #{/if}
+                #{get 'headerActions' /}
+                #{if models.Member.connected()}
+                    <a href="/logout">Log out</a>
+                #{/if}
+            </div>
+        </div>
 
         #{doLayout /}
     </body>

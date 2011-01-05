@@ -8,6 +8,10 @@ body.main {
     margin: 0 auto;
 }
 
+h1, h2 {
+    color: #3c5b88;
+}
+
 ul {
     padding: 0;
 }
@@ -95,10 +99,6 @@ div.attachments {
     color: gray;
 }
 
-div.header {
-    text-align:center;
-}
-
 div.left {
     float: left;
     margin: 0;
@@ -121,4 +121,33 @@ div.filters {
     width: 100%;
     background-color: red;
     color: white;
+}
+
+.header {
+    background-color: #003366;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    margin-bottom: 10px;
+}
+
+.header .logo a {
+    font-size: 20pt;
+    width: 50px;
+    float: left;
+    color: #cccccc;
+}
+
+.header .loggedInAs {
+    width: 100%;
+    text-align: right;
+}
+
+.header .actions {
+    margin-top: 5px;
+    text-align: right;
+}
+
+.header .actions a {
+    margin-left: 20px;
+    color: #cccccc;
 }

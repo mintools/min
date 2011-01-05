@@ -71,7 +71,9 @@ public class Tasks extends Controller {
                 task.createdDate = new Date();
             }
 
-            task.owner = loggedInUser;
+            if (task.owner == null) {
+                task.owner = loggedInUser;
+            }
 
             // add attachments
             if (attachments != null) {

@@ -8,6 +8,12 @@
     <a href="@{Tasks.index()}">Back to Task List</a>        
 </div>
 
+#{if !tasks}
+    <div style="margin-top: 20px; font-size: 18pt;">
+    Trash is empty
+    </div>    
+#{/if}
+
 <div id="tasks" class="left">
   <ul id="tasksList" class="elements">
     #{list tasks, as:'task'}
