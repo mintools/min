@@ -1,0 +1,37 @@
+<div class="hide properties">
+    <input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>
+</div>
+<div>
+    <div class="display">
+        <div class="title">
+            <h3>${task.title}</h3>
+            <!--div class="createdBy">By: ${task.owner}</div-->
+        </div>
+        <div class="main">
+            <div class="description descriptionSummary">
+                <p>
+                    ${task.content.nl2br()} 
+                </p>
+            </div>
+            <div class="tags">
+                <ul class="tagContainer">
+                </ul>
+            </div>
+        </div>
+        <div class="move">
+            <img src="@{'/public/images/arrow-move.png'}"/>
+        </div>
+        <div class="thumbnails">
+            <img src="@{'/public/files/blue_hills-thumb.jpg'}" title="" rel="#image_blue_hills" class="thumb"/>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="editingButtons">
+        <a href="" class="saveButton button ui-state-default ui-corner-all right hide">Save</a>
+        <a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
+        <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
+        <div class="clear">
+        </div>
+    </div>
+</div>

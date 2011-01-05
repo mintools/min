@@ -1,0 +1,156 @@
+body {
+    font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
+    font-size: .8em;
+} .header {
+    font-size: .7em;
+    font-weight: bold;
+    margin: 10px;
+    
+}
+
+h1 {
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
+
+h3 {
+    font-size: .9em;
+}
+
+div.tasks {
+    float: left;
+    width: 98%;
+    margin: 0 1%;
+} .right {
+    float: right;
+} .clear {
+    clear: both;
+}.hide {
+    display: none;
+}.inputTitle {
+    font-weight: bold;
+    font-size: 80%;
+}
+
+div.task {
+    border: 1px solid #DDDDDD;
+    padding: 5px 10px;
+    margin: 0px 0px 15px 0;
+}
+
+div.taskPlaceholder {
+    background-color: #e5e5e5;;
+    height: 110px;
+    margin: 10px 0px;
+}
+
+div.task .title {
+    width: 8%;
+    margin-right: 2%;
+    padding: 2px 0px;
+    float: left;
+}
+
+div.task .createdBy {
+    font-size: .7em;
+	margin-top:5px;
+}
+
+
+div.task .main {
+    width: 68%;
+    margin-right: 2%;
+    float: left;
+}
+
+div.task .thumbnails {
+    width: 20%;
+    float: right;
+    clear: right;
+}
+
+div.task .thumbnails img {
+    float: left;
+    margin-top: 3px;
+    margin-right: 3px;
+}
+
+div.task .hide {
+    display:none;
+}
+
+div.preview .close {
+    background-image: url(../images/overlay/close.png);
+    cursor: pointer;
+    height: 35px;
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    width: 35px;
+}
+
+div.preview {
+    display: none;
+    background: #DDDDDD;
+    padding: 10px;
+    font-size: 11px;
+    z-index: 1000;
+}
+
+div.task .descriptionSummary {
+    height: 60px;
+    overflow: hidden;
+}
+
+div.task .descriptionShow {
+}
+
+div.task .showIcon, div.task .hideIcon {
+    float: right;
+    position: relative;
+    margin-right: 10px;
+}
+
+div.task .move {
+    float: right;
+    cursor: move;
+    position: relative;
+}
+
+div.task .editingButtons {
+    float: right;
+    top: -5px;
+    position: relative;
+}
+
+div.task .editingButtons .button {
+    padding: 0.1em 1em;
+    font: normal normal normal 80% / normal 'Trebuchet MS', sans-serif;
+    position: relative;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+div.task h3 {
+    padding: 0px;
+    margin: 0px;
+}
+
+div.task p {
+    padding: 2px 0px;
+    margin: 0px;
+}
+
+div.task .edit input, div.task .edit textarea {
+    width: 100%;
+}
+
+div.task .tags {
+    margin-top: 10px;
+}
+
+div.filters {
+    float: right;
+    margin-right: 1%;
+    width: 29%;
+}
