@@ -5,7 +5,6 @@ body {
     font-size: .7em;
     font-weight: bold;
     margin: 10px;
-    
 }
 
 h1 {
@@ -53,9 +52,8 @@ div.task .title {
 
 div.task .createdBy {
     font-size: .7em;
-	margin-top:5px;
+    margin-top: 5px;
 }
-
 
 div.task .main {
     width: 68%;
@@ -75,8 +73,12 @@ div.task .thumbnails img {
     margin-right: 3px;
 }
 
+div.task.editMode, div.task.editMode input{
+    background-color: #FBEFEF;
+}
+
 div.task .hide {
-    display:none;
+    display: none;
 }
 
 div.preview .close {

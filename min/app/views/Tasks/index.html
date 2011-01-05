@@ -14,15 +14,17 @@
 #{/if}
 <div class="previews">
     <div id="image_blue_hills" class="preview" style="display:none">
-        <img src="@{'/public/files/blue_hills.jpg'}">
+        <!--img src="@{'/public/files/blue_hills.jpg'}"-->
     </div>
 </div>
 <div class="tasks">
     #{list tasks, as:'task'}
-    #{include 'Tasks/task.html'/}
+    <div class="task">
+        #{include 'Tasks/task.html'/}
+    </div>
     #{/list}
 </div>
-<div class="filters">
+<div class="filters hide">
     <h3>Filters</h3>
     <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rhoncus auctor dolor quis volutpat. Morbi eget venenatis arcu. Aenean fringilla, diam sed interdum suscipit, ante ligula luctus enim, nec sagittis dolor massa nec augue. Phasellus sed orci ipsum, hendrerit gravida dolor. Phasellus sed velit eu leo scelerisque ultrices. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam varius semper ante in eleifend. Proin et eros id metus tristique mollis. Etiam felis velit, fringilla id blandit nec, vestibulum sed dolor. Duis egestas turpis et justo fermentum eu ornare urna consectetur. Donec eu tellus eget magna viverra malesuada. In vel ante et lorem hendrerit ultrices. Fusce felis lorem, sollicitudin ut convallis eget, vestibulum vel lorem. Nunc tellus felis, cursus eget viverra eu, interdum ac velit. Nullam viverra euismod suscipit. Integer eu massa lobortis magna pellentesque porta eget vel neque. Suspendisse potenti. 

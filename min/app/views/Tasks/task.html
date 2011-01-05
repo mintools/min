@@ -1,5 +1,7 @@
 <div class="hide properties">
+	#{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }
     <input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>
+	#{/form}
 </div>
 <div>
     <div class="display">
@@ -22,14 +24,15 @@
             <img src="@{'/public/images/arrow-move.png'}"/>
         </div>
         <div class="thumbnails">
-            <img src="@{'/public/files/blue_hills-thumb.jpg'}" title="" rel="#image_blue_hills" class="thumb"/>
+            <!--img src="@{'/public/files/blue_hills-thumb.jpg'}" title="" rel="#image_blue_hills" class="thumb"/-->
         </div>
         <div class="clear">
         </div>
     </div>
     <div class="editingButtons">
-        <a href="" class="saveButton button ui-state-default ui-corner-all right hide">Save</a>
         <a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
+        <a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
+		<a href="" class="saveButton button ui-state-default ui-corner-all right hide">Save</a>
         <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
         <div class="clear">
         </div>

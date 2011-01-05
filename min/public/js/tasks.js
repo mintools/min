@@ -3,11 +3,14 @@ function task(taskElement) {
 	var cTask = taskElement;
 	var current = this;
 
-	this.id = $("input[name='id']", cTask).val();
-
 	this.init = function() {
 		$(".editButton", cTask).click(function() {
 			current.edit();
+			return false;
+		});
+
+		$(".deleteButton", cTask).click(function() {
+			current.deleteT();
 			return false;
 		});
 
@@ -29,6 +32,12 @@ function task(taskElement) {
 		});
 
 		/*
+		 * Variables
+		 */
+
+		current.refreshVars();
+
+		/*
 		 * Save their original state
 		 */
 		current.originalTitle = $(".title h3", cTask).html();
@@ -37,28 +46,73 @@ function task(taskElement) {
 
 	};
 
+	this.refreshVars = function() {
+
+		current.actionUrl = $("form", cTask).attr("action");
+		current.authenticityToken = $("input[name='authenticityToken']", cTask).val();
+
+		current.id = $("input[name='id']", cTask).val();
+		current.title = $(".title h3", cTask).html();
+		current.content = $(".description", cTask).html();
+		current.tags = new Array();
+		$(".tagit-choice input", cTask).each(function() {
+			current.tags.push($(this).val())
+		});
+
+	};
+
+	this.getDataForPost = function() {
+
+		current.refreshVars();
+
+		var rtnData = {};
+		rtnData.task = {};
+
+		rtnData.authenticityToken = current.authenticityToken;
+		rtnData["task.id"] = current.id;
+		rtnData["task.title"] = current.title;
+		rtnData["task.content"] = current.content;
+		rtnData.selectedTags = current.tags;
+
+		return rtnData;
+	};
+
 	this.edit = function() {
+		$(cTask).addClass('editMode');
 		current.showSaveButtons();
 		current.makeEditable();
 		current.showLongSummary();
 	};
 
+	this.deleteT = function() {
+
+	};
+
 	this.save = function() {
-		
-		
-		
+
+		$(cTask).removeClass('editMode');
+
 		current.showEditButtons();
+
+		var data = current.getDataForPost();
+		data.action = "save";
+
+		// console.log(data);
+		$.post(current.actionUrl, data, function(data) {
+			$(cTask).replaceWith(data);
+		});
 
 	};
 
 	this.cancel = function() {
 
+		$(cTask).removeClass('editMode');
 		current.makeUnEditable();
 
 		$(".title h3", cTask).html(current.originalTitle);
 		$(".description", cTask).html(current.originalDesc);
 		$("ul.tagContainer", cTask).html(current.originalTags);
-		
+
 		$("ul.tagContainer", cTask).tagit({
 			availableTags : []
 		});
@@ -68,11 +122,11 @@ function task(taskElement) {
 
 	this.showEditButtons = function() {
 		$('.saveButton, .cancelButton', cTask).hide();
-		$('.editButton', cTask).show();
+		$('.editButton, .deleteButton', cTask).show();
 	};
 
 	this.showSaveButtons = function() {
-		$('.editButton', cTask).hide();
+		$('.editButton, .deleteButton', cTask).hide();
 		$('.saveButton, .cancelButton', cTask).show();
 	};
 
@@ -140,9 +194,10 @@ $(document).ready(function() {
 			$(".task .properties").each(function() {
 
 				var tempTask = new task($(this));
+				tempTask.init();
 
 				if (taskOrder[current] !== tempTask.id) {
-					toSwap.push('task-' + tempTask.id);
+					toSwap.push(tempTask.id);
 					taskOrder[current] = tempTask.id;
 				}
 				current++;
