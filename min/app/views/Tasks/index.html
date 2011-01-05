@@ -31,10 +31,6 @@
 </script>
 #{/set}
 
-#{set 'headerActions' }
-    <a href="@{Tasks.trash()}">See Trash</a>
-#{/set}
-
 #{if tag}
   Filtered on ${tag} (<a href="@{Tasks.index()}">Show all</a>)
 #{/if}
