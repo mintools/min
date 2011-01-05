@@ -7,6 +7,7 @@
 # Home page
 GET     /                                       Tasks.index
 
+# Authentication
 GET     /login                                  Secure.login
 GET     /logout                                 Secure.logout
 
