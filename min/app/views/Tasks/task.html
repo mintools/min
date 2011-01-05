@@ -6,13 +6,13 @@
 <div>
     <div class="display">
         <div class="title">
-            <h3>${task.title}</h3>
+            <h3>${task.title.raw()}</h3>
             <!--div class="createdBy">By: ${task.owner}</div-->
         </div>
         <div class="main">
             <div class="description descriptionSummary">
                 <p>
-                    ${task.content.nl2br()} 
+                    ${task.content.raw()} 
                 </p>
             </div>
             <div class="tags">
