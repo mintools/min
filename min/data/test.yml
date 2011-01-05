@@ -6,14 +6,22 @@ Member(Member2):
   username:         SOY
   password:         password
 
+TagGroup(TagGroup1):
+  name:             tagGroup1
+
+TagGroup(TagGroup2):
+  name:             tagGroup2
+
 Tag(Tag1):
     name:           tag1
+    group:          TagGroup1
 
 Tag(Tag2):
     name:           tag2
 
 Tag(Tag3):
     name:           tag3
+    group:          TagGroup1
 
 Tag(Tag4):
     name:           tag4
@@ -48,11 +56,7 @@ Task(Task3):
 
 Attachment(Attachment1):
   createdDate:      2010-12-01
-  filename:         XYZ.pdf
-  name:             XYZ
+  filename:         UUID.pdf
+  name:             UUID
   task:             Task1
-
-TagGroup(TagGroup1):
-  tags:
-                    - Tag1
-                    - Tag3  
+  title:            OriginalFilename.pdf

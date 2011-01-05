@@ -92,10 +92,11 @@ public class Tasks extends Controller {
                     // attach it to task
                     Attachment attachment = new Attachment();
 
-                    attachment.filename = file.getName();
+                    attachment.title = filename;
                     attachment.name = uuid;
                     attachment.createdDate = new Date();
                     attachment.task = task;
+                    attachment.filename = attachment.name + "." + extension;
 
                     // check if the file is an image
                     if ("png".equalsIgnoreCase(extension) ||
@@ -117,7 +118,7 @@ public class Tasks extends Controller {
 
                     // todo: is there a better way?
                     FileInputStream in = new FileInputStream(file);
-                    File outFile = new File(dir, file.getName());
+                    File outFile = new File(dir, uuid + "." + extension);
 
                     FileOutputStream out = new FileOutputStream(outFile);
                     byte[] buf = new byte[1024];
