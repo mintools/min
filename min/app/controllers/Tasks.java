@@ -139,6 +139,11 @@ public class Tasks extends Controller {
         }
     }
 
+    public static void deleteAttachment(Long id) {
+        Attachment attachment = Attachment.findById(id);
+        attachment.delete();
+    }
+
     public static void delete(Long taskId) {
 //        Task.deleteById(taskId);
         Task task = Task.findById(taskId);
