@@ -17,13 +17,20 @@
         <!--img src="@{'/public/files/blue_hills.jpg'}"-->
     </div>
 </div>
+<div class="taskBar">
+    <a href="" class="newButton button ui-state-default ui-corner-all">New Task</a>
+    <div id="newTask" class="hide">
+        <div class="task">
+            #{include 'Tasks/task.html'/}
+        </div>
+    </div>
+</div>
 <div class="tasks">
     #{list tasks, as:'task'}
     <div class="task">
         <div class="move">
             <img src="@{'/public/images/arrow-move.png'}"/>
-        </div>
-		#{include 'Tasks/task.html'/}
+        </div>#{include 'Tasks/task.html'/}
     </div>#{/list}
 </div>
 <div class="filters hide">

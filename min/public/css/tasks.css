@@ -99,6 +99,10 @@ div.preview {
     z-index: 1000;
 }
 
+div.taskBar {
+	padding: 0 10px 10px 10px;
+}
+
 div.task .descriptionSummary {
     height: 60px;
     overflow: hidden;
@@ -125,7 +129,7 @@ div.task .editingButtons {
     position: relative;
 }
 
-div.task .editingButtons .button {
+div.task .editingButtons .button, a.newButton {
     padding: 0.1em 1em;
     font: normal normal normal 80% / normal 'Trebuchet MS', sans-serif;
     position: relative;

@@ -2,6 +2,8 @@ function task(taskElement) {
 
 	var cTask = taskElement;
 	var current = this;
+	var dialog = new dialogObj();
+	var isNew = false;
 
 	this.init = function() {
 		$(".editButton", cTask).click(function() {
@@ -10,7 +12,8 @@ function task(taskElement) {
 		});
 
 		$(".deleteButton", cTask).click(function() {
-			current.deleteT();
+			console.log("delete button presssed");
+			current.deleteButton();
 			return false;
 		});
 
@@ -56,7 +59,7 @@ function task(taskElement) {
 		current.content = $(".description", cTask).html();
 		current.tags = new Array();
 		$(".tagit-choice input", cTask).each(function() {
-			current.tags.push($(this).val())
+			current.tags.push($(this).val());
 		});
 
 	};
@@ -84,8 +87,34 @@ function task(taskElement) {
 		current.makeEditable();
 	};
 
-	this.deleteT = function() {
+	this.deleteButton = function() {
 
+		dialog.makeConfirmation({
+			"Yes" : function() {
+				current.deleteTask();
+				dialog.close();
+			},
+			"No" : function() {
+				dialog.close();
+			}
+		});
+
+		dialog.setTitle("Confirm Delete");
+		dialog.setContents(current.title + "<br/><b>Are you sure you want to delete the Task?</b>");
+		dialog.open();
+	};
+
+	this.deleteTask = function() {
+
+		// console.log("Deleted");
+
+		$.get("/tasks/delete", {
+			taskId : current.id
+		}, function(data) {
+			$(cTask).fadeOut(600, function() {
+				$(this).remove();
+			});
+		});
 	};
 
 	this.save = function() {
@@ -163,69 +192,93 @@ function task(taskElement) {
 
 };
 
+function tasks() {
+
+	var taskOrder = new Array();
+	
+	this.init = function() {
+		/*
+		 * Initialise tasks
+		 */
+		$('.task').each(function() {
+			var aTask = new task(this);
+
+			aTask.init();
+		});
+		
+		$(".task .properties").each(function() {
+			taskOrder.push($("input[name='id']", this).val());
+		});
+		
+		$("a.newTask").click(function(){
+			
+			
+			return false;
+		});
+
+	};
+	
+	this.loadSort = function() {
+		$('.tasks').sortable({
+			items : ".task",
+			placeholder : 'taskPlaceholder',
+			handle : $(".move"),
+			update : function(event, ui) {
+				var current = 0;
+				var toSwap = new Array();
+				$(".task .properties").each(function() {
+
+					var tempTask = new task($(this));
+					tempTask.init();
+
+					if (taskOrder[current] !== tempTask.id) {
+						toSwap.push(tempTask.id);
+						taskOrder[current] = tempTask.id;
+					}
+					current++;
+				});
+
+				$.post('/tasks/sort', {
+					order : toSwap
+				}, function() {
+
+					// todo: perhaps stop a spinning progress indicator or
+					// something
+					$("#notifications").text("saved");
+					$("#notifications").show();
+					$("#notifications").fadeOut(2000);
+				});
+
+				// console.log(newOrder);
+			}
+		});
+	};
+	
+	this.addNew = function() {
+
+	};
+
+};
+
 $(document).ready(function() {
 
-	/*
-	 * Initialise tasks
-	 */
-	$('.task').each(function() {
-		var aTask = new task(this);
+	theTasks = new tasks();
+	theTasks.init();
 
-		aTask.init();
-	});
 
-	/*
-	 * Track the initial order
-	 */
-	var taskOrder = new Array();
-
-	$(".task .properties").each(function() {
-		taskOrder.push($("input[name='id']", this).val());
-	});
 
 	/*
 	 * Make the tasks sortable. Only submit the reordered tasks.
 	 */
-	$('.tasks').sortable({
-		items : ".task",
-		placeholder : 'taskPlaceholder',
-		handle : $(".move"),
-		update : function(event, ui) {
-			var current = 0;
-			var toSwap = new Array();
-			$(".task .properties").each(function() {
+	theTasks.loadSort();
 
-				var tempTask = new task($(this));
-				tempTask.init();
-
-				if (taskOrder[current] !== tempTask.id) {
-					toSwap.push(tempTask.id);
-					taskOrder[current] = tempTask.id;
-				}
-				current++;
-			});
-
-			$.post('/tasks/sort', {
-				order : toSwap
-			}, function() {
-
-				// todo: perhaps stop a spinning progress indicator or something
-				$("#notifications").text("saved");
-				$("#notifications").show();
-				$("#notifications").fadeOut(2000);
-			});
-
-			// console.log(newOrder);
-		}
-	});
-
-	$(".thumbnails img.thumb[rel]").overlay({
-		mask : {
-			color : '#ebecff',
-			loadSpeed : 200,
-			opacity : 0.9
-		},
-		closeOnClick : true
-	});
+	// $(".thumbnails img.thumb[rel]").overlay({
+	// mask : {
+	// color : '#ebecff',
+	// loadSpeed : 200,
+	// opacity : 0.9
+	// },
+	// closeOnClick : true
+	// });
 
 });
