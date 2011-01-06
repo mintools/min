@@ -36,8 +36,7 @@ public class Tasks extends Controller {
             tasks = new ArrayList<Task>();
             Task task = Task.findById(taskId);
             tasks.add(task);
-        }
-        else {
+        } else {
             tasks = Task.find("from Task t where t.isActive = true order by sortOrder desc").fetch();
         }
 
@@ -114,6 +113,17 @@ public class Tasks extends Controller {
         }
     }
 
+    public static void addAttachment(Long taskId, File file) throws Exception {
+        Task task = Task.findById(taskId);
+
+        Attachment attachment = createAttachment(file);
+
+        attachment.task = task;
+        task.attachments.add(attachment);
+
+        renderTemplate("Tasks/attachment.json", attachment);
+    }
+
     public static void deleteAttachment(Long id) {
         Attachment attachment = Attachment.findById(id);
         attachment.delete();
@@ -155,16 +165,15 @@ public class Tasks extends Controller {
 
         if (checkedTags != null) {
             StringBuffer queryString = new StringBuffer();
-            for (int i = 0, l=checkedTags.length; i < l; i++) {
+            for (int i = 0, l = checkedTags.length; i < l; i++) {
                 String checkedTag = checkedTags[i];
                 queryString.append(checkedTag);
-                if (i < l-1) {
-                    queryString.append(" AND "); 
+                if (i < l - 1) {
+                    queryString.append(" AND ");
                 }
             }
             tasks = TaskIndex.searchTasks("tags", queryString.toString(), true);
-        }
-        else {
+        } else {
             tasks = Task.findAll();
         }
 
@@ -217,14 +226,12 @@ public class Tasks extends Controller {
     public static void search(String field, String queryText) throws Exception {
         if (StringUtils.isEmpty(queryText)) {
             renderTemplate("Tasks/searchTerms.html");
-        }
-        else {
+        } else {
             List<Task> tasks = TaskIndex.searchTasks(field, queryText, false);
 
             render(tasks, field, queryText);
         }
     }
-
 
 
     private static Attachment createAttachment(File file) throws IOException {

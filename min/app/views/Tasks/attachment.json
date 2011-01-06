@@ -1,0 +1,11 @@
+{"attachment" : {
+    "id": "${attachment.id}",
+    #{if "image".equals(attachment?.type)}
+        "thumbnail": "/public/files/thumbnail_${attachment.name}.png",
+    #{/if}
+    #{else}
+        "thumbnail": "/public/files/unknownFile.png",
+    #{/else}
+    "filename": "/public/files/${attachment.filename}",
+    "title": "${attachment.title}"
+}}
