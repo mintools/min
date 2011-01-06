@@ -1,9 +1,11 @@
-function task(taskElement) {
+function task(taskElement, taskList) {
 
 	var cTask = taskElement;
 	var current = this;
 	var dialog = new dialogObj();
-	current.isNew = false;
+
+	this.taskList = taskList;
+	this.isNew = false;
 
 	this.init = function(isNew) {
 		current.isNew = isNew;
@@ -38,8 +40,8 @@ function task(taskElement) {
 		$("ul.tagContainer", cTask).tagit({
 			availableTags : []
 		});
-		
-		if(isNew){
+
+		if (isNew) {
 			current.makeEditable();
 			current.showLongSummary();
 		}
@@ -91,7 +93,7 @@ function task(taskElement) {
 	};
 
 	this.edit = function() {
-		
+
 		current.showSaveButtons();
 		current.showLongSummary();
 		current.makeEditable();
@@ -145,12 +147,16 @@ function task(taskElement) {
 
 		$.post(current.actionUrl, data, function(data) {
 
+			var tempIsNew = current.isNew;
 			$('.contents', cTask).html(data);
-			if (current.isNew) {
-				current.showMoveHandle();
-			}
+
 			current.init();
-			
+
+			if (tempIsNew) {
+				current.showMoveHandle();
+				current.taskList.sortRefresh();
+			}
+
 		}, "html");
 	};
 
@@ -209,9 +215,9 @@ function task(taskElement) {
 		$('.description', cTask).attr('contentEditable', true);
 
 	};
-	
-	this.showMoveHandle = function(){
-		$('.move',cTask).removeClass('hide');
+
+	this.showMoveHandle = function() {
+		$('.move', cTask).removeClass('hide');
 	};
 
 };
@@ -226,23 +232,22 @@ function tasks() {
 		 * Initialise tasks
 		 */
 		$('.task').each(function() {
-			var aTask = new task(this);
+			var aTask = new task(this, current);
 
 			aTask.init();
-		});
-
-		$(".task .properties").each(function() {
-			taskOrder.push($("input[name='id']", this).val());
 		});
 
 		$("a.newButton").click(function() {
 			current.addNew();
 			return false;
 		});
+		current.setOrder();
+		current.loadSort();
 
 	};
 
 	this.loadSort = function() {
+
 		$('.tasks').sortable({
 			items : ".task",
 			placeholder : 'taskPlaceholder',
@@ -250,7 +255,8 @@ function tasks() {
 			update : function(event, ui) {
 				var current = 0;
 				var toSwap = new Array();
-				$(".task .properties").each(function() {
+				// console.log(taskOrder);
+				$(".tasks .task .properties").each(function() {
 
 					var tempTask = new task($(this));
 					tempTask.init();
@@ -278,10 +284,26 @@ function tasks() {
 		});
 	};
 
+	this.sortRefresh = function() {
+
+		// console.log("sortable again");
+		$('.tasks').sortable('destroy');
+
+		current.loadSort();
+		current.setOrder();
+	};
+
+	this.setOrder = function() {
+		taskOrder = new Array();
+		$(".tasks .task .properties").each(function() {
+			taskOrder.push($("input[name='id']", this).val());
+		});
+	};
+
 	this.addNew = function() {
 		var clone = $("#newTask .task").clone();
 
-		var newTask = new task(clone);
+		var newTask = new task(clone, current);
 		newTask.init(true);
 
 		$('.tasks').prepend(clone);
@@ -297,15 +319,5 @@ $(document).ready(function() {
 	/*
 	 * Make the tasks sortable. Only submit the reordered tasks.
 	 */
-	theTasks.loadSort();
-
-	// $(".thumbnails img.thumb[rel]").overlay({
-	// mask : {
-	// color : '#ebecff',
-	// loadSpeed : 200,
-	// opacity : 0.9
-	// },
-	// closeOnClick : true
-	// });
 
 });
