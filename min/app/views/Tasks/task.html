@@ -1,19 +1,25 @@
 <div class="contents">
     <div class="hide properties">
-        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/><input name="orderNumber" value="11"/>#{/form}
+        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}
     </div>
     <div class="display">
         <div class="title">
-            <h3>#{if !editing} 
+            <h3>#{if task.title} 
                 ${task.title.raw()} 
-                #{/if}</h3>
+                #{/if}
+                #{else}
+				Title
+                #{/else}</h3>
             <!--div class="createdBy">By: ${task.owner}</div-->
         </div>
         <div class="main">
             <div class="description descriptionSummary">
-                #{if !editing} 
+                #{if task.content} 
                 ${task.content.raw()} 
                 #{/if}
+				#{else}
+				Please enter a description
+                #{/else}
             </div>
             <!--div class="tags">
             <ul class="tagContainer">
@@ -27,10 +33,12 @@
         </div>
     </div>
     <div class="editingButtons">
-        <a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
-        <a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
-        <a href="" class="saveButton button ui-state-default ui-corner-all right hide">Save</a>
-        <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
+    	<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
+		<a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
+		#{if !isNew} 
+		<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
+		<a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
+		#{/if}
         <div class="clear">
         </div>
     </div>

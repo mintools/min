@@ -1,6 +1,7 @@
 #{extends 'main.html' /}
 #{set title:'Tasks' /}
 #{set 'moreScripts' }
+#{set isNew:false/}
 <script type="text/javascript" src="@{'/public/js/tasks.js'}">
 </script>
 #{/set}
@@ -21,7 +22,11 @@
     <a href="" class="newButton button ui-state-default ui-corner-all">New Task</a>
     <div id="newTask" class="hide">
         <div class="task">
+            <div class="move hide">
+                <img src="@{'/public/images/arrow-move.png'}"/>
+            </div>#{set isNew:true/}
             #{include 'Tasks/task.html'/}
+            #{set isNew:false/}
         </div>
     </div>
 </div>

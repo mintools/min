@@ -3,17 +3,22 @@ function task(taskElement) {
 	var cTask = taskElement;
 	var current = this;
 	var dialog = new dialogObj();
-	var isNew = false;
+	current.isNew = false;
 
-	this.init = function() {
+	this.init = function(isNew) {
+		current.isNew = isNew;
+
 		$(".editButton", cTask).click(function() {
 			current.edit();
 			return false;
 		});
 
 		$(".deleteButton", cTask).click(function() {
-			console.log("delete button presssed");
-			current.deleteButton();
+			if (isNew) {
+				current.remove();
+			} else {
+				current.deleteButton();
+			}
 			return false;
 		});
 
@@ -33,6 +38,11 @@ function task(taskElement) {
 		$("ul.tagContainer", cTask).tagit({
 			availableTags : []
 		});
+		
+		if(isNew){
+			current.makeEditable();
+			current.showLongSummary();
+		}
 
 		/*
 		 * Variables
@@ -81,7 +91,7 @@ function task(taskElement) {
 	};
 
 	this.edit = function() {
-		$(cTask).addClass('editMode');
+		
 		current.showSaveButtons();
 		current.showLongSummary();
 		current.makeEditable();
@@ -111,9 +121,13 @@ function task(taskElement) {
 		$.get("/tasks/delete", {
 			taskId : current.id
 		}, function(data) {
-			$(cTask).fadeOut(600, function() {
-				$(this).remove();
-			});
+			current.remove();
+		});
+	};
+
+	this.remove = function() {
+		$(cTask).slideUp(600, function() {
+			$(this).remove();
 		});
 	};
 
@@ -125,12 +139,18 @@ function task(taskElement) {
 		current.showEditButtons();
 
 		var data = current.getDataForPost();
-		data.action = "save";
+		if (!current.isNew) {
+			data.action = "save";
+		}
 
 		$.post(current.actionUrl, data, function(data) {
 
 			$('.contents', cTask).html(data);
+			if (current.isNew) {
+				current.showMoveHandle();
+			}
 			current.init();
+			
 		}, "html");
 	};
 
@@ -179,7 +199,7 @@ function task(taskElement) {
 	};
 
 	this.makeEditable = function() {
-
+		$(cTask).addClass('editMode');
 		$('.title h3', cTask).attr('contentEditable', true).keypress(function(event) {
 			return event.which != 13;
 		});
@@ -189,13 +209,18 @@ function task(taskElement) {
 		$('.description', cTask).attr('contentEditable', true);
 
 	};
+	
+	this.showMoveHandle = function(){
+		$('.move',cTask).removeClass('hide');
+	};
 
 };
 
 function tasks() {
 
 	var taskOrder = new Array();
-	
+	var current = this;
+
 	this.init = function() {
 		/*
 		 * Initialise tasks
@@ -205,19 +230,18 @@ function tasks() {
 
 			aTask.init();
 		});
-		
+
 		$(".task .properties").each(function() {
 			taskOrder.push($("input[name='id']", this).val());
 		});
-		
-		$("a.newTask").click(function(){
-			
-			
+
+		$("a.newButton").click(function() {
+			current.addNew();
 			return false;
 		});
 
 	};
-	
+
 	this.loadSort = function() {
 		$('.tasks').sortable({
 			items : ".task",
@@ -253,9 +277,14 @@ function tasks() {
 			}
 		});
 	};
-	
-	this.addNew = function() {
 
+	this.addNew = function() {
+		var clone = $("#newTask .task").clone();
+
+		var newTask = new task(clone);
+		newTask.init(true);
+
+		$('.tasks').prepend(clone);
 	};
 
 };
@@ -264,8 +293,6 @@ $(document).ready(function() {
 
 	theTasks = new tasks();
 	theTasks.init();
-
-
 
 	/*
 	 * Make the tasks sortable. Only submit the reordered tasks.
