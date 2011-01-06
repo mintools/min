@@ -5,14 +5,7 @@
 <script type="text/javascript" src="@{'/public/js/tasks.js'}">
 </script>
 #{/set}
-#{if models.Member.connected()}
-<div class="header right">
-    Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)
-</div>
-<div class="header left">
-    <h1>Min Task Manager</h1>
-</div>
-#{/if}
+
 <div class="previews">
     <div id="image_blue_hills" class="preview" style="display:none">
         <!--img src="@{'/public/files/blue_hills.jpg'}"-->

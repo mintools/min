@@ -8,8 +8,7 @@ body {
 }
 
 h1 {
-    margin-left: 10px;
-    margin-bottom: 5px;
+	margin: 0 0 5px 5px;
 }
 
 h3 {
@@ -22,6 +21,8 @@ div.tasks {
     margin: 0 1%;
 } .right {
     float: right;
+}.left {
+    float: left;
 } .clear {
     clear: both;
 }.hide {
@@ -73,7 +74,7 @@ div.task .thumbnails img {
     margin-right: 3px;
 }
 
-div.task.editMode, div.task.editMode input{
+div.task.editMode, div.task.editMode input {
     background-color: #FBEFEF;
 }
 
@@ -100,7 +101,7 @@ div.preview {
 }
 
 div.taskBar {
-	padding: 0 10px 10px 10px;
+    padding: 0 10px 10px 10px;
 }
 
 div.task .descriptionSummary {

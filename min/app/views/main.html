@@ -24,8 +24,8 @@
         #{get 'moreScripts' /}
     </head>
     <body class="main">
-        <div class="header">
-            <div class="logo"><a href="@{Tasks.index()}">Min</a></div>
+        <div class="header right">
+            
             <div class="loggedInAs">
             #{if models.Member.connected()}
                 Logged in as ${models.Member.connected().username}
@@ -43,6 +43,12 @@
                 #{/if}
             </div>
         </div>
+		<div class="header left">
+			<h1 class="logo"><a href="@{Tasks.index()}">Min Task Manager</a></h1>
+		</div>
+		
+		<div class="clear"></div>
+
 
         #{doLayout /}
         <div id="dialog">
