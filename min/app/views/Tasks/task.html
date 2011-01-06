@@ -4,16 +4,20 @@
     </div>
     <div class="display">
         <div class="title">
-            <h3>${task.title.raw()}</h3>
+            <h3>#{if !editing} 
+                ${task.title.raw()} 
+                #{/if}</h3>
             <!--div class="createdBy">By: ${task.owner}</div-->
         </div>
         <div class="main">
             <div class="description descriptionSummary">
+                #{if !editing} 
                 ${task.content.raw()} 
+                #{/if}
             </div>
             <!--div class="tags">
-                <ul class="tagContainer">
-                </ul>
+            <ul class="tagContainer">
+            </ul>
             </div-->
         </div>
         <div class="thumbnails">
