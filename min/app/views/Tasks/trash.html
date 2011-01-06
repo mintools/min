@@ -1,0 +1,59 @@
+#{extends 'main.html' /}
+#{set title:'Trash' /}
+
+#{set 'moreScripts' }
+#{/set}
+
+<div>
+    <a href="@{Tasks.index()}">Back to Task List</a>        
+</div>
+
+#{if !tasks}
+    <div style="margin-top: 20px; font-size: 18pt;">
+    Trash is empty
+    </div>    
+#{/if}
+
+<div id="tasks" class="left">
+  <ul id="tasksList" class="elements">
+    #{list tasks, as:'task'}
+
+      <li id="task-${task.id}" class="element task view">
+          <div class="main">
+              <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
+              <div class="title">(id:${task.id})${task.title}</div>
+
+              <div class="owner">
+                  Raised by: <a href="@{Members.show(task.owner.id)}">${task.owner}</a>
+              </div>
+
+              <div class="content">${task.content.nl2br()}</div>
+          </div>
+
+            <div class="actions">
+                <a href="@{Tasks.undelete(task.id)}" class="delete">Undelete</a>
+            </div>
+      </li>
+
+      <script type="text/javascript">
+        $(function() {
+          var uid = '#task-${task.id}';
+
+          $(uid + ' .delete').click(function(e) {
+            $.ajax({
+              url:$(this).attr('href'),
+              type:'post',
+              success:function(data, status, xhr) {
+                $(uid).fadeOut(600, function() {
+                  $(this).remove();
+                });
+              }
+            });
+            return false;
+          });
+        });
+      </script>
+
+    #{/list}
+  </ul>
+</div>

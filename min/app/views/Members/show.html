@@ -1,5 +1,9 @@
 #{extends 'main.html' /}
 
+<div>
+    <a href="@{Tasks.index()}">Back to Task List</a>
+</div>
+        
 <h2>Tasks raised by ${member.username}</h2>
     #{list member.raisedTasks, as: "task"}
         #{include 'Tasks/_show.html'/}

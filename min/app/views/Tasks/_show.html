@@ -6,7 +6,7 @@
     <div class="main">
         <span class="dragHandle">[+]</span>
         <div class="createdDate">${task.createdDate?.format('dd MMM yyyy, h:mm a')}</div>
-        <div class="title">${task.title}</div>
+        <div class="title">(id:${task.id})${task.title}</div>
 
         <div class="owner">
             Raised by: <a href="@{Members.show(task.owner.id)}">${task.owner}</a>
@@ -38,6 +38,7 @@
         <div class="heading">Attachments</div>
         #{list task.attachments, as:'attachment'}
           #{include 'Attachments/_show.html'/}
+          <a href="@{Tasks.deleteAttachment(attachment.id)}" class="deleteAttachment">[delete]</a>
         #{/list}
     </div>
     #{/if}
@@ -58,15 +59,32 @@
             return false;
           });
           $(uid + ' .delete').click(function(e) {
-            $.ajax({
-              url:$(this).attr('href'),
-              type:'delete',
-              success:function(data, status, xhr) {
-                $(uid).fadeOut(600, function() {
-                  $(this).remove();
+            if (confirm("Are you sure you want to delete the task?")) {                
+                $.ajax({
+                  url:$(this).attr('href'),
+                  type:'delete',
+                  success:function(data, status, xhr) {
+                    $(uid).fadeOut(600, function() {
+                      $(this).remove();
+                    });
+                  }
                 });
-              }
-            });
+            }
+            return false;
+          });
+
+          $(uid + ' .deleteAttachment').click(function(e) {
+            if (confirm("Are you sure you want to delete the attachment?")) {
+                $.ajax({
+                  url:$(this).attr('href'),
+                  type:'delete',
+                  success:function(data, status, xhr) {
+                      $.get('@{Tasks.show(task.id)}', function(data, status, xhr) {
+                        $('#task-' + '${task.id}').replaceWith(data);
+                      });
+                  }
+                });
+            }
             return false;
           });
         });
@@ -84,7 +102,7 @@
         <input type="hidden" name="task.id" value="${task.id}"/>
 
         <div class="title">
-            <input type="text" name="task.title" value="${task.title}"/>
+            <input type="text" name="task.title" size="100" value="${task.title}"/>
             <span class="error">${errors.forKey('task.title')}</span>
         </div>
 
@@ -152,7 +170,7 @@
               // cancel action
               $(uid + ' .cancel').click(function(e) {
                 #{if task.id}
-                  $.get('@{show(task.id)}', function(data, status, xhr) {
+                  $.get('@{Tasks.show(task.id)}', function(data, status, xhr) {
                     $('#task-' + '${task.id}').replaceWith(data);
                   });
                 #{/if}

@@ -1,5 +1,7 @@
-package controllers;
+package controllers.admin;
 
+import controllers.CRUD;
+import controllers.Secure;
 import models.Member;
 import play.mvc.With;
 
@@ -9,5 +11,5 @@ import play.mvc.With;
  */
 @With(Secure.class)
 @CRUD.For(Member.class)
-public class AdminMembers extends CRUD {
+public class Members extends CRUD {
 }

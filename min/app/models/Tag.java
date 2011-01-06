@@ -10,6 +10,9 @@ public class Tag extends Model implements Comparable<Tag> {
 
     public String name;
 
+    @ManyToOne(optional = true)
+    public TagGroup group;
+
     private Tag(String name) {
         this.name = name;
     }

@@ -27,8 +27,7 @@ import java.util.*;
  */
 @With(Secure.class)
 public class Tasks extends Controller {
-    private static final String HOME_DIR = Play.configuration.getProperty("fileStorage.location"); 
-    private static final String FILES_DIR = HOME_DIR + "/public/files";
+    private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
     public static void index() {
         List<Task> tasks = Task.find("from Task t where t.isActive = true order by sortOrder").fetch();
@@ -72,7 +71,9 @@ public class Tasks extends Controller {
                 task.createdDate = new Date();
             }
 
-            task.owner = loggedInUser;
+            if (task.owner == null) {
+                task.owner = loggedInUser;
+            }
 
             // add attachments
             if (attachments != null) {
@@ -91,10 +92,11 @@ public class Tasks extends Controller {
                     // attach it to task
                     Attachment attachment = new Attachment();
 
-                    attachment.filename = file.getName();
+                    attachment.title = filename;
                     attachment.name = uuid;
                     attachment.createdDate = new Date();
                     attachment.task = task;
+                    attachment.filename = attachment.name + "." + extension;
 
                     // check if the file is an image
                     if ("png".equalsIgnoreCase(extension) ||
@@ -116,7 +118,7 @@ public class Tasks extends Controller {
 
                     // todo: is there a better way?
                     FileInputStream in = new FileInputStream(file);
-                    File outFile = new File(dir, file.getName());
+                    File outFile = new File(dir, uuid + "." + extension);
 
                     FileOutputStream out = new FileOutputStream(outFile);
                     byte[] buf = new byte[1024];
@@ -137,11 +139,23 @@ public class Tasks extends Controller {
         }
     }
 
+    public static void deleteAttachment(Long id) {
+        Attachment attachment = Attachment.findById(id);
+        attachment.delete();
+    }
+
     public static void delete(Long taskId) {
 //        Task.deleteById(taskId);
         Task task = Task.findById(taskId);
         task.deactivate();
     }
+
+    public static void undelete(Long taskId) {
+//        Task.deleteById(taskId);
+        Task task = Task.findById(taskId);
+        task.activate();
+    }    
+
 
     public static void listTagged(String tag) {
         List<Task> tasks = Task.findTaggedWith(tag);
@@ -158,7 +172,7 @@ public class Tasks extends Controller {
         // a placeholder for a new task
         Task task = new Task();
 
-        renderTemplate("Tasks/index.html", tasks, task);
+        render(tasks);
     }
 
     public static void filter(String[] checkedTags) {

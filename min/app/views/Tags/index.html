@@ -1,0 +1,51 @@
+#{extends 'main.html' /}
+
+<script type="text/javascript">
+    $(function() {
+       $(".groupSelector").change(function() {
+           var tagId = $(this).attr("name");
+           var groupId = $(this).attr("value");
+           
+          $.ajax({
+              type: 'POST',
+              url: '@{Tags.assignGroup()}',
+              data: {'tagId':tagId,'groupId':groupId},
+              success: function(data) {
+                  location.reload();
+              }
+            });            
+       });
+    });
+</script>
+
+<h1>Tag Groups</h1>        
+
+#{list tagGroups, as: "tagGroup"}
+   <h3>${tagGroup.name} (${tagGroup.tags.size()})</h3>
+
+   <ul class="tags">
+        #{list tagGroup.tags, as: "tag"}
+            <li class="tag">${tag.name}</li>
+        #{/list}
+   </ul>
+#{/list}
+
+<h3>Ungrouped (${orphanTags.size()})</h3>
+<ul class="tags">
+    #{list orphanTags, as: "tag"}
+       <li class="tag">${tag.name}</li>
+    #{/list}
+</ul>
+
+<hr/>        
+
+<h1>All Tags</h1>
+<ul class="tags">
+    #{list tags, as: "tag"}
+        <li class="tag">${tag.name} -
+            #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}
+                #{option} Unassigned #{/option}
+            #{/select}
+        </li>
+    #{/list}
+</ul>

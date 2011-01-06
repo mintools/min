@@ -14,9 +14,9 @@ import java.util.Date;
 @Entity
 public class Attachment extends Model {
     public Date createdDate;
-    public String name;
-    public String filename;
-    public String title;
+    public String name; // UUID
+    public String filename; // stored filename, ie. UUID.doc
+    public String title; // original filename
     public String type;
 
     @ManyToOne(optional = false)
