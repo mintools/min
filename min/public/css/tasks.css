@@ -161,3 +161,46 @@ div.filters {
     margin-right: 1%;
     width: 29%;
 }
+
+#notifications {
+    float: none;
+    width: 100%;
+    background-color: red;
+    color: white;
+}
+
+.taskSummary .title a {
+    font-size: 14pt;
+    color: #0066ff;
+    margin-bottom: 10px;
+}
+
+.taskSummary .content {
+    margin: 5px 0px;
+    font-size: 10pt;
+    color: #333333;
+}
+
+.searchTerm {
+    padding-right: 20px;
+    color: red;
+}
+
+.tagGroup .tags {
+    margin: 5px 10px;
+}
+
+.tagGroup .name {
+    color: #3399ff;
+    margin: 0;
+    font-size: 12pt;
+}
+
+.tags ul {
+    margin: 0;
+    padding: 0 0 0 10px;
+}
+
+.tags li {
+    list-style: none;
+}

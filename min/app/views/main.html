@@ -32,11 +32,13 @@
             #{/if}
             </div>
             <div class="actions">
-                <a href="@{Tasks.index()}">All Tasks</a>
+                <a href="@{Tasks.search()}">Search Tasks</a>
+                <a href="@{Tasks.index()}">See All Tasks</a>
                 #{if models.Member.connected()}
-                    <a href="@{Members.show(models.Member.connected().id)}">My Tasks</a>
+                    <a href="@{Members.show(models.Member.connected().id)}">See My Tasks</a>
                 #{/if}
-                <a href="@{Tasks.trash()}">Trashed Tasks</a>
+                <a href="@{Tasks.trash()}">See Trashed Tasks</a>
+                <a href="@{Tags.index()}">Maintain Tags</a>
                 #{get 'headerActions' /}
                 #{if models.Member.connected()}
                     <a href="/logout">Log out</a>

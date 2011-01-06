@@ -8,7 +8,8 @@ body.main {
     margin: 0 auto;
 }
 
-h1, h2 {
+h1, h2, h3 {
+    margin-top: 5px;
     color: #3c5b88;
 }
 
@@ -150,4 +151,40 @@ div.filters {
 .header .actions a {
     margin-left: 20px;
     color: #cccccc;
+}
+
+.taskSummary .title a {
+    font-size: 14pt;
+    color: #0066ff;
+    margin-bottom: 10px;
+}
+
+.taskSummary .content {
+    margin: 5px 0px;
+    font-size: 10pt;
+    color: #333333;
+}
+
+.searchTerm {
+    padding-right: 20px;
+    color: red;
+}
+
+.tagGroup .tags {
+    margin: 5px 10px;
+}
+
+.tagGroup .name {
+    color: #3399ff;
+    margin: 0;
+    font-size: 12pt;
+}
+
+.tags ul {    
+    margin: 0;
+    padding: 0 0 0 10px;
+}
+
+.tags li {
+    list-style: none;
 }

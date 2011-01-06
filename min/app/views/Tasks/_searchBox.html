@@ -1,0 +1,13 @@
+#{form id:'searchForm', action:@Tasks.search(), method:'post'}
+    <hr>
+    <div class="field">
+        Query:
+        #{select 'field', value: field}
+            #{option value="title"} Title #{/option}
+            #{option value="content"} Content #{/option}
+            #{option value="tags"} Tags #{/option}
+        #{/select}
+        <input type="text" name="queryText" value="${queryText}" size="70"/><input type="submit" value="Search">
+    </div>
+    <hr>
+#{/form}

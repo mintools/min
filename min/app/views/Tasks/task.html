@@ -1,6 +1,6 @@
 <div class="contents">
     <div class="hide properties">
-        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}
+        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@Tasks.save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}
     </div>
     <div class="display">
         <div class="title">

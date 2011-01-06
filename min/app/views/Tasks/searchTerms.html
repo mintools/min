@@ -1,0 +1,19 @@
+#{extends 'main.html' /}
+#{set title:'Search' /}
+
+<h1>Search</h1>
+
+#{include 'Tasks/_searchBox.html'/}
+
+<p class="info">
+    Query Syntax:<br/>
+    <table>
+        <tr><td class="searchTerm">abc</td><td>finds tasks that include "abc" in the specified field</td></tr>
+        <tr><td class="searchTerm">"xyz abc"</td><td>finds tasks that include "xyz abc" in the specified field</td></tr>
+        <tr><td class="searchTerm">xyz abc</td><td>finds tasks that include "xyz" OR "abc" in the specified field</td></tr>
+        <tr><td class="searchTerm">xyz AND abc</td><td>finds tasks that include "xyz" AND "abc" in the specified field</td></tr>
+        <tr><td class="searchTerm">te?t</td><td>? matches any one character</td></tr>
+        <tr><td class="searchTerm">te*t</td><td>* matches any number of character</td></tr>
+        <tr><td class="searchTerm"></td><td>Note: You cannot use a * or ? symbol as the first character of a search.</td></tr>
+    </table>
+</p>

@@ -31,12 +31,32 @@
         </div>#{include 'Tasks/task.html'/}
     </div>#{/list}
 </div>
-<div class="filters hide">
-    <h3>Filters</h3>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla rhoncus auctor dolor quis volutpat. Morbi eget venenatis arcu. Aenean fringilla, diam sed interdum suscipit, ante ligula luctus enim, nec sagittis dolor massa nec augue. Phasellus sed orci ipsum, hendrerit gravida dolor. Phasellus sed velit eu leo scelerisque ultrices. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam varius semper ante in eleifend. Proin et eros id metus tristique mollis. Etiam felis velit, fringilla id blandit nec, vestibulum sed dolor. Duis egestas turpis et justo fermentum eu ornare urna consectetur. Donec eu tellus eget magna viverra malesuada. In vel ante et lorem hendrerit ultrices. Fusce felis lorem, sollicitudin ut convallis eget, vestibulum vel lorem. Nunc tellus felis, cursus eget viverra eu, interdum ac velit. Nullam viverra euismod suscipit. Integer eu massa lobortis magna pellentesque porta eget vel neque. Suspendisse potenti. 
-        Vestibulum eget urna id magna congue dictum vel vitae arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pulvinar risus id diam pellentesque sit amet commodo elit egestas. Aliquam id libero neque, id malesuada enim. Cras nec massa a ligula fringilla cursus. Curabitur dapibus urna pharetra quam dictum et pellentesque tellus ultricies. Vestibulum fringilla vestibulum turpis, volutpat auctor lorem cursus sit amet. Nulla sit amet leo eu libero molestie ornare at at est. Nulla placerat libero vitae neque mattis pellentesque. Mauris eros justo, congue nec condimentum id, luctus eget lectus. Nam venenatis dui sed lorem fermentum varius. Vivamus risus felis, rhoncus id rhoncus vitae, posuere facilisis nibh. Quisque augue sapien, feugiat vitae pretium a, rutrum non mauris. In ac quam vel diam imperdiet dapibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin in mattis tortor. Nulla aliquet lobortis fringilla. Nam sollicitudin libero a ligula sodales dapibus. 
-    </p>
+<div class="filters">
+    <h3>Filter Tasks</h3>
+    #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
+        <ul class="tags">
+        #{list models.Tag.ungrouped(), as: "tag"}
+            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+        #{/list}
+        </ul>
+
+        #{list models.TagGroup.findAll(), as: "tagGroup"}
+           #{if !tagGroup.tags.isEmpty()}
+               <div class="tagGroup">
+                   <div class="name">${tagGroup.name}</div>
+
+                   <ul class="tags">
+                        #{list tagGroup.tags, as: "tag"}
+                            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+                        #{/list}
+                    </ul>
+                </div>
+            #{/if}
+        #{/list}
+
+        <hr/>
+        <input type="submit" name="action" value="Filter"/>
+    #{/form}
 </div>
 <div id="mask">
 </div>

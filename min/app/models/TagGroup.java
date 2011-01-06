@@ -1,5 +1,6 @@
 package models;
 
+import play.data.validation.Required;
 import play.db.jpa.Model;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Entity
 public class TagGroup extends Model {
+    @Required
     public String name;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)

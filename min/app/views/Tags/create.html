@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+
+<h1>Create new Tag</h1>        
+#{form action:@Tags.save(), method:'post'}
+    Tag Name: <input name="tag.name" value="${tag.name}"/>
+    <span class="error">${errors.forKey('tag.name')}</span>
+
+    <div>
+        <a href="@{Tags.index()}">cancel</a>
+        <input type="submit" value="Create">
+    </div>
+#{/form}

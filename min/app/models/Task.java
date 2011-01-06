@@ -22,7 +22,7 @@ public class Task extends Model {
     public Member assignedTo;
 
     public Boolean isActive;
-    public Integer sortOrder;
+    public Long sortOrder;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     public Set<Tag> tags = new HashSet<Tag>();
@@ -36,7 +36,6 @@ public class Task extends Model {
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     public List<Attachment> attachments = new ArrayList<Attachment>();
-
 
     public Task tagItWith(String name) {
         tags.add(Tag.findOrCreateByName(name));

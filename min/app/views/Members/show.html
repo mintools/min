@@ -5,11 +5,21 @@
 </div>
         
 <h2>Tasks raised by ${member.username}</h2>
+
+<div class="tasks">
     #{list member.raisedTasks, as: "task"}
-        #{include 'Tasks/_show.html'/}
+    <div class="task">
+        #{include 'Tasks/task.html'/}
+    </div>
     #{/list}
+</div>
 
 <h2>Tasks assigned to ${member.username}</h2>
+
+<div class="tasks">
     #{list member.assignedTasks, as: "task"}
-        #{include 'Tasks/_show.html'/}
+    <div class="task">
+        #{include 'Tasks/task.html'/}
+    </div>
     #{/list}
+</div>        

@@ -3,19 +3,17 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
+import play.data.validation.Required;
 import play.db.jpa.*;
 
 @Entity
 public class Tag extends Model implements Comparable<Tag> {
 
+    @Required
     public String name;
 
     @ManyToOne(optional = true)
     public TagGroup group;
-
-    private Tag(String name) {
-        this.name = name;
-    }
 
     public String toString() {
         return name;
@@ -28,9 +26,14 @@ public class Tag extends Model implements Comparable<Tag> {
     public static Tag findOrCreateByName(String name) {
         Tag tag = Tag.find("byName", name).first();
         if (tag == null) {
-            tag = new Tag(name);
+            tag = new Tag();
+            tag.name = name;
         }
         return tag;
+    }
+
+    public static List<Tag> ungrouped() {
+        return Tag.find("select t from models.Tag as t where t.group = null").fetch();
     }
 
     public static List<Map> getCloud() {
