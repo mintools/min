@@ -1,14 +1,17 @@
 Member(Member1):
   username:         Andrew
   password:         password
+  email:            soyoung@soyabean.com.au
 
 Member(Member2):
   username:         SOY
   password:         password
+  email:            soyoung@soyabean.com.au
   
 Member(Member3):
   username:         Simon
   password:         password
+  email:            soyoung@soyabean.com.au
 
 TagGroup(TagGroup1):
   name:             tagGroup1
