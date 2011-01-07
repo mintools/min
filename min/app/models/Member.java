@@ -1,6 +1,7 @@
 package models;
 
 import org.apache.commons.lang.StringUtils;
+import play.data.validation.Email;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 import play.mvc.Scope;
@@ -21,6 +22,9 @@ public class Member extends Model {
     public String username;
     @Required
     public String password;
+
+    @Email
+    public String email;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     public List<Task> raisedTasks = new ArrayList<Task>();
