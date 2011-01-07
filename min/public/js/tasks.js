@@ -231,14 +231,16 @@ function task(taskElement, taskList) {
 		}).change(function() {
 			console.log('upload file');
 			console.log($(".uploader form", cTask));
-			
+
 			var form = $(".uploader form", cTask).ajaxForm({
+				dataType : "json",
 				success : function(data) {
-					console.log('uploaded file');
+					console.log('uploaded file', data);
 				}
+
 			});
-			
-			 form.ajaxSubmit();
+
+			form.ajaxSubmit();
 		});
 	};
 
