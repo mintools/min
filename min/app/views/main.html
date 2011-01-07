@@ -3,11 +3,11 @@
     <head>
         <title>#{get 'title' /}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <!--link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}"-->
-        #{get 'moreStyles' /}
+        <!--link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}"-->#{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/smoothness/jquery-ui-1.8.7.custom.css'}" media="screen"/>
         <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/jquery.ui.autocomplete.custom.css'}" />
+        <link rel="stylesheet" type="text/css" href="@{'/public/css/fileuploader.css'}" media='screen'/>
         <link rel="stylesheet" type="text/css" href="@{'/public/css/tasks.css'}" media='screen'/>
         <script type="text/javascript" src="@{'/public/js/jquery/jquery-1.4.4.min.js'}">
         </script>
@@ -19,39 +19,35 @@
         </script>
         <script type="text/javascript" src="@{'/public/js/tag-it.js'}">
         </script>
-		<script type="text/javascript" src="@{'/public/js/dialog.js'}">
+        <script type="text/javascript" src="@{'/public/js/dialog.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/fileuploader.js'}">
         </script>
         #{get 'moreScripts' /}
     </head>
     <body class="main">
         <div class="header right">
-            
             <div class="loggedInAs">
-            #{if models.Member.connected()}
+                #{if models.Member.connected()}
                 Logged in as ${models.Member.connected().username}
-            #{/if}
+                #{/if}
             </div>
             <div class="actions">
                 <a href="@{Tasks.search()}">Search Tasks</a>
                 <a href="@{Tasks.index()}">See All Tasks</a>
-                #{if models.Member.connected()}
-                    <a href="@{Members.show(models.Member.connected().id)}">See My Tasks</a>
-                #{/if}
-                <a href="@{Tasks.trash()}">See Trashed Tasks</a>
+                #{if models.Member.connected()}<a href="@{Members.show(models.Member.connected().id)}">See My Tasks</a>
+                #{/if}<a href="@{Tasks.trash()}">See Trashed Tasks</a>
                 <a href="@{Tags.index()}">Maintain Tags</a>
                 #{get 'headerActions' /}
-                #{if models.Member.connected()}
-                    <a href="/logout">Log out</a>
+                #{if models.Member.connected()}<a href="/logout">Log out</a>
                 #{/if}
             </div>
         </div>
-		<div class="header left">
-			<h1 class="logo"><a href="@{Tasks.index()}">Min Task Manager</a></h1>
-		</div>
-		
-		<div class="clear"></div>
-
-
+        <div class="header left">
+            <h1 class="logo"><a href="@{Tasks.index()}">Min Task Manager</a></h1>
+        </div>
+        <div class="clear">
+        </div>
         #{doLayout /}
         <div id="dialog">
         </div>

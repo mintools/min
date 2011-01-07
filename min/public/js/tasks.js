@@ -9,6 +9,13 @@ function task(taskElement, taskList) {
 
 	this.init = function(isNew) {
 		current.isNew = isNew;
+		
+		/*
+		 * Variables
+		 */
+
+		current.refreshVars();
+
 
 		$(".editButton", cTask).click(function() {
 			current.edit();
@@ -41,16 +48,12 @@ function task(taskElement, taskList) {
 			availableTags : []
 		});
 
+		
 		if (isNew) {
 			current.makeEditable();
 			current.showLongSummary();
 		}
 
-		/*
-		 * Variables
-		 */
-
-		current.refreshVars();
 
 		/*
 		 * Save their original state
@@ -58,6 +61,8 @@ function task(taskElement, taskList) {
 		current.originalTitle = $(".title h3", cTask).html();
 		current.originalDesc = $(".description", cTask).html();
 		current.originalTags = $("ul.tagContainer", cTask).html();
+
+		current.createUploader();
 
 	};
 
@@ -218,6 +223,20 @@ function task(taskElement, taskList) {
 
 	this.showMoveHandle = function() {
 		$('.move', cTask).removeClass('hide');
+	};
+
+	this.createUploader = function() {
+		console.log($('.uploader', cTask).first()[0]);
+
+		var params = {
+			id : current.id
+		};
+
+		var uploader = new qq.FileUploader({
+			element : $('.uploader', cTask).first()[0],
+			action : '/tasks/addFile',
+			params : params
+		});
 	};
 
 };
