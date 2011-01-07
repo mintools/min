@@ -156,6 +156,11 @@ div.task .tags {
     margin-top: 10px;
 }
 
+div.task .uploader .file{
+    display: none;
+}
+
+
 div.filters {
     float: right;
     margin-right: 1%;

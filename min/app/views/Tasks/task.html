@@ -28,9 +28,11 @@
         </div>
         <div class="thumbnails">
             <!--img src="@{'/public/files/blue_hills-thumb.jpg'}" title="" rel="#image_blue_hills" class="thumb"/-->
-			<div class="uploader">
-				
-				
+			<div class="uploader right">
+				<form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+					<input type="hidden" name="taskId" value="${task.id}"/>
+					<input type="file" name="file"/>
+				</form>
 			</div>
         </div>
         <div class="clear">

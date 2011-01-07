@@ -9,13 +9,12 @@ function task(taskElement, taskList) {
 
 	this.init = function(isNew) {
 		current.isNew = isNew;
-		
+
 		/*
 		 * Variables
 		 */
 
 		current.refreshVars();
-
 
 		$(".editButton", cTask).click(function() {
 			current.edit();
@@ -48,12 +47,10 @@ function task(taskElement, taskList) {
 			availableTags : []
 		});
 
-		
 		if (isNew) {
 			current.makeEditable();
 			current.showLongSummary();
 		}
-
 
 		/*
 		 * Save their original state
@@ -226,16 +223,22 @@ function task(taskElement, taskList) {
 	};
 
 	this.createUploader = function() {
-		console.log($('.uploader', cTask).first()[0]);
-
-		var params = {
-			id : current.id
-		};
-
-		var uploader = new qq.FileUploader({
-			element : $('.uploader', cTask).first()[0],
-			action : '/tasks/addFile',
-			params : params
+		$("input[type=file]", cTask).filestyle({
+			image : "public/images/newAttachment.png",
+			imageheight : 32,
+			imagewidth : 32,
+			width : 40
+		}).change(function() {
+			console.log('upload file');
+			console.log($(".uploader form", cTask));
+			
+			var form = $(".uploader form", cTask).ajaxForm({
+				success : function(data) {
+					console.log('uploaded file');
+				}
+			});
+			
+			 form.ajaxSubmit();
 		});
 	};
 
