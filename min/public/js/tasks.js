@@ -232,15 +232,12 @@ function task(taskElement, taskList) {
 			console.log('upload file');
 			console.log($(".uploader form", cTask));
 
-			var form = $(".uploader form", cTask).ajaxForm({
-				dataType : "json",
+			var form = $(".uploader form", cTask).ajaxSubmit({
+				dataType : "xml",
 				success : function(data) {
 					console.log('uploaded file', data);
 				}
-
 			});
-
-			form.ajaxSubmit();
 		});
 	};
 

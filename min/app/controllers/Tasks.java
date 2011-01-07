@@ -120,8 +120,9 @@ public class Tasks extends Controller {
 
         attachment.task = task;
         task.attachments.add(attachment);
+        attachment.save();
 
-        renderTemplate("Tasks/attachment.json", attachment);
+        renderTemplate("Tasks/addAttachment.xml", attachment);
     }
 
     public static void deleteAttachment(Long id) {
