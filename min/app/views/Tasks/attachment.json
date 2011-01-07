@@ -1,11 +1,11 @@
-{"attachment" : {
+{
     "id": "${attachment.id}",
     #{if "image".equals(attachment?.type)}
-        "thumbnail": "/public/files/thumbnail_${attachment.name}.png",
+        "thumbnail": "/public/files/thumbnail_${attachment.name.escapeJSON().raw()}.png",
     #{/if}
     #{else}
         "thumbnail": "/public/files/unknownFile.png",
     #{/else}
-    "filename": "/public/files/${attachment.filename}",
-    "title": "${attachment.title}"
-}}
+    "filename": "/public/files/${attachment.filename.escapeJSON().raw()}",
+    "title": "${attachment.title.escapeJSON().raw()}"
+}
