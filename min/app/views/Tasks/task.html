@@ -21,6 +21,23 @@
 				Please enter a description
                 #{/else}
             </div>
+            <div class="comments">
+                #{list task.comments, as: "comment"}
+                    #{include "Tasks/comment.html"/}
+                #{/list}
+            </div>
+            <div class="interestedParties">
+
+                #{if models.Member.connected().isInterestedIn(task)}
+                    <a href="@{Tasks.removeInterest(task.id)}">Remove Interest</a>
+                #{/if}
+                #{else}
+                    <a href="@{Tasks.addInterest(task.id)}">Add Interest</a>
+                #{/else}
+                #{list task.interestedMembers, as: "member"}
+                    #{include "Members/avatar.html"/}
+                #{/list}
+            </div>
             <!--div class="tags">
             <ul class="tagContainer">
             </ul>

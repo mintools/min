@@ -37,6 +37,12 @@ public class Task extends Model {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     public List<Attachment> attachments = new ArrayList<Attachment>();
 
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    public List<TaskInterest> taskInterests = new ArrayList<TaskInterest>();
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    public List<Comment> comments = new ArrayList<Comment>();
+
     public Task tagItWith(String name) {
         tags.add(Tag.findOrCreateByName(name));
         return this;
@@ -50,6 +56,22 @@ public class Task extends Model {
     public Task deactivate() {
         this.isActive = false;
         return this.save();
+    }
+
+    public Comment addComment(Member member, String commentStr) {
+        Comment comment = new Comment(this, member, commentStr);
+        this.comments.add(comment);
+        this.save();
+
+        return comment;
+    }
+
+    public List<Member> getInterestedMembers() {
+        // can only call this method after the Task has been persisted
+        if (this.id == null) {
+            return null;
+        }
+        return Member.find("select m from Member m join m.taskInterests t where t.task = ?", this).fetch();
     }
 
     public static List<Task> findTaggedWith(String tag) {

@@ -3,6 +3,7 @@ package controllers;
 import com.mortennobel.imagescaling.ResampleOp;
 import controllers.utils.TaskIndex;
 import models.Attachment;
+import models.Comment;
 import models.Member;
 import models.Task;
 import org.apache.commons.lang.StringUtils;
@@ -128,6 +129,38 @@ public class Tasks extends Controller {
     public static void deleteAttachment(Long id) {
         Attachment attachment = Attachment.findById(id);
         attachment.delete();
+    }
+
+    public static void addInterest(Long id) {
+        Task task = Task.findById(id);
+        Member member = Member.connected();
+
+        member.addInterest(task);
+
+        renderTemplate("Members/avatar.html", member);
+    }
+
+    public static void removeInterest(Long id) {
+        Task task = Task.findById(id);
+        Member member = Member.connected();
+
+        member.removeInterest(task);
+
+        renderTemplate("Members/avatar.html", member);
+    }
+
+    public static void addComment(Long id, Long memberId, String content) {
+        Task task = Task.findById(id);
+        Member member = Member.findById(memberId);
+        Comment comment = task.addComment(member, content);
+
+        renderTemplate("Tasks/comment.html", comment);
+    }
+
+    public static void deleteComment(Long id) {
+        Comment comment = Comment.findById(id);
+
+        comment.delete();
     }
 
     public static void delete(Long taskId) {

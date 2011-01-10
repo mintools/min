@@ -7,6 +7,7 @@ Member(Member2):
   username:         SOY
   password:         password
   email:            soyoung@soyabean.com.au
+  avatarFilename:   d0d8249c-850f-4015-9b40-8d63c5d7d0e5.png
   
 Member(Member3):
   username:         Simon
@@ -70,3 +71,23 @@ Attachment(Attachment1):
   name:             UUID
   task:             Task1
   title:            OriginalFilename.pdf
+
+TaskInterest(TaskInterest1):
+  member:           Member2
+  task:             Task1
+
+TaskInterest(TaskInterest2):
+  member:           Member1
+  task:             Task1
+
+Comment(Comment1):
+  member:           Member1
+  task:             Task1
+  createdDate:      2010-12-08
+  content:          This is a test comment
+
+Comment(Comment2):
+  member:           Member2
+  task:             Task1
+  createdDate:      2010-12-08
+  content:          This is another test comment  

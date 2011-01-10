@@ -1,0 +1,24 @@
+#{extends "main.html"/}
+
+#{form action:@save(), method:'post', enctype:'multipart/form-data' }
+    <input type="hidden" name="member.id" value="${member.id}"/>
+
+    <div class="field">
+        username: <input type="text" name="member.username" value="${member.username}"/>
+        <span class="error">${errors.forKey('member.username')}</span>
+    </div>
+    <div class="field">
+        password: <input type="password" name="member.password" value="${member.password}"/>
+        <span class="error">${errors.forKey('member.password')}</span>
+    </div>
+    <div class="field">
+        email: <input type="text" name="member.email" value="${member.email}"/>
+        <span class="error">${errors.forKey('member.email')}</span>
+    </div>
+    <div class="field">
+        avatar: <input type="file" name="avatar"/>
+    </div>
+    <div class="actions">
+        <input type="submit">
+    </div>    
+#{/form}
