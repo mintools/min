@@ -1,0 +1,17 @@
+<Attachment>
+<Id>${attachment.id}</Id>
+<Thumbnail>
+    #{if "image".equals(attachment?.type)}
+        /public/files/thumbnail_${attachment.name.escapeJSON().raw()}.png
+    #{/if}
+    #{else}
+        /public/files/unknownFile.png
+    #{/else}
+</Thumbnail>
+<Title>
+    ${attachment.title.escapeJSON().raw()}
+</Title>
+<Filename>
+    /public/files/${attachment.filename.escapeJSON().raw()}
+</Filename>
+</Attachment>
