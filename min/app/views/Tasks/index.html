@@ -18,8 +18,9 @@
         <div class="task">
             <div class="move hide">
                 <img src="@{'/public/images/arrow-move.png'}"/>
-            </div>#{set isNew:true/}
-            #{include 'Tasks/task.html'/}
+            </div>
+			#{set isNew:true/}
+            	#{include 'Tasks/task.html'/}
             #{set isNew:false/}
         </div>
     </div>
@@ -32,6 +33,7 @@
         </div>#{include 'Tasks/task.html'/}
     </div>#{/list}
 </div>
+<!--
 <div class="filters">
     <h3>Filter Tasks</h3>
     #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
@@ -59,5 +61,6 @@
         <input type="submit" name="action" value="Filter"/>
     #{/form}
 </div>
+-->
 <div id="mask">
 </div>

@@ -26,19 +26,20 @@
     </head>
     <body class="main">
         <div class="header right">
-            <div class="loggedInAs">
-                #{if models.Member.connected()}
-                Logged in as ${models.Member.connected().username}
-                #{/if}
-            </div>
             <div class="actions">
                 <a href="@{Tasks.search()}">Search Tasks</a>
                 <a href="@{Tasks.index()}">See All Tasks</a>
-                #{if models.Member.connected()}<a href="@{Members.show(models.Member.connected().id)}">See My Tasks</a>
-                #{/if}<a href="@{Tasks.trash()}">See Trashed Tasks</a>
+                #{if models.Member.connected()}
+					<a href="@{Members.show(models.Member.connected().id)}">See My Tasks</a>
+                #{/if}
+				<a href="@{Tasks.trash()}">See Trashed Tasks</a>
                 <a href="@{Tags.index()}">Maintain Tags</a>
                 #{get 'headerActions' /}
-                #{if models.Member.connected()}<a href="/logout">Log out</a>
+            </div>
+			<div class="loggedInAs right">
+                #{if models.Member.connected()}
+                Logged in as ${models.Member.connected().username}
+					<a href="/logout">Log out</a>
                 #{/if}
             </div>
         </div>

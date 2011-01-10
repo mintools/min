@@ -13,9 +13,11 @@ function task(taskElement, taskList) {
 		/*
 		 * Variables
 		 */
-
 		current.refreshVars();
 
+		/*
+		 * Buttons
+		 */
 		$(".editButton", cTask).click(function() {
 			current.edit();
 			return false;
@@ -39,6 +41,11 @@ function task(taskElement, taskList) {
 			current.cancel();
 			return false;
 		});
+		
+		$(".thumbnails .attachment img.delete",cTask).click(function(){
+			current.deleteAttachmentConfirm($(this).parents('.attachment').first());
+			return false;
+		});
 
 		/*
 		 * Initialise tag editing
@@ -51,6 +58,16 @@ function task(taskElement, taskList) {
 			current.makeEditable();
 			current.showLongSummary();
 		}
+		
+		$(".thumbnails .attachment .thumb img[rel]",cTask).overlay({
+			mask : {
+				color : '#ebecff',
+				loadSpeed : 200,
+				opacity : 0.9
+			},
+			closeOnClick : true
+		});
+
 
 		/*
 		 * Save their original state
@@ -76,6 +93,18 @@ function task(taskElement, taskList) {
 			current.tags.push($(this).val());
 		});
 
+	};
+
+	this.refresh = function() {
+
+		$.get('/tasks/show', {
+			taskId : current.id
+		}, function(data) {
+			console.log(data);
+			
+			$(".contents",cTask).replaceWith(data);
+			current.init();
+		});
 	};
 
 	this.getDataForPost = function() {
@@ -126,6 +155,34 @@ function task(taskElement, taskList) {
 			taskId : current.id
 		}, function(data) {
 			current.remove();
+		});
+	};
+	
+	this.deleteAttachmentConfirm = function(attachment){
+		dialog.makeConfirmation({
+			"Yes" : function() {
+				current.deleteAttachment(attachment);
+				dialog.close();
+			},
+			"No" : function() {
+				dialog.close();
+			}
+		});
+		
+		dialog.setTitle("Confirm Delete");
+		dialog.setContents( "Are you sure you want to delete the Attachment?</b>");
+		dialog.open();
+	};
+	
+	this.deleteAttachment = function(attachment){
+		console.log(attachment);
+		
+		var attId = $('input[name=attachmentId]',attachment).val();
+
+		$.get("/tasks/deleteAttachment", {
+			id : attId
+		}, function(data) {
+			attachment.remove();
 		});
 	};
 
@@ -225,17 +282,16 @@ function task(taskElement, taskList) {
 	this.createUploader = function() {
 		$("input[type=file]", cTask).filestyle({
 			image : "public/images/newAttachment.png",
-			imageheight : 32,
-			imagewidth : 32,
+			imageheight : 18,
+			imagewidth : 25,
 			width : 40
 		}).change(function() {
-			console.log('upload file');
-			console.log($(".uploader form", cTask));
+//			console.log('upload file');
 
 			var form = $(".uploader form", cTask).ajaxSubmit({
 				dataType : "xml",
 				success : function(data) {
-					console.log('uploaded file', data);
+					current.refresh();
 				}
 			});
 		});

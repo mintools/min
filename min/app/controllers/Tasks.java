@@ -50,7 +50,7 @@ public class Tasks extends Controller {
     public static void show(Long taskId) {
         Task task = Task.findById(taskId);
         boolean editing = Boolean.parseBoolean(params.get("editing"));
-        renderTemplate("Tasks/_show.html", task, editing);
+        renderTemplate("Tasks/task.html", task, editing);
     }
 
     public static void save(@Valid Task task, File[] attachments) throws Exception {

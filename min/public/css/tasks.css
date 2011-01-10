@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-	margin: 0 0 5px 5px;
+    margin: 0 0 5px 5px;
 }
 
 h3 {
@@ -68,10 +68,29 @@ div.task .thumbnails {
     clear: right;
 }
 
-div.task .thumbnails img {
+div.task .thumbnails .thumb {
     float: left;
     margin-top: 3px;
     margin-right: 3px;
+	width: 50px;
+}
+
+div.task .thumbnails .attachment a {
+    border: none;
+    color: white;
+}
+div.task.editMode .thumbnails img {
+float:left;
+
+}
+
+div.task.editMode .thumbnails img.delete {
+float:right;
+    display: inline;
+}
+
+div.task .thumbnails img.delete {
+    display: none;
 }
 
 div.task.editMode, div.task.editMode input {
@@ -156,56 +175,39 @@ div.task .tags {
     margin-top: 10px;
 }
 
-div.task .uploader .file{
+div.task .uploader .file {
     display: none;
 }
-
 
 div.filters {
     float: right;
     margin-right: 1%;
     width: 29%;
-}
-
-#notifications {
+} #notifications {
     float: none;
     width: 100%;
     background-color: red;
     color: white;
-}
-
-.taskSummary .title a {
+} .taskSummary .title a {
     font-size: 14pt;
     color: #0066ff;
     margin-bottom: 10px;
-}
-
-.taskSummary .content {
+} .taskSummary .content {
     margin: 5px 0px;
     font-size: 10pt;
     color: #333333;
-}
-
-.searchTerm {
+} .searchTerm {
     padding-right: 20px;
     color: red;
-}
-
-.tagGroup .tags {
+} .tagGroup .tags {
     margin: 5px 10px;
-}
-
-.tagGroup .name {
+} .tagGroup .name {
     color: #3399ff;
     margin: 0;
     font-size: 12pt;
-}
-
-.tags ul {
+} .tags ul {
     margin: 0;
     padding: 0 0 0 10px;
-}
-
-.tags li {
+} .tags li {
     list-style: none;
 }
