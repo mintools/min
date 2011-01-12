@@ -12,8 +12,8 @@
     </div>
     <div class="display">
         <div class="title">
-            <h3>#{if task.title} 
-                	${task.title.raw()} 
+            <h3>#{if task.title}
+                	${task.title.raw()}
                 #{/if}
                 #{else}
                		Title
@@ -22,8 +22,8 @@
         </div>
         <div class="main">
             <div class="description descriptionSummary">
-                #{if task.content} 
-                	${task.content.raw()} 
+                #{if task.content}
+                	${task.content.raw()}
                 #{/if}
                 #{else}
                 	Please enter a description
@@ -53,7 +53,7 @@
 			</div>
 			 <div class="clear"></div>
 		    <div class="editingButtons">
-		    	#{if !isNew} 
+		    	#{if !isNew}
 		        <div class="uploader right">
 		            <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
 		                <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>

@@ -87,4 +87,12 @@ public class Task extends Model {
                 "select distinct t from Task t join t.tags as tg where tg.name in (:tags) group by t.id having count(g.id) = :size"
         ).bind("tags", tags).bind("size", tags.length).fetch();
     }
+
+    public static List<Task> findActive() {
+        return Task.find("from Task t where t.isActive = true order by sortOrder desc").fetch();
+    }
+
+    public static List<Task> findInactive() {
+        return Task.find("from Task t where t.isActive = false order by sortOrder desc").fetch();
+    }
 }

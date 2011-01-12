@@ -75,71 +75,27 @@ public class TaskIndex {
         writer.addDocument(document);
     }
 
-    public static List<Task> searchTasks(String field, String queryString, boolean inflateTasks) throws Exception {
-        List<Task> tasks = new ArrayList<Task>();
-
+    public static Long[] searchTaskIds(String queryString, int numResults) throws Exception {
         Searcher searcher = new IndexSearcher(FSDirectory.open(new File(INDEX_PATH)), true);
 
         Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-        QueryParser parser = new QueryParser(Version.LUCENE_30, (field!=null?field:"content"), analyzer);
+        QueryParser parser = new QueryParser(Version.LUCENE_30, "content", analyzer);
         Query query = parser.parse(queryString);
 
 
-        TopDocs docs = searcher.search(query, 10);
+        TopDocs docs = searcher.search(query, numResults);
+
+        Long[] taskIds = new Long[docs.scoreDocs.length];
 
         for (int i = 0; i < docs.scoreDocs.length; i++) {
             Document result = searcher.doc(docs.scoreDocs[i].doc);
 
-            Task task = new Task();
-
-            task.id = Long.parseLong(result.getField("id").stringValue());
-            task.title = result.getField("title").stringValue();
-            task.content = result.getField("content") == null ? null : result.getField("content").stringValue();
-
-            tasks.add(task);
+            taskIds[i] = Long.parseLong(result.getField("id").stringValue());
         }
-
-
-//        Collector streamingHitCollector = new Collector() {
-//            private Scorer scorer;
-//            private int docBase;
-//
-//            // simply print docId and score of every matching document
-//            public void collect(int doc) throws IOException {
-//                System.out.println("doc=" + doc + docBase + " score=" + scorer.score());
-//            }
-//
-//            public boolean acceptsDocsOutOfOrder() {
-//                return true;
-//            }
-//
-//            public void setNextReader(IndexReader reader, int docBase) throws IOException {
-//                this.docBase = docBase;
-//            }
-//
-//            public void setScorer(Scorer scorer) throws IOException {
-//                this.scorer = scorer;
-//            }
-//        };
-//        searcher.search(query, streamingHitCollector);
 
         analyzer.close();
         searcher.close();
 
-        if (inflateTasks) {
-            if (!tasks.isEmpty()) {
-                // collect task ids from the search results
-                Long[] taskIds = new Long[tasks.size()];
-                for (int i = 0, l = tasks.size(); i < l; i++) {
-                    Task taskResult = tasks.get(i);
-                    taskIds[i] = taskResult.id;
-                }
-
-                // grab results from db and overwrite tasks
-                tasks = Task.find("select t from models.Task as t where t.id in (:ids)").bind("ids", taskIds).fetch();
-            }
-        }
-
-        return tasks;
-    }
+        return taskIds;
+    }    
 }

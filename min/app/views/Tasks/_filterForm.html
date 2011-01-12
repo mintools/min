@@ -1,0 +1,47 @@
+#{set allMembers: models.Member.findAll()/}
+
+#{form id:'filterForm', action:@Tasks.filter(), method:'post'}
+    <h3>Text Filter</h3>
+
+    <input type="text" name="searchText" value="${searchText}" size="50"/>
+
+    <hr/>
+
+    <h3>Tag Filter</h3>
+
+    <ul class="tags">
+    #{list models.Tag.ungrouped(), as: "tag"}
+        <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+    #{/list}
+    </ul>
+
+    #{list models.TagGroup.findAll(), as: "tagGroup"}
+       #{if !tagGroup.tags.isEmpty()}
+           <div class="tagGroup">
+               <div class="name">${tagGroup.name}</div>
+
+               <ul class="tags">
+                    #{list tagGroup.tags, as: "tag"}
+                        <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+                    #{/list}
+                </ul>
+            </div>
+        #{/if}
+    #{/list}
+
+    <hr/>
+
+    <h3>Raised By</h3>
+    #{select 'raisedById', items: allMembers, valueProperty:'id', value: raisedById, labelProperty:'username'}
+        #{option} Unassigned #{/option}
+    #{/select}
+
+    <h3>Assigned To</h3>
+    #{select 'assignedToId', items: allMembers, valueProperty:'id', value: assignedToId, labelProperty:'username'}
+        #{option} Unassigned #{/option}
+    #{/select}
+
+    <hr/>
+
+    <input type="submit" name="action" value="Filter"/>
+#{/form}

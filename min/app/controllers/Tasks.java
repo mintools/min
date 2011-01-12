@@ -10,10 +10,18 @@ import org.apache.commons.lang.StringUtils;
 import play.Play;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
+import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.With;
 
 import javax.imageio.ImageIO;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +46,7 @@ public class Tasks extends Controller {
             Task task = Task.findById(taskId);
             tasks.add(task);
         } else {
-            tasks = Task.find("from Task t where t.isActive = true order by sortOrder desc").fetch();
+            tasks = Task.findActive();
         }
 
         // a placeholder for a new task
@@ -177,7 +185,14 @@ public class Tasks extends Controller {
 
 
     public static void listTagged(String tag) throws Exception {
-        List<Task> tasks = TaskIndex.searchTasks("tags", tag, true);
+        String queryString = "tags: " + tag;
+
+        List<Task> tasks = null;
+
+        Long[] ids = TaskIndex.searchTaskIds(queryString, 10);
+        if (ids != null && ids.length > 0) {
+            tasks = Task.find("form Task t where t.isActive = true and t.id in (:ids)").bind("ids", ids).fetch();
+        }
 
         // a placeholder for a new task
         Task task = new Task();
@@ -186,7 +201,7 @@ public class Tasks extends Controller {
     }
 
     public static void trash() {
-        List<Task> tasks = Task.find("from Task t where t.isActive = false order by sortOrder desc").fetch();
+        List<Task> tasks = Task.findInactive();
 
         // a placeholder for a new task
         Task task = new Task();
@@ -194,27 +209,89 @@ public class Tasks extends Controller {
         render(tasks);
     }
 
-    public static void filter(String[] checkedTags) throws Exception {
-        List<Task> tasks;
+    public static void filter(String[] checkedTags, String searchText, Long raisedById, Long assignedToId) throws Exception {
 
+        CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
+
+        CriteriaQuery<Task> query = builder.createQuery(Task.class);
+
+        Root<Task> taskRoot = query.from(Task.class);
+
+        List<Predicate> predicates = new ArrayList<Predicate>();
+
+        // task must be active
+        predicates.add(builder.equal(taskRoot.get("isActive"), true));
+
+        // add assignedTo predicate
+        if (assignedToId != null) {
+            Member assignedTo = Member.findById(assignedToId);
+            if (assignedTo != null) {
+                predicates.add(builder.equal(taskRoot.get("assignedTo"), assignedTo));
+            }
+        }
+
+        // add raisedBy predicate
+        if (raisedById != null) {
+            Member raisedBy = Member.findById(raisedById);
+            if (raisedBy != null) {
+                predicates.add(builder.equal(taskRoot.get("owner"), raisedBy));
+            }
+        }
+
+        // add lucene-related predicate
+        StringBuilder luceneQuery = new StringBuilder();
+
+        // add search string
+        if (!StringUtils.isEmpty(searchText)) {
+            luceneQuery.append(searchText);
+            luceneQuery.append(" ");
+        }
+
+        // add tags
         if (checkedTags != null) {
-            StringBuffer queryString = new StringBuffer();
+            if (!StringUtils.isEmpty(luceneQuery.toString())) {
+                luceneQuery.append(" AND ");
+            }
+
+            luceneQuery.append("tags:");
             for (int i = 0, l = checkedTags.length; i < l; i++) {
                 String checkedTag = checkedTags[i];
-                queryString.append(checkedTag);
+                luceneQuery.append(checkedTag);
                 if (i < l - 1) {
-                    queryString.append(" AND ");
+                    luceneQuery.append(" AND ");
                 }
             }
-            tasks = TaskIndex.searchTasks("tags", queryString.toString(), true);
-        } else {
-            tasks = Task.findAll();
         }
+
+        // create lucene predicate
+        if (!StringUtils.isEmpty(luceneQuery.toString())) {
+            Long[] ids = TaskIndex.searchTaskIds(luceneQuery.toString(), 10);
+
+            if (ids != null && ids.length > 0) {
+                predicates.add(taskRoot.get("id").in(ids));
+            }
+        }
+
+        // aggregate all predicates
+        if (predicates.size() > 0) {
+            Iterator i = predicates.iterator();
+            Predicate finalPredicate = (Predicate) i.next();
+
+            while (i.hasNext()) {
+                finalPredicate = builder.and(finalPredicate, (Predicate) i.next());
+            }
+
+            query.where(finalPredicate);
+        }
+
+        // execute query
+        TypedQuery<Task> q = JPA.em().createQuery(query);
+        List<Task> tasks = q.getResultList();
 
         // a placeholder for a new task
         Task task = new Task();
 
-        renderTemplate("Tasks/index.html", checkedTags, tasks, task);
+        renderTemplate("Tasks/index.html", checkedTags, assignedToId, raisedById, searchText, tasks, task);
     }
 
     public static void sort(Long[] order) {
@@ -223,9 +300,7 @@ public class Tasks extends Controller {
         List<Task> tasks = Task.find("select t from models.Task t where t.id in (:taskIds) order by t.sortOrder desc").bind("taskIds", order).fetch();
 
         ArrayList<Long> ordering = new ArrayList<Long>();
-        for (Iterator<Task> iterator = tasks.iterator(); iterator.hasNext();) {
-            Task task = iterator.next();
-
+        for (Task task : tasks) {
             ordering.add(task.sortOrder);
         }
 
@@ -235,38 +310,7 @@ public class Tasks extends Controller {
             task.sortOrder = ordering.get(i);
             task.save();
         }
-
-//        // order will come in the form: task-3,task-2,task-1
-//        StringTokenizer taskTokens = new StringTokenizer(order, ",", false);
-//
-//        int index = 0;
-//
-//        while (taskTokens.hasMoreTokens()) {
-//            String taskToken = taskTokens.nextToken();
-//
-//            // get the task id from the token
-//            String taskId = taskToken.substring(taskToken.lastIndexOf('-') + 1);
-//
-//            Task task = Task.findById(Long.parseLong(taskId));
-//
-//            task.sortOrder = index;
-//
-//            task.save();
-//
-//            index++;
-//        }
     }
-
-    public static void search(String field, String queryText) throws Exception {
-        if (StringUtils.isEmpty(queryText)) {
-            renderTemplate("Tasks/searchTerms.html");
-        } else {
-            List<Task> tasks = TaskIndex.searchTasks(field, queryText, false);
-
-            render(tasks, field, queryText);
-        }
-    }
-
 
     private static Attachment createAttachment(File file) throws IOException {
         // Destination directory

@@ -263,7 +263,16 @@ div.filters {
 #filter-div {
     background-color: #e5e8f1;
     padding: 20px;
-    width: 250px;
+    width: 300px;
     border: 2px solid #55607E;
     z-index: 9999;
+
+    -webkit-box-shadow: #666 0px 2px 3px;
+    -moz-box-shadow: #666 0px 2px 3px;
+    box-shadow: #666 0px 2px 3px;
+    behavior: url(/public/javascripts/pie/PIE.htc);
+}
+
+.actions a {
+    margin-right: 15px;
 }
