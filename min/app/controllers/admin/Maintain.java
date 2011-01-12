@@ -3,6 +3,7 @@ package controllers.admin;
 import models.Task;
 import play.mvc.Controller;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,19 +13,16 @@ import java.util.List;
  */
 public class Maintain extends Controller {
     public static void migrate1() {
-        List<Task> tasks = Task.findAll();
+        List<Task> tasks = Task.find("from Task t order by t.sortOrder desc").fetch();
 
-        long largestId = tasks.size();
-
+        long i = 1;
         for (Task task : tasks) {
             // change newlines to <br>
             task.content = task.content.replace("\n", "<br/>");
 
             // assign sortOrder
-            if (task.sortOrder == null || task.sortOrder == 0) {
-                task.sortOrder = largestId--;
-            }
 
+            task.sortOrder = i++;
             task.save();
         }
     }
