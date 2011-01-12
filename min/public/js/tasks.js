@@ -3,6 +3,7 @@ function task(taskElement, taskList) {
 	var cTask = taskElement;
 	var current = this;
 	var dialog = new dialogObj();
+    var expanded = false;
 
 	this.taskList = taskList;
 	this.isNew = false;
@@ -14,6 +15,14 @@ function task(taskElement, taskList) {
 		 * Variables
 		 */
 		current.refreshVars();
+
+        /**
+         * expand
+         */
+        $(cTask).click(function() {
+            current.toggle();
+            return true;
+        });
 
 		/*
 		 * Buttons
@@ -41,6 +50,16 @@ function task(taskElement, taskList) {
 			current.cancel();
 			return false;
 		});
+
+        $(".addInterestButton", cTask).click(function() {
+			current.addInterest();
+			return false;
+		});
+
+        $(".removeInterestButton", cTask).live("click", function() {
+            current.removeInterest($(this).closest(".taskInterest"));
+            return false;
+        });
 		
 		$(".thumbnails .attachment img.delete",cTask).click(function(){
 			current.deleteAttachmentConfirm($(this).parents('.attachment').first());
@@ -122,6 +141,16 @@ function task(taskElement, taskList) {
 
 		return rtnData;
 	};
+
+    this.toggle = function() {
+        if (current.expanded) {
+            current.showShortSummary();
+        }
+        else {
+            current.showLongSummary();
+        }
+        current.expanded = !current.expanded;
+    };
 
 	this.edit = function() {
 
@@ -235,6 +264,24 @@ function task(taskElement, taskList) {
 
 		current.showEditButtons();
 	};
+
+    this.addInterest = function() {
+        $.get("/tasks/addInterest", {
+			id : current.id
+		}, function(data) {
+			$('.taskInterests', cTask).append(data);
+            $('.addInterestButton', cTask).hide();
+		});
+    };
+
+    this.removeInterest = function(parent) {        
+        $.get("/tasks/removeInterest", {
+			id : current.id
+		}, function(data) {
+            parent.remove();
+            $('.addInterestButton', cTask).show();
+		});
+    };
 
 	this.showEditButtons = function() {
 		$('.saveButton, .cancelButton', cTask).hide();

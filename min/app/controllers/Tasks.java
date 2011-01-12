@@ -137,7 +137,7 @@ public class Tasks extends Controller {
 
         member.addInterest(task);
 
-        renderTemplate("Members/avatar.html", member);
+        renderTemplate("Members/taskInterest.html", member, task);
     }
 
     public static void removeInterest(Long id) {

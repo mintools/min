@@ -23,20 +23,11 @@
                 	Please enter a description
                 #{/else}
             </div>
-            <!--<div class="comments">
+            <div class="comments">
                 #{list task.comments, as: "comment"}
                 #{include "Tasks/comment.html"/}
                 #{/list}
             </div>
-            <div class="interestedParties">
-                #{if models.Member.connected().isInterestedIn(task)}<a href="@{Tasks.removeInterest(task.id)}">Remove Interest</a>
-                #{/if}
-                #{else}<a href="@{Tasks.addInterest(task.id)}">Add Interest</a>
-                #{/else}
-                #{list task.interestedMembers, as: "member"}
-                #{include "Members/avatar.html"/}
-                #{/list}
-            </div>-->
             <!--div class="tags">
             <ul class="tagContainer">
             </ul>
@@ -45,6 +36,11 @@
         <div class="thumbnails">
             #{list task.attachments, as:'attachment'}
             	#{include 'Attachments/attachment.html'/}
+            #{/list}
+        </div>
+        <div class="taskInterests">
+            #{list task.interestedMembers, as: "member"}
+                #{include "Members/taskInterest.html"/}
             #{/list}
         </div>
         <div class="clear">
@@ -58,9 +54,10 @@
         </div>
 			<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
         	<a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
-        #{if !isNew} 
+        #{if !isNew}
 			<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
 	        <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
+            <a href="" class="addInterestButton button ui-state-default ui-corner-all right #{if models.Member.connected().isInterestedIn(task)}hide#{/if}">Work On</a>
         #{/if}
         <div class="clear">
         </div>

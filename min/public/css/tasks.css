@@ -57,9 +57,31 @@ div.task .createdBy {
 }
 
 div.task .main {
-    width: 68%;
+    width: 48%;
     margin-right: 2%;
     float: left;
+}
+
+div.task .taskInterests {
+    width: 18%;
+    margin-right: 2%;
+    float: left;
+}
+
+div.task .taskInterests .taskInterest {
+    float: left;
+    margin-right: 5px;
+}
+
+div.task .taskInterests .taskInterest .avatar img {
+    width:50px;
+    height:50px;
+    float: left;
+}
+
+div.task .taskInterests .taskInterest img.delete {
+    float: right;
+    display: inline;
 }
 
 div.task .thumbnails {
