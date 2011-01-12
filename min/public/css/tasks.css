@@ -1,3 +1,7 @@
+html {
+    background-color: #eff3f7;    
+}
+
 body {
     font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
     font-size: .8em;
@@ -5,6 +9,12 @@ body {
     font-size: .7em;
     font-weight: bold;
     margin: 10px;
+}
+
+a {
+    text-decoration:none;
+    font-size: 10pt;
+    color: #408dda;
 }
 
 h1 {
@@ -36,11 +46,12 @@ div.task {
     border: 1px solid #DDDDDD;
     padding: 5px 10px;
     margin: 0px 0px 15px 0;
+    background-color: white;
 }
 
 div.taskPlaceholder {
     background-color: #e5e5e5;;
-    height: 110px;
+    height: 50px;
     margin: 10px 0px;
 }
 
@@ -65,23 +76,25 @@ div.task .main {
 div.task .taskInterests {
     width: 18%;
     margin-right: 2%;
-    float: left;
+    float: right;
 }
 
 div.task .taskInterests .taskInterest {
-    float: left;
+    float: right;
     margin-right: 5px;
 }
 
 div.task .taskInterests .taskInterest .avatar img {
-    width:50px;
-    height:50px;
+    width:25px;
+    height:25px;
     float: left;
 }
 
 div.task .taskInterests .taskInterest img.delete {
     float: right;
     display: inline;
+    height: 10px;
+    width: 10px;
 }
 
 div.task .thumbnails {
@@ -90,25 +103,36 @@ div.task .thumbnails {
     clear: right;
 }
 
+div.task .thumbnails .attachment {
+    text-align: right;
+}
+
 div.task .thumbnails .thumb {
     float: left;
     margin-top: 3px;
     margin-right: 3px;
-	width: 50px;
+	width: 25px;
+}
+
+div.task .thumbnails img {
+    width: 25px;
+    height: 25px;
 }
 
 div.task .thumbnails .attachment a {
     border: none;
     color: white;
+    float: right;
 }
 div.task.editMode .thumbnails img {
-float:left;
-
+    float: right;
 }
 
 div.task.editMode .thumbnails img.delete {
-float:right;
+    float:right;
     display: inline;
+    width: 10px;
+    height: 10px;
 }
 
 div.task .thumbnails img.delete {
@@ -146,7 +170,7 @@ div.taskBar {
 }
 
 div.task .descriptionSummary {
-    height: 74px;
+    height: 50px;
     overflow: hidden;
 }
 
@@ -160,7 +184,7 @@ div.task .showIcon, div.task .hideIcon {
 }
 
 div.task .move {
-    float: right;
+    float: left;
     cursor: move;
     position: relative;
 }

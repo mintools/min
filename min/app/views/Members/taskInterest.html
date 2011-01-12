@@ -1,7 +1,7 @@
-<div class="taskInterest">
+<div class="taskInterest" id="taskInterest_${task.id}_${member.id}">
 	<input type="hidden" name="taskId" value="${task.id}">
 	<input type="hidden" name="memberId" value="${member.id}">
 
     #{include "Members/avatar.html"/}
-    #{if models.Member.connected() == member}<a class="removeInterestButton" href="#"><img src="/public/images/delete.png"/></a>#{/if}
+    #{if models.Member.connected() == member}<a class="removeInterestButton" href="#"><img class="delete" src="/public/images/delete.png"/></a>#{/if}
 </div>

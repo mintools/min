@@ -1,3 +1,9 @@
+<div class="taskInterests">
+    #{list task.interestedMembers, as: "member"}
+        #{include "Members/taskInterest.html"/}
+    #{/list}
+</div>
+
 <div class="contents">
     <div class="hide properties">
         #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }
@@ -36,11 +42,6 @@
         <div class="thumbnails">
             #{list task.attachments, as:'attachment'}
             	#{include 'Attachments/attachment.html'/}
-            #{/list}
-        </div>
-        <div class="taskInterests">
-            #{list task.interestedMembers, as: "member"}
-                #{include "Members/taskInterest.html"/}
             #{/list}
         </div>
         <div class="clear">

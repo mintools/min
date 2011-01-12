@@ -199,7 +199,7 @@ function task(taskElement, taskList) {
 		});
 		
 		dialog.setTitle("Confirm Delete");
-		dialog.setContents("Are you sure you want to delete the Attachment?</b>");
+		dialog.setContents( "Are you sure you want to delete the Attachment?</b>");
 		dialog.open();
 	};
 	
@@ -274,7 +274,7 @@ function task(taskElement, taskList) {
 		});
     };
 
-    this.removeInterest = function(parent) {        
+    this.removeInterest = function(parent) {
         $.get("/tasks/removeInterest", {
 			id : current.id
 		}, function(data) {
