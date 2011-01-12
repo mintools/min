@@ -47,11 +47,13 @@
         </div>
     </div>
     <div class="editingButtons">
+    	#{if !isNew} 
         <div class="uploader right">
             <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
                 <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>
             </form>
         </div>
+		#{/if}
 			<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
         	<a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
         #{if !isNew}
