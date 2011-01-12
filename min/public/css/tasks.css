@@ -270,7 +270,7 @@ div.filters {
     -webkit-box-shadow: #666 0px 2px 3px;
     -moz-box-shadow: #666 0px 2px 3px;
     box-shadow: #666 0px 2px 3px;
-    behavior: url(/public/javascripts/pie/PIE.htc);
+    behavior: url(/public/js/pie/PIE.htc);
 }
 
 .actions a {
