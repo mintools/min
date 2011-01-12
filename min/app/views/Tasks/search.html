@@ -8,6 +8,6 @@
 #{list tasks, as: 'task'}
     <div class="taskSummary">
         <div class="title"><a href="@{Tasks.index(task.id)}">${task.title}</a></div>
-        <div class="content">${task.content}</div>
+        <div class="content">${task.content.raw()}</div>
     </div>
 #{/list}
