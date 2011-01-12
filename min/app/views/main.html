@@ -22,18 +22,14 @@
         </script>
         <script type="text/javascript" src="@{'/public/js/jquery.filestyle.js'}">
         </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.tabSlideOut.v1.3.js'}">
+        </script>
         #{get 'moreScripts' /}
     </head>
     <body class="main">
         <div class="header right">
             <div class="actions">
-                <a href="@{Tasks.search()}">Search Tasks</a>
-                <a href="@{Tasks.index()}">See All Tasks</a>
-                #{if models.Member.connected()}
-					<a href="@{Members.show(models.Member.connected().id)}">See My Tasks</a>
-                #{/if}
 				<a href="@{Tasks.trash()}">See Trashed Tasks</a>
-                <a href="@{Tags.index()}">Maintain Tags</a>
                 #{get 'headerActions' /}
             </div>
 			<div class="loggedInAs right">
