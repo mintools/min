@@ -149,9 +149,11 @@ function task(taskElement, taskList) {
     this.toggle = function() {
         if (current.expanded) {
             current.showShortSummary();
+            $('.tags',cTask).addClass('hide');
         }
         else {
             current.showLongSummary();
+            $('.tags',cTask).removeClass('hide');
         }
         current.expanded = !current.expanded;
     };
@@ -315,7 +317,7 @@ function task(taskElement, taskList) {
 
 		$('.description', cTask).attr('contentEditable', false);
 
-		$('li.tagit-new', cTask).addClass('hide');
+		$('.tags', cTask).addClass('hide');
 	};
 
 	this.makeEditable = function() {
@@ -324,7 +326,7 @@ function task(taskElement, taskList) {
 			return event.which != 13;
 		});
 
-		$('li.tagit-new', cTask).removeClass('hide');
+		$('.tags', cTask).removeClass('hide');
 
 		$('.description', cTask).attr('contentEditable', true);
 

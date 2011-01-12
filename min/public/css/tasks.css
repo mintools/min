@@ -45,7 +45,7 @@ div.tasks {
 div.task {
     border: 1px solid #DDDDDD;
     padding: 5px 10px;
-    margin: 0px 0px 15px 0;
+    margin: 0px 0px 3px 0;
     background-color: white;
 }
 
@@ -97,10 +97,14 @@ div.task .taskInterests .taskInterest img.delete {
     width: 10px;
 }
 
-div.task .thumbnails {
+div.task .thumbnailsButtons {
     width: 20%;
     float: right;
     clear: right;
+}
+
+div.task .thumbnails{
+    height:25px;
 }
 
 div.task .thumbnails .attachment {
@@ -191,8 +195,6 @@ div.task .move {
 
 div.task .editingButtons {
     float: right;
-    top: -5px;
-    position: relative;
 }
 
 div.task .editingButtons .button, a.newButton {

@@ -34,34 +34,40 @@
                 #{include "Tasks/comment.html"/}
                 #{/list}
             </div>
-            <!--div class="tags">
+            <div class="tags hide">
             <ul class="tagContainer">
+            	 #{list items:task.tags, as:'tag'}
+                <li class="tagit-choice">
+                    ${tag}<a class="close">x</a>
+                    <input type="hidden" name="item[tags][]" value="${tag}" style="display: none;">
+                </li>
+				#{/list}
             </ul>
-            </div-->
+            </div>
         </div>
-        <div class="thumbnails">
-            #{list task.attachments, as:'attachment'}
-            	#{include 'Attachments/attachment.html'/}
-            #{/list}
-        </div>
-        <div class="clear">
-        </div>
-    </div>
-    <div class="editingButtons">
-    	#{if !isNew} 
-        <div class="uploader right">
-            <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-                <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>
-            </form>
-        </div>
-		#{/if}
-			<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
-        	<a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
-        #{if !isNew}
-			<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
-	        <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
-        #{/if}
-        <div class="clear">
-        </div>
-    </div>
+		<div class="thumbnailsButtons">
+	 		<div class="thumbnails">
+				#{list task.attachments, as:'attachment'}
+					#{include 'Attachments/attachment.html'/}
+				#{/list}
+			</div>
+			 <div class="clear"></div>
+		    <div class="editingButtons">
+		    	#{if !isNew} 
+		        <div class="uploader right">
+		            <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+		                <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>
+		            </form>
+		        </div>
+				#{/if}
+					<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
+		        	<a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
+		        #{if !isNew}
+					<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
+			        <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
+		        #{/if}
+			</div>
+		</div>
+	</div>
+	 <div class="clear"></div>
 </div>
