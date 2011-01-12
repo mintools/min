@@ -114,7 +114,7 @@ div.task .thumbnails .thumb {
 	width: 25px;
 }
 
-div.task .thumbnails img {
+div.task .thumbnails .thumb img {
     width: 25px;
     height: 25px;
 }

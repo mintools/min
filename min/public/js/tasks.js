@@ -7,7 +7,19 @@ function task(taskElement, taskList) {
 
 	this.taskList = taskList;
 	this.isNew = false;
+	this.mode = '';
 
+    /**
+     * expand
+     */
+    $(cTask).click(function() {
+    	console.log(current.isEditMode());
+    	if(!current.isEditMode()){
+    		current.toggle();
+    	}
+        return true;
+    });
+	
 	this.init = function(isNew) {
 		current.isNew = isNew;
 
@@ -15,14 +27,6 @@ function task(taskElement, taskList) {
 		 * Variables
 		 */
 		current.refreshVars();
-
-        /**
-         * expand
-         */
-        $(cTask).click(function() {
-            current.toggle();
-            return true;
-        });
 
 		/*
 		 * Buttons
@@ -119,7 +123,7 @@ function task(taskElement, taskList) {
 		$.get('/tasks/show', {
 			taskId : current.id
 		}, function(data) {
-			console.log(data);
+			//console.log(data);
 			
 			$(".contents",cTask).replaceWith(data);
 			current.init();
@@ -151,9 +155,13 @@ function task(taskElement, taskList) {
         }
         current.expanded = !current.expanded;
     };
+    
+    this.isEditMode = function(){
+    	return $(cTask).hasClass('editMode');
+    };
 
 	this.edit = function() {
-
+		
 		current.showSaveButtons();
 		current.showLongSummary();
 		current.makeEditable();
