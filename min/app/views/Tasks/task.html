@@ -1,73 +1,68 @@
-<div class="taskInterests">
-    #{list task.interestedMembers, as: "member"}
-        #{include "Members/taskInterest.html"/}
-    #{/list}
-</div>
-
 <div class="contents">
     <div class="hide properties">
-        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }
-			<input name="id" value="${task.id}"/>
-		#{/form}
+        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}
     </div>
     <div class="display">
         <div class="title">
             <h3>#{if task.title}
-                	${task.title.raw()}
+                ${task.title.raw()}
                 #{/if}
                 #{else}
-               		Title
+                Title
                 #{/else}</h3>
             <!--div class="createdBy">By: ${task.owner}</div-->
         </div>
         <div class="main">
             <div class="description descriptionSummary">
                 #{if task.content}
-                	${task.content.raw()}
+                ${task.content.raw()}
                 #{/if}
                 #{else}
-                	Please enter a description
+                Please enter a description
                 #{/else}
             </div>
-            <div class="comments">
-                #{list task.comments, as: "comment"}
-                #{include "Tasks/comment.html"/}
-                #{/list}
-            </div>
-            <div class="tags hide">
-            <ul class="tagContainer">
-            	 #{list items:task.tags, as:'tag'}
-                <li class="tagit-choice">
-                    ${tag}<a class="close">x</a>
-                    <input type="hidden" name="item[tags][]" value="${tag}" style="display: none;">
-                </li>
-				#{/list}
-            </ul>
+            <div class="tags">
+                <ul class="tagContainer">
+                    #{list items:task.tags, as:'tag'}
+                    <li class="tagit-choice">
+                        ${tag}<a class="close">x</a>
+                        <input type="hidden" name="item[tags][]" value="${tag}" style="display: none;">
+                    </li>#{/list}
+                </ul>
             </div>
         </div>
-		<div class="thumbnailsButtons">
-	 		<div class="thumbnails">
-				#{list task.attachments, as:'attachment'}
-					#{include 'Attachments/attachment.html'/}
-				#{/list}
-			</div>
-			 <div class="clear"></div>
-		    <div class="editingButtons">
-		    	#{if !isNew}
-		        <div class="uploader right">
-		            <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-		                <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>
-		            </form>
-		        </div>
-				#{/if}
-					<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
-		        	<a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
-		        #{if !isNew}
-					<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
-			        <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
-		        #{/if}
-			</div>
-		</div>
-	</div>
-	 <div class="clear"></div>
+        <div class="comments">
+            #{list task.comments, as: "comment"}
+            #{include "Tasks/comment.html"/}
+            #{/list}
+        </div>
+        <div class="taskInterests">
+            #{list task.interestedMembers, as: "member"}
+            #{include "Members/taskInterest.html"/}
+            #{/list}
+        </div>
+        <div class="thumbnailsButtons">
+            <div class="thumbnails">
+                #{list task.attachments, as:'attachment'}
+                #{include 'Attachments/attachment.html'/}
+                #{/list}
+            </div>
+            <div class="clear">
+            </div>
+            <div class="editingButtons">
+                #{if !isNew}
+                <div class="uploader right">
+                    <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                        <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>
+                    </form>
+                </div>#{/if}<a href="" class="saveButton button ui-state-default ui-corner-all right #{if !isNew}hide#{/if}">Save</a>
+                <a href="" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>
+                #{if !isNew}<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
+                <a href="" class="cancelButton button ui-state-default ui-corner-all right hide">Cancel</a>
+                #{/if}
+            </div>
+        </div>
+    </div>
+    <div class="clear">
+    </div>
 </div>

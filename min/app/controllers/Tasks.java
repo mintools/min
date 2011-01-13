@@ -87,7 +87,7 @@ public class Tasks extends Controller {
             // todo: remove hardcoding
 
             // get selected tags
-            String[] selectedTags = params.getAll("selectedTags");
+            String[] selectedTags = params.getAll("selectedTags[]");
             if (selectedTags != null) {
                 for (String selectedTagName : selectedTags) {
                     if (!StringUtils.isEmpty(selectedTagName)) {

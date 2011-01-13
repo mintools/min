@@ -3,23 +3,17 @@ function task(taskElement, taskList) {
 	var cTask = taskElement;
 	var current = this;
 	var dialog = new dialogObj();
-    var expanded = false;
+	var expanded = false;
 
 	this.taskList = taskList;
 	this.isNew = false;
 	this.mode = '';
 
-    /**
-     * expand
-     */
-    $(cTask).click(function() {
-    	console.log(current.isEditMode());
-    	if(!current.isEditMode()){
-    		current.toggle();
-    	}
-        return true;
-    });
+	/**
+	 * expand
+	 */
 	
+
 	this.init = function(isNew) {
 		current.isNew = isNew;
 
@@ -28,6 +22,14 @@ function task(taskElement, taskList) {
 		 */
 		current.refreshVars();
 
+		$('.title,.main,.comments',cTask).click(function() {
+			
+			if (!current.isEditMode()) {
+				current.toggle();
+			}
+			return true;
+		});
+		
 		/*
 		 * Buttons
 		 */
@@ -55,34 +57,28 @@ function task(taskElement, taskList) {
 			return false;
 		});
 
-        $(".addInterestButton", cTask).click(function() {
+		$(".addInterestButton", cTask).click(function() {
 			current.addInterest();
 			return false;
 		});
 
-        $(".removeInterestButton", cTask).live("click", function() {
-            current.removeInterest($(this).closest(".taskInterest"));
-            return false;
-        });
-		
-		$(".thumbnails .attachment img.delete",cTask).click(function(){
+		$(".removeInterestButton", cTask).live("click", function() {
+			current.removeInterest($(this).closest(".taskInterest"));
+			return false;
+		});
+
+		$(".thumbnails .attachment img.delete", cTask).click(function() {
 			current.deleteAttachmentConfirm($(this).parents('.attachment').first());
 			return false;
 		});
 
-		/*
-		 * Initialise tag editing
-		 */
-		$("ul.tagContainer", cTask).tagit({
-			availableTags : []
-		});
 
 		if (isNew) {
 			current.makeEditable();
 			current.showLongSummary();
 		}
-		
-		$(".thumbnails .attachment .thumb img[rel]",cTask).overlay({
+
+		$(".thumbnails .attachment .thumb img[rel]", cTask).overlay({
 			mask : {
 				color : '#ebecff',
 				loadSpeed : 200,
@@ -91,13 +87,20 @@ function task(taskElement, taskList) {
 			closeOnClick : true
 		});
 
-
 		/*
 		 * Save their original state
 		 */
 		current.originalTitle = $(".title h3", cTask).html();
 		current.originalDesc = $(".description", cTask).html();
 		current.originalTags = $("ul.tagContainer", cTask).html();
+		
+		/*
+		 * Initialise tag editing
+		 */
+		$("ul.tagContainer", cTask).tagit({
+			availableTags : []
+		});
+
 
 		current.createUploader();
 
@@ -123,9 +126,9 @@ function task(taskElement, taskList) {
 		$.get('/tasks/show', {
 			taskId : current.id
 		}, function(data) {
-			//console.log(data);
-			
-			$(".contents",cTask).replaceWith(data);
+			// console.log(data);
+
+			$(".contents", cTask).replaceWith(data);
 			current.init();
 		});
 	};
@@ -146,24 +149,25 @@ function task(taskElement, taskList) {
 		return rtnData;
 	};
 
-    this.toggle = function() {
-        if (current.expanded) {
-            current.showShortSummary();
-            $('.tags',cTask).addClass('hide');
-        }
-        else {
-            current.showLongSummary();
-            $('.tags',cTask).removeClass('hide');
-        }
-        current.expanded = !current.expanded;
-    };
-    
-    this.isEditMode = function(){
-    	return $(cTask).hasClass('editMode');
-    };
+	this.toggle = function() {
+		if (current.expanded) {
+			$(cTask).removeClass('expandMode');
+			current.showShortSummary();
+		} else {
+			$(cTask).addClass('expandMode');
+			current.showLongSummary();
+
+		}
+		current.expanded = !current.expanded;
+	};
+
+	this.isEditMode = function() {
+		return $(cTask).hasClass('editMode');
+	};
 
 	this.edit = function() {
-		
+
+		$(cTask).removeClass('expandMode');
 		current.showSaveButtons();
 		current.showLongSummary();
 		current.makeEditable();
@@ -196,8 +200,8 @@ function task(taskElement, taskList) {
 			current.remove();
 		});
 	};
-	
-	this.deleteAttachmentConfirm = function(attachment){
+
+	this.deleteAttachmentConfirm = function(attachment) {
 		dialog.makeConfirmation({
 			"Yes" : function() {
 				current.deleteAttachment(attachment);
@@ -207,16 +211,16 @@ function task(taskElement, taskList) {
 				dialog.close();
 			}
 		});
-		
+
 		dialog.setTitle("Confirm Delete");
-		dialog.setContents( "Are you sure you want to delete the Attachment?</b>");
+		dialog.setContents("Are you sure you want to delete the Attachment?</b>");
 		dialog.open();
 	};
-	
-	this.deleteAttachment = function(attachment){
-		console.log(attachment);
-		
-		var attId = $('input[name=attachmentId]',attachment).val();
+
+	this.deleteAttachment = function(attachment) {
+		//console.log(attachment);
+
+		var attId = $('input[name=attachmentId]', attachment).val();
 
 		$.get("/tasks/deleteAttachment", {
 			id : attId
@@ -275,23 +279,23 @@ function task(taskElement, taskList) {
 		current.showEditButtons();
 	};
 
-    this.addInterest = function() {
-        $.get("/tasks/addInterest", {
+	this.addInterest = function() {
+		$.get("/tasks/addInterest", {
 			id : current.id
 		}, function(data) {
 			$('.taskInterests', cTask).append(data);
-            $('.addInterestButton', cTask).hide();
+			$('.addInterestButton', cTask).hide();
 		});
-    };
+	};
 
-    this.removeInterest = function(parent) {
-        $.get("/tasks/removeInterest", {
+	this.removeInterest = function(parent) {
+		$.get("/tasks/removeInterest", {
 			id : current.id
 		}, function(data) {
-            parent.remove();
-            $('.addInterestButton', cTask).show();
+			parent.remove();
+			$('.addInterestButton', cTask).show();
 		});
-    };
+	};
 
 	this.showEditButtons = function() {
 		$('.saveButton, .cancelButton', cTask).hide();
@@ -317,7 +321,7 @@ function task(taskElement, taskList) {
 
 		$('.description', cTask).attr('contentEditable', false);
 
-		$('.tags', cTask).addClass('hide');
+		$('.tagit-new', cTask).addClass('hide');
 	};
 
 	this.makeEditable = function() {
@@ -326,7 +330,7 @@ function task(taskElement, taskList) {
 			return event.which != 13;
 		});
 
-		$('.tags', cTask).removeClass('hide');
+		$('.tagit-new', cTask).removeClass('hide');
 
 		$('.description', cTask).attr('contentEditable', true);
 
@@ -343,7 +347,7 @@ function task(taskElement, taskList) {
 			imagewidth : 25,
 			width : 40
 		}).change(function() {
-//			console.log('upload file');
+			// console.log('upload file');
 
 			var form = $(".uploader form", cTask).ajaxSubmit({
 				dataType : "xml",
