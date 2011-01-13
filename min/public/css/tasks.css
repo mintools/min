@@ -8,7 +8,7 @@ body {
 } .header {
     font-size: .7em;
     font-weight: bold;
-    margin: 10px;
+    margin: 0.5%;
 }
 
 a {
@@ -18,7 +18,7 @@ a {
 }
 
 h1 {
-    margin: 0 0 5px 5px;
+    margin: 0 0 0.5% 5px;
 }
 
 h3 {
@@ -28,7 +28,7 @@ h3 {
 div.tasks {
     float: left;
     width: 98%;
-    margin: 0 1%;
+    margin: 0 0.5%;
 } .right {
     float: right;
 }.left {
@@ -44,9 +44,10 @@ div.tasks {
 
 div.task {
     border: 1px solid #DDDDDD;
-    padding: 5px 10px;
-    margin: 0px 0px 3px 0;
+    padding: 5px 5px 5px 0px;
+    margin: 0px 0px 4px 0;
     background-color: white;
+    -moz-box-shadow: 0 1px 1px #DDDDDD;
 }
 
 div.taskPlaceholder {
@@ -74,10 +75,23 @@ div.task .main {
 }
 
 div.task .comments {
-    width: 19%;
+    width: 23%;
     margin-right: 1%;
     float: left;
     font-size: 0.8em;
+}
+div.task .comments .comment{
+    width: 100%;
+	float:left;
+}
+
+div.task .comments .comment .member{
+    width: 25%;
+	float:left;
+}
+div.task .comments .comment .content{
+    width: 75%;
+	float:left;
 }
 
 div.task .taskInterests {
@@ -165,8 +179,6 @@ div.task.editMode, div.task.editMode input {
     background-color: #FBEFEF;
 }
 
-
-
 div.task .hide {
     display: none;
 }
@@ -190,7 +202,7 @@ div.preview {
 }
 
 div.taskBar {
-    padding: 0 10px 10px 10px;
+    padding: 0 0.5% 10px 0.5%;
 }
 
 div.task .descriptionSummary {
@@ -211,10 +223,21 @@ div.task .move {
     float: left;
     cursor: move;
     position: relative;
+    margin: 30px 0px 0px 3px;
+}
+
+div.task .move img {
+    position: absolute;
+    top: 50%;
+}
+
+div.task .contents {
+    margin-left: 13px;
 }
 
 div.task .editingButtons {
     float: right;
+	margin-top: 2px;
 }
 
 div.task .editingButtons .button, a.newButton {
@@ -242,19 +265,26 @@ div.task .edit input, div.task .edit textarea {
 div.task .tags {
     margin-top: 10px;
 }
-div.task.editMode .tags .close {
-	display:inline;
-} 
 
-div.task .tags .close{
-    display:none;
+div.task.editMode .tags .close {
+    display: inline;
+}
+
+div.task .tags .close {
+    display: none;
 }
 
 div.task.expandMode .tags, div.task.editMode .tags {
-	display:inline;
-} 
+    display: block;
+}
+
 div.task .tags {
-    display:none;
+    display: none;
+}
+
+div.tags ul {
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -290,10 +320,6 @@ div.filters {
     font-size: 12pt;
 }
 
-div.tags ul {
-    margin: 0;
-    padding: 0 0 0 10px;
-}
 
 div.task.editMode .tags ul.tagit {
     border: 1px solid #C6C6C6;
@@ -309,12 +335,15 @@ div.tags li {
     background-color: #e5e8f1;
     padding: 20px;
     width: 300px;
-    border: 2px solid #55607E;
+    border: 1px solid #DDDDDD;
     z-index: 9999;
     -webkit-box-shadow: #666 0px 2px 3px;
     -moz-box-shadow: #666 0px 2px 3px;
     box-shadow: #666 0px 2px 3px;
     behavior: url(/public/js/pie/PIE.htc);
+} #filter-div a {
+    border: 1px solid #DDDDDD;
+    -moz-box-shadow: -1px 0 1px #666666
 } .actions a {
     margin-right: 15px;
 }
