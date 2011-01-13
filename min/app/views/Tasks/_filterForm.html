@@ -1,46 +1,69 @@
-#{set allMembers: models.Member.findAll()/}
+#{set allMembers: models.Member.getMembers()/}
 
 #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
-    <h3>Text Filter</h3>
+    <fieldset>
+        <legend>Filter Text</legend>
 
-    <input type="text" name="searchText" value="${searchText}" size="30"/>
-
-    <hr/>
-
-    <h3>Tag Filter</h3>
-
-    <ul class="tags">
-    #{list models.Tag.ungrouped(), as: "tag"}
-        <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
-    #{/list}
-    </ul>
+        <input type="text" name="searchText" value="${searchText}" size="30"/>
+    </fieldset>
 
     #{list models.TagGroup.findAll(), as: "tagGroup"}
        #{if !tagGroup.tags.isEmpty()}
            <div class="tagGroup">
-               <div class="name">${tagGroup.name}</div>
+               <fieldset>
+                    <legend>${tagGroup.name}</legend>
 
-               <ul class="tags">
-                    #{list tagGroup.tags, as: "tag"}
-                        <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
-                    #{/list}
-                </ul>
+                    <ul class="tags">
+                        #{list tagGroup.tags, as: "tag"}
+                            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+                        #{/list}
+                    </ul>
+               </fieldset>
             </div>
         #{/if}
     #{/list}
 
-    <hr/>
+    <fieldset>
+        <legend>Other</legend>
 
-    <h3>Raised By</h3>
-    #{select 'raisedById', items: allMembers, valueProperty:'id', value: raisedById, labelProperty:'username'}
-        #{option} Unassigned #{/option}
-    #{/select}
+        <ul class="tags">
+        #{list models.Tag.ungrouped(), as: "tag"}
+            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+        #{/list}
+        </ul>
+    </fieldset>
 
-    <h3>Assigned To</h3>
-    #{select 'assignedToId', items: allMembers, valueProperty:'id', value: assignedToId, labelProperty:'username'}
-        #{option} Unassigned #{/option}
-    #{/select}
-
+    <fieldset>
+        <legend>Members</legend>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Raised By</th>
+                    <th>Assigned To</th>
+                </tr>
+            </thead>
+            #{list allMembers, as: "member"}
+                <tr>
+                    <td>
+                        ${member.username}
+                    </td>
+                    <td>
+                        <input type="checkbox" name="raisedBy" value="${member.id}" #{if raisedBy?.contains(member.id.toString())}checked#{/if}/>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="assignedTo" value="${member.id}" #{if assignedTo?.contains(member.id.toString())}checked#{/if}/>
+                    </td>
+                </tr>
+            #{/list}
+            <tr>
+                <td>Unassigned</td>
+                <td></td>
+                <td><input type="checkbox" name="assignedTo" value="unassigned" #{if assignedTo?.contains('unassigned')}checked#{/if}/></td>
+            </tr>
+        </table>
+    </fieldset>
+        
     <hr/>
 
     <input type="submit" name="action" value="Filter"/>

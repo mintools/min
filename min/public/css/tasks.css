@@ -341,9 +341,17 @@ div.tags li {
     -moz-box-shadow: #666 0px 2px 3px;
     box-shadow: #666 0px 2px 3px;
     behavior: url(/public/js/pie/PIE.htc);
+} #filter-div td {
+    text-align: center;
 } #filter-div a {
     border: 1px solid #DDDDDD;
     -moz-box-shadow: -1px 0 1px #666666
 } .actions a {
     margin-right: 15px;
+} fieldset {
+    padding-top: 10px;
+    border: 1px solid #c3c1c1;
+    margin-bottom: 10px;
+} fieldset legend {
+    font-weight:bold;
 }

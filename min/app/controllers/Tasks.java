@@ -209,7 +209,7 @@ public class Tasks extends Controller {
         render(tasks);
     }
 
-    public static void filter(String[] checkedTags, String searchText, Long raisedById, Long assignedToId) throws Exception {
+    public static void filter(String[] checkedTags, String searchText, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
 
         CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
 
@@ -222,19 +222,49 @@ public class Tasks extends Controller {
         // task must be active
         predicates.add(builder.equal(taskRoot.get("isActive"), true));
 
-        // add assignedTo predicate
-        if (assignedToId != null) {
-            Member assignedTo = Member.findById(assignedToId);
-            if (assignedTo != null) {
-                predicates.add(builder.equal(taskRoot.get("assignedTo"), assignedTo));
+        // add raisedBy predicate
+        if (raisedBy != null) {
+            ArrayList<Long> memberIds = new ArrayList<Long>();
+            for (int i = 0, l = raisedBy.length; i < l; i++) {
+                String s = raisedBy[i];
+                memberIds.add(Long.parseLong(s));
+            }
+
+            if (memberIds.size() > 0) {
+                predicates.add(taskRoot.get("owner").get("id").in(memberIds));
             }
         }
 
-        // add raisedBy predicate
-        if (raisedById != null) {
-            Member raisedBy = Member.findById(raisedById);
-            if (raisedBy != null) {
-                predicates.add(builder.equal(taskRoot.get("owner"), raisedBy));
+        // add assignedTo predicate
+        List<Predicate> assignedToPredicates = new ArrayList<Predicate>();
+        if (assignedTo != null) {
+            ArrayList<Long> memberIds = new ArrayList<Long>();
+            for (int i = 0, l = assignedTo.length; i < l; i++) {
+                String s = assignedTo[i];
+
+                if ("unassigned".equalsIgnoreCase(s)) {
+                    // treat unassigned differently
+                    assignedToPredicates.add(builder.isNull(taskRoot.get("assignedTo")));
+                }
+                else {
+                    memberIds.add(Long.parseLong(s));
+                }
+            }
+
+            if (memberIds.size() > 0) {
+                assignedToPredicates.add(taskRoot.get("assignedTo").get("id").in(memberIds));
+            }
+
+            // OR the unassigned and asignedTo predicates
+            if (assignedToPredicates.size() > 0) {
+               Iterator i = assignedToPredicates.iterator();
+                Predicate finalPredicate = (Predicate) i.next();
+
+                while (i.hasNext()) {
+                    finalPredicate = builder.or(finalPredicate, (Predicate) i.next());
+                }
+
+                predicates.add(finalPredicate);
             }
         }
 
@@ -291,7 +321,7 @@ public class Tasks extends Controller {
         // a placeholder for a new task
         Task task = new Task();
 
-        renderTemplate("Tasks/index.html", checkedTags, assignedToId, raisedById, searchText, tasks, task);
+        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, workingOn, searchText, tasks, task);
     }
 
     public static void sort(Long[] order) {
