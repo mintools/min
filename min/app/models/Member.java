@@ -87,4 +87,8 @@ public class Member extends Model {
         }
         return null;
     }
+
+    public static List<Member> getMembers() {
+        return Member.find("from Member m order by m.username asc").fetch();
+    }
 }
