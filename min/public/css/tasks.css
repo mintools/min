@@ -1,5 +1,5 @@
 html {
-    background-color: #eff3f7;    
+    background-color: #eff3f7;
 }
 
 body {
@@ -12,7 +12,7 @@ body {
 }
 
 a {
-    text-decoration:none;
+    text-decoration: none;
     font-size: 10pt;
     color: #408dda;
 }
@@ -68,26 +68,39 @@ div.task .createdBy {
 }
 
 div.task .main {
-    width: 48%;
-    margin-right: 2%;
+    width: 49%;
+    margin-right: 1%;
     float: left;
+}
+
+div.task .comments {
+    width: 19%;
+    margin-right: 1%;
+    float: left;
+    font-size: 0.8em;
 }
 
 div.task .taskInterests {
-    width: 18%;
+    width: 13%;
     margin-right: 2%;
     float: right;
+    height: 27px;
 }
 
 div.task .taskInterests .taskInterest {
-    float: right;
-    margin-right: 5px;
+    float: left;
+    margin-right: 3px;
+}
+
+div.task .taskInterests .taskInterest a.avatar {
+    border: none;
 }
 
 div.task .taskInterests .taskInterest .avatar img {
-    width:25px;
-    height:25px;
+    width: 25px;
+    height: 25px;
     float: left;
+    border: 1px solid #DDDDDD;
 }
 
 div.task .taskInterests .taskInterest img.delete {
@@ -98,13 +111,13 @@ div.task .taskInterests .taskInterest img.delete {
 }
 
 div.task .thumbnailsButtons {
-    width: 20%;
+    width: 15%;
     float: right;
     clear: right;
 }
 
-div.task .thumbnails{
-    height:25px;
+div.task .thumbnails {
+    height: 27px;
 }
 
 div.task .thumbnails .attachment {
@@ -115,12 +128,12 @@ div.task .thumbnails .thumb {
     float: left;
     margin-top: 3px;
     margin-right: 3px;
-	width: 25px;
 }
 
 div.task .thumbnails .thumb img {
     width: 25px;
     height: 25px;
+    border: 1px solid #DDDDDD;
 }
 
 div.task .thumbnails .attachment a {
@@ -128,12 +141,13 @@ div.task .thumbnails .attachment a {
     color: white;
     float: right;
 }
+
 div.task.editMode .thumbnails img {
     float: right;
 }
 
 div.task.editMode .thumbnails img.delete {
-    float:right;
+    float: right;
     display: inline;
     width: 10px;
     height: 10px;
@@ -143,9 +157,15 @@ div.task .thumbnails img.delete {
     display: none;
 }
 
+div.task.expandMode {
+    background-color: #D7F5C4;
+}
+
 div.task.editMode, div.task.editMode input {
     background-color: #FBEFEF;
 }
+
+
 
 div.task .hide {
     display: none;
@@ -222,6 +242,21 @@ div.task .edit input, div.task .edit textarea {
 div.task .tags {
     margin-top: 10px;
 }
+div.task.editMode .tags .close {
+	display:inline;
+} 
+
+div.task .tags .close{
+    display:none;
+}
+
+div.task.expandMode .tags, div.task.editMode .tags {
+	display:inline;
+} 
+div.task .tags {
+    display:none;
+}
+
 
 div.task .uploader .file {
     display: none;
@@ -253,26 +288,33 @@ div.filters {
     color: #3399ff;
     margin: 0;
     font-size: 12pt;
-} .tags ul {
-    margin: 0;
-    padding: 0 0 0 10px;
-} .tags li {
-    list-style: none;
 }
 
-#filter-div {
+div.tags ul {
+    margin: 0;
+    padding: 0 0 0 10px;
+}
+
+div.task.editMode .tags ul.tagit {
+    border: 1px solid #C6C6C6;
+}
+
+div.task .tags ul.tagit {
+    border: none;
+}
+
+div.tags li {
+    list-style: none;
+} #filter-div {
     background-color: #e5e8f1;
     padding: 20px;
     width: 300px;
     border: 2px solid #55607E;
     z-index: 9999;
-
     -webkit-box-shadow: #666 0px 2px 3px;
     -moz-box-shadow: #666 0px 2px 3px;
     box-shadow: #666 0px 2px 3px;
     behavior: url(/public/js/pie/PIE.htc);
-}
-
-.actions a {
+} .actions a {
     margin-right: 15px;
 }
