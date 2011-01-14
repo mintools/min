@@ -2,10 +2,7 @@ package controllers;
 
 import com.mortennobel.imagescaling.ResampleOp;
 import controllers.utils.TaskIndex;
-import models.Attachment;
-import models.Comment;
-import models.Member;
-import models.Task;
+import models.*;
 import org.apache.commons.lang.StringUtils;
 import play.Play;
 import play.data.validation.Valid;
@@ -284,11 +281,44 @@ public class Tasks extends Controller {
             }
 
             luceneQuery.append("tags:");
-            for (int i = 0, l = checkedTags.length; i < l; i++) {
-                String checkedTag = checkedTags[i];
-                luceneQuery.append(checkedTag);
-                if (i < l - 1) {
-                    luceneQuery.append(" AND ");
+
+            // todo: decide TO or AND based on whether the tags are within the same tagGroup
+
+            // sort checkedTags into groups
+            Map<String, List<Tag>> groups = new HashMap<String, List<Tag>>();
+
+            for (int i = 0; i < checkedTags.length; i++) {
+                Long tagId = Long.parseLong(checkedTags[i]);
+                Tag tag = Tag.findById(tagId);
+
+                // groupName = "ungrouped" if tag doesn't belong to any group
+                String groupName = (tag.group != null) ? tag.group.name : "ungrouped";
+
+                List<Tag> tags = groups.get(groupName);
+                if (tags == null) {
+                    tags = new ArrayList<Tag>();
+                    groups.put(groupName, tags);
+                }
+                tags.add(tag);
+            }
+
+            // create tag lucene query
+            for (Iterator<List<Tag>> iterator = groups.values().iterator(); iterator.hasNext();) {
+                List<Tag> tags = iterator.next();
+
+                if (tags.size() > 1) luceneQuery.append("(");
+                for (Iterator<Tag> t = tags.iterator(); t.hasNext();) {
+                    Tag tag = t.next();
+                    luceneQuery.append(tag.name);
+
+                    if (t.hasNext()) {
+                        luceneQuery.append(" OR ");
+                    }
+                }
+                if (tags.size() > 1) luceneQuery.append(")");
+
+                if (iterator.hasNext()) {
+                    luceneQuery.append(" AND tags:");
                 }
             }
         }

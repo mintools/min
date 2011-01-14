@@ -15,7 +15,7 @@
 
                     <ul class="tags">
                         #{list tagGroup.tags, as: "tag"}
-                            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+                            <li><input type="checkbox" name="checkedTags" value="${tag.id}" #{if checkedTags?.contains(tag.id.toString())}checked #{/if}/>${tag}</li>
                         #{/list}
                     </ul>
                </fieldset>
@@ -28,7 +28,7 @@
 
         <ul class="tags">
         #{list models.Tag.ungrouped(), as: "tag"}
-            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
+            <li><input type="checkbox" name="checkedTags" value="${tag.id}" #{if checkedTags?.contains(tag.id.toString())}checked #{/if}/>${tag}</li>
         #{/list}
         </ul>
     </fieldset>
