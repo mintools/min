@@ -293,6 +293,8 @@ public class Tasks extends Controller {
             }
         }
 
+        boolean noResults = false;
+
         // create lucene predicate
         if (!StringUtils.isEmpty(luceneQuery.toString())) {
             Long[] ids = TaskIndex.searchTaskIds(luceneQuery.toString(), 10);
@@ -300,23 +302,34 @@ public class Tasks extends Controller {
             if (ids != null && ids.length > 0) {
                 predicates.add(taskRoot.get("id").in(ids));
             }
+            else {
+                // lucene hasn't returned anything, shortcut the rest of the search
+                noResults = true;
+            }
         }
 
-        // aggregate all predicates
-        if (predicates.size() > 0) {
-            Iterator i = predicates.iterator();
-            Predicate finalPredicate = (Predicate) i.next();
+        List<Task> tasks;
 
-            while (i.hasNext()) {
-                finalPredicate = builder.and(finalPredicate, (Predicate) i.next());
+        if (noResults) {
+            tasks = new ArrayList<Task>();
+        }
+        else {
+            // aggregate all predicates
+            if (predicates.size() > 0) {
+                Iterator i = predicates.iterator();
+                Predicate finalPredicate = (Predicate) i.next();
+
+                while (i.hasNext()) {
+                    finalPredicate = builder.and(finalPredicate, (Predicate) i.next());
+                }
+
+                query.where(finalPredicate);
             }
 
-            query.where(finalPredicate);
+            // execute query
+            TypedQuery<Task> q = JPA.em().createQuery(query);
+            tasks = q.getResultList();
         }
-
-        // execute query
-        TypedQuery<Task> q = JPA.em().createQuery(query);
-        List<Task> tasks = q.getResultList();
 
         // a placeholder for a new task
         Task task = new Task();
