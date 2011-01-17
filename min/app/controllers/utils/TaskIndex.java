@@ -75,13 +75,8 @@ public class TaskIndex {
         writer.addDocument(document);
     }
 
-    public static Long[] searchTaskIds(String queryString, int numResults) throws Exception {
+    public static Long[] searchTaskIds(Query query, int numResults) throws Exception {
         Searcher searcher = new IndexSearcher(FSDirectory.open(new File(INDEX_PATH)), true);
-
-        Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-        QueryParser parser = new QueryParser(Version.LUCENE_30, "content", analyzer);
-        Query query = parser.parse(queryString);
-
 
         TopDocs docs = searcher.search(query, numResults);
 
@@ -93,7 +88,6 @@ public class TaskIndex {
             taskIds[i] = Long.parseLong(result.getField("id").stringValue());
         }
 
-        analyzer.close();
         searcher.close();
 
         return taskIds;

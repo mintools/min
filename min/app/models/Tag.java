@@ -24,11 +24,12 @@ public class Tag extends Model implements Comparable<Tag> {
     }
 
     public static Tag findOrCreateByName(String name) {
-        Tag tag = Tag.find("byName", name).first();
+        Tag tag = Tag.find("from Tag t where upper(t.name) = ?", name.toUpperCase()).first();
         if (tag == null) {
             tag = new Tag();
             tag.name = name;
         }
+        tag.save();
         return tag;
     }
 

@@ -10,7 +10,7 @@
                 #{else}
                 Title
                 #{/else}</h3>
-            <!--div class="createdBy">By: ${task.owner}</div-->
+            <!--div class="createdBy">By: ${task.owner}</div-->            
         </div>
         <div class="main">
             <div class="description descriptionSummary">
@@ -21,17 +21,14 @@
                 Please enter a description
                 #{/else}
             </div>
-            <div class="tags">
-                <ul class="tagContainer">
-                    #{list items:task.tags, as:'tag'}
-                    <li class="tagit-choice">
-                        ${tag}<a class="close">x</a>
-                        <input type="hidden" name="item[tags][]" value="${tag}" style="display: none;">
-                    </li>#{/list}
-                </ul>
-            </div>
         </div>
         <div class="comments">
+            <div class="selectedTags">
+                #{if task.tags}
+                    ${task.tags?.join(' ')}
+                #{/if}                
+            </div>
+
             #{list task.comments, as: "comment"}
             #{include "Tasks/comment.html"/}
             #{/list}

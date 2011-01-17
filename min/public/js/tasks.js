@@ -92,15 +92,6 @@ function task(taskElement, taskList) {
 		 */
 		current.originalTitle = $(".title h3", cTask).html();
 		current.originalDesc = $(".description", cTask).html();
-		current.originalTags = $("ul.tagContainer", cTask).html();
-		
-		/*
-		 * Initialise tag editing
-		 */
-		$("ul.tagContainer", cTask).tagit({
-			availableTags : []
-		});
-
 
 		current.createUploader();
 
@@ -112,13 +103,9 @@ function task(taskElement, taskList) {
 		current.authenticityToken = $("input[name='authenticityToken']", cTask).val();
 
 		current.id = $("input[name='id']", cTask).val();
-		current.title = $(".title h3", cTask).html();
-		current.content = $(".description", cTask).html();
-		current.tags = new Array();
-		$(".tagit-choice input", cTask).each(function() {
-			current.tags.push($(this).val());
-		});
-
+		current.title = $.trim($(".title h3", cTask).html());
+		current.content = $.trim($(".description", cTask).html());
+        current.selectedTags = $.trim($(".selectedTags", cTask).text());
 	};
 
 	this.refresh = function() {
@@ -135,7 +122,7 @@ function task(taskElement, taskList) {
 
 	this.getDataForPost = function() {
 
-		current.refreshVars();
+//		current.refreshVars();
 
 		var rtnData = {};
 		rtnData.task = {};
@@ -144,7 +131,7 @@ function task(taskElement, taskList) {
 		rtnData["task.id"] = current.id;
 		rtnData["task.title"] = current.title;
 		rtnData["task.content"] = current.content;
-		rtnData.selectedTags = current.tags;
+		rtnData["selectedTags"] = current.selectedTags;        
 
 		return rtnData;
 	};
@@ -236,6 +223,9 @@ function task(taskElement, taskList) {
 	};
 
 	this.save = function() {
+		current.title = $.trim($(".title h3", cTask).html());
+		current.content = $.trim($(".description", cTask).html());
+        current.selectedTags = $(".tagContainer", cTask).val();
 
 		$(cTask).removeClass('editMode');
 
@@ -250,7 +240,7 @@ function task(taskElement, taskList) {
 		$.post(current.actionUrl, data, function(data) {
 
 			var tempIsNew = current.isNew;
-			$('.contents', cTask).html(data);
+			$('.contents', cTask).replaceWith(data);
 
 			current.init();
 
@@ -270,11 +260,7 @@ function task(taskElement, taskList) {
 
 		$(".title h3", cTask).html(current.originalTitle);
 		$(".description", cTask).html(current.originalDesc);
-		$("ul.tagContainer", cTask).html(current.originalTags);
-
-		$("ul.tagContainer", cTask).tagit({
-			availableTags : []
-		});
+        $(".selectedTags", cTask).html(current.selectedTags);
 
 		current.showEditButtons();
 	};
@@ -320,8 +306,6 @@ function task(taskElement, taskList) {
 		$('.title h3', cTask).attr('contentEditable', false);
 
 		$('.description', cTask).attr('contentEditable', false);
-
-		$('.tagit-new', cTask).addClass('hide');
 	};
 
 	this.makeEditable = function() {
@@ -330,10 +314,14 @@ function task(taskElement, taskList) {
 			return event.which != 13;
 		});
 
-		$('.tagit-new', cTask).removeClass('hide');
-
 		$('.description', cTask).attr('contentEditable', true);
 
+        $('.selectedTags', cTask).html('<input class="tagContainer" type="text" name="selectedTags" value="' + (current.selectedTags ? current.selectedTags: "") + '"/>');
+        $('.tagContainer', cTask).tagSuggest({
+            url: '/tasks/gettags',
+//            tags: ['bugs'],
+            delay: 250
+        });               
 	};
 
 	this.showMoveHandle = function() {

@@ -334,7 +334,7 @@ div.tags li {
 } #filter-div {
     background-color: #e5e8f1;
     padding: 20px;
-    width: 300px;
+    width: 500px;
     border: 1px solid #DDDDDD;
     z-index: 9999;
     -webkit-box-shadow: #666 0px 2px 3px;
@@ -354,4 +354,30 @@ div.tags li {
     margin-bottom: 10px;
 } fieldset legend {
     font-weight:bold;
+}
+
+SPAN.tagMatches {
+    margin-left: 10px;
+}
+
+SPAN.tagMatches SPAN {
+    padding: 2px;
+    margin-right: 4px;
+    background-color: #91b9f2;
+    color: #fff;
+    cursor: pointer;
+}
+
+.filterContainer {
+    overflow: hidden;
+}
+
+.filterContainer .column {
+    width: 48%;
+    float: left;
+    margin-right: 2%;
+}
+
+.descriptionTextArea {
+    width: 100%;
 }
