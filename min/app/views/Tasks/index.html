@@ -12,7 +12,7 @@
             imageHeight: '200px',                     //height of tab image           //Optionally can be set using css
             imageWidth: '18px',                       //width of tab image            //Optionally can be set using css
             tabLocation: 'right',                      //side of screen where tab lives, top, right, bottom, or left
-            topPos: '76px',
+            topPos: 50,
             speed: 300,                               //speed of animation
             action: 'click',                          //options: 'click' or 'hover', action to trigger animation
             fixedPosition: true                      //options: true makes it stick(fixed position) on scroll
@@ -53,34 +53,6 @@
         </div>#{include 'Tasks/task.html'/}
     </div>#{/list}
 </div>
-<!--
-<div class="filters">
-    <h3>Filter Tasks</h3>
-    #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
-        <ul class="tags">
-        #{list models.Tag.ungrouped(), as: "tag"}
-            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
-        #{/list}
-        </ul>
-
-        #{list models.TagGroup.findAll(), as: "tagGroup"}
-           #{if !tagGroup.tags.isEmpty()}
-               <div class="tagGroup">
-                   <div class="name">${tagGroup.name}</div>
-
-                   <ul class="tags">
-                        #{list tagGroup.tags, as: "tag"}
-                            <li><input type="checkbox" name="checkedTags" value="${tag}" #{if checkedTags?.contains(tag.name)}checked #{/if}/>${tag}</li>
-                        #{/list}
-                    </ul>
-                </div>
-            #{/if}
-        #{/list}
-
-        <hr/>
-        <input type="submit" name="action" value="Filter"/>
-    #{/form}
-</div>
--->
+    
 <div id="mask">
 </div>
