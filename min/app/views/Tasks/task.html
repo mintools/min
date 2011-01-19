@@ -1,4 +1,3 @@
-<div class="insertAction hide"><a href="#">Add Task</a></div>
 <div class="contents">
     <div class="hide properties">
         #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}

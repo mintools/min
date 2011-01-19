@@ -13,7 +13,6 @@ function task(taskElement, taskList) {
 	/**
 	 * expand
 	 */
-	
 
 	this.init = function(isNew) {
 		current.isNew = isNew;
@@ -372,7 +371,6 @@ function task(taskElement, taskList) {
 			});
 		});
 	};
-
 }
 
 function tasks() {

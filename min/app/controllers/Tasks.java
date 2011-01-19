@@ -8,10 +8,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.*;
 import org.apache.lucene.util.Version;
 import play.Play;
 import play.data.validation.Valid;
@@ -288,6 +285,8 @@ public class Tasks extends Controller {
         // add lucene-related predicate
         BooleanQuery luceneQuery = new BooleanQuery();
 
+//        luceneQuery.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
+
         // add search string
         if (!StringUtils.isEmpty(searchText)) {
             Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
@@ -301,22 +300,23 @@ public class Tasks extends Controller {
 
         // iterate through all tagGroups and all tags, checking if they have been checked by the user
         List<Tag> selectedTags = new ArrayList();
+
         if (checkedTags != null) {
             for (int i = 0; i < checkedTags.length; i++) {
                 String tagIdString = checkedTags[i];
                 Tag tag = Tag.findById(Long.parseLong(tagIdString));
                 selectedTags.add(tag);
-            }
+            }                
         }
 
-//        List<TagGroup> selectedNoTagGroup = new ArrayList();
-//        if (noTag != null) {
-//            for (int i = 0; i < noTag.length; i++) {
-//                String tagGroupIdString = noTag[i];
-//                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
-//                selectedNoTagGroup.add(group);
-//            }
-//        }
+        List<TagGroup> selectedNoTagGroup = new ArrayList();
+        if (noTag != null) {
+            for (int i = 0; i < noTag.length; i++) {
+                String tagGroupIdString = noTag[i];
+                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
+                selectedNoTagGroup.add(group);
+            }
+        }
 
         List<TagGroup> groups = TagGroup.findAll();
         for (Iterator<TagGroup> iterator = groups.iterator(); iterator.hasNext();) {
@@ -335,16 +335,16 @@ public class Tasks extends Controller {
                 }
             }
 
-            // check if "no group" has been selected
-//            if (selectedNoTagGroup.contains(tagGroup)) {
-//                BooleanQuery noGroupTagQuery = new BooleanQuery();
-//                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
-//                    Tag tag = tagIterator.next();
-//                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-//                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.MUST_NOT);
-//                }
-//                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.SHOULD);
-//            }
+//                check if "no group" has been selected
+            if (selectedNoTagGroup.contains(tagGroup)) {
+                BooleanQuery noGroupTagQuery = new BooleanQuery();
+                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
+                    Tag tag = tagIterator.next();
+                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
+                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
+                }
+                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.MUST_NOT);
+            }
 
             if (!groupQuery.clauses().isEmpty()) luceneQuery.add(groupQuery, BooleanClause.Occur.MUST);
         }
