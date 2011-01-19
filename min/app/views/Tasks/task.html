@@ -3,7 +3,6 @@
     <div class="hide properties">
         #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}
     </div>
-    <span class="taskId hoverAction hide">Task ID: ${task.id}</span>
     <div class="display">
         <div class="title">
             <h3>#{if task.title}

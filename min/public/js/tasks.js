@@ -347,8 +347,6 @@ function task(taskElement, taskList) {
 
         $('.selectedTags', cTask).html('<input class="tagContainer" type="text" name="selectedTags" value="' + (current.selectedTags ? current.selectedTags: "") + '"/>');
         $('.tagContainer', cTask).tagSuggest({
-            url: '/tasks/gettags',
-//            tags: ['bugs'],
             delay: 250
         });               
 	};

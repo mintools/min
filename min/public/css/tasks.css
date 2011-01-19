@@ -416,14 +416,8 @@ SPAN.tagMatches SPAN {
     width: 100%;
 }
 
-.insertAction {
-    float: left;
-    height: 0;
-    position: relative;
-    margin-top: -15px;
-}
-
 .taskId {
     color:#cccccc;
-    float:right;    
+    font-size: 6pt;
+    text-align: center;
 }

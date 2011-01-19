@@ -19,8 +19,8 @@
                             #{list tagGroup.tags, as: "tag"}
                                 <li><input type="checkbox" name="checkedTags" value="${tag.id}" #{if checkedTags?.contains(tag.id.toString())}checked #{/if}/>${tag}</li>
                             #{/list}
-                            <!--<hr/>-->
-                            <!--<li><input type="checkbox" name="noTag" value="${tagGroup.id}" #{if noTag?.contains(tagGroup.id?.toString())}checked #{/if}/>No ${tagGroup.name}</li>-->
+                            <hr/>
+                            <li><input type="checkbox" name="noTag" value="${tagGroup.id}" #{if noTag?.contains(tagGroup.id?.toString())}checked #{/if}/>No ${tagGroup.name}</li>
                         </ul>
                    </fieldset>
                 #{/if}

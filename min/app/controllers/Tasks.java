@@ -22,10 +22,7 @@ import play.mvc.With;
 
 import javax.imageio.ImageIO;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 import java.awt.image.BufferedImage;
@@ -275,6 +272,19 @@ public class Tasks extends Controller {
             }
         }
 
+//        // add "no tags in group" predictate (must be done in DB since Lucene does not work well with negation queries
+//        if (noTag != null) {
+//            for (int i = 0; i < noTag.length; i++) {
+//                String tagGroupIdString = noTag[i];
+//                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
+//
+//                Join<Task, Tag> join = taskRoot.join("tags", JoinType.LEFT);
+//                Predicate joinPredicate = join.in(group.tags);
+//
+//                predicates.add(builder.not(joinPredicate));
+//            }
+//        }
+
         // add lucene-related predicate
         BooleanQuery luceneQuery = new BooleanQuery();
 
@@ -299,14 +309,14 @@ public class Tasks extends Controller {
             }
         }
 
-        List<TagGroup> selectedNoTagGroup = new ArrayList();
-        if (noTag != null) {
-            for (int i = 0; i < noTag.length; i++) {
-                String tagGroupIdString = noTag[i];
-                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
-                selectedNoTagGroup.add(group);
-            }
-        }
+//        List<TagGroup> selectedNoTagGroup = new ArrayList();
+//        if (noTag != null) {
+//            for (int i = 0; i < noTag.length; i++) {
+//                String tagGroupIdString = noTag[i];
+//                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
+//                selectedNoTagGroup.add(group);
+//            }
+//        }
 
         List<TagGroup> groups = TagGroup.findAll();
         for (Iterator<TagGroup> iterator = groups.iterator(); iterator.hasNext();) {
@@ -326,15 +336,15 @@ public class Tasks extends Controller {
             }
 
             // check if "no group" has been selected
-            if (selectedNoTagGroup.contains(tagGroup)) {
-                BooleanQuery noGroupTagQuery = new BooleanQuery();
-                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
-                    Tag tag = tagIterator.next();
-                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.MUST_NOT);
-                }
-                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.SHOULD);
-            }
+//            if (selectedNoTagGroup.contains(tagGroup)) {
+//                BooleanQuery noGroupTagQuery = new BooleanQuery();
+//                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
+//                    Tag tag = tagIterator.next();
+//                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
+//                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.MUST_NOT);
+//                }
+//                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.SHOULD);
+//            }
 
             if (!groupQuery.clauses().isEmpty()) luceneQuery.add(groupQuery, BooleanClause.Occur.MUST);
         }
@@ -391,11 +401,6 @@ public class Tasks extends Controller {
         Task task = new Task();
 
         renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks, task);
-    }
-
-    public static void getTags() {
-        List<Tag> tags = Tag.findAll();
-        render(tags);
     }
 
     public static void sort(Long[] order) {

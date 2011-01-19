@@ -70,4 +70,9 @@ public class Tags extends Controller {
             t.save();
         }
     }
+
+    public static void getTags() {
+        List<Tag> tags = Tag.findAll();
+        render(tags);
+    }
 }
