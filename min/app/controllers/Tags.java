@@ -9,6 +9,7 @@ import play.mvc.Controller;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * User: soyoung
@@ -58,5 +59,15 @@ public class Tags extends Controller {
             tag.group = TagGroup.findById(groupId);
         }
         tag.save();        
+    }
+
+    public static void sort(List<Long> tags) {
+        
+        for (int i = 0; i < tags.size(); i++) {
+            Long tagId = tags.get(i);
+            Tag t = Tag.findById(tagId);
+            t.sortOrder = tags.size() - i;
+            t.save();
+        }
     }
 }

@@ -15,6 +15,8 @@ public class Tag extends Model implements Comparable<Tag> {
     @ManyToOne(optional = true)
     public TagGroup group;
 
+    public Integer sortOrder;
+
     public String toString() {
         return name;
     }

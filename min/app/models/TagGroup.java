@@ -6,6 +6,7 @@ import play.db.jpa.Model;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class TagGroup extends Model {
     public String name;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OrderBy("sortOrder DESC") 
     public List<Tag> tags = new ArrayList<Tag>();
 
     public String toString() {
