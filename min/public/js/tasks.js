@@ -8,6 +8,7 @@ function task(taskElement, taskList) {
 	this.taskList = taskList;
 	this.isNew = false;
 	this.mode = '';
+    this.cTask = cTask;
 
 	/**
 	 * expand
@@ -21,6 +22,30 @@ function task(taskElement, taskList) {
 		 * Variables
 		 */
 		current.refreshVars();
+
+        $(cTask).mouseenter(function(e) {
+            if (!current.isNew) $(".hoverAction", cTask).show();
+        });
+
+        $(cTask).mouseleave(function(e) {
+            if (!current.isNew) $(".hoverAction", cTask).hide();
+        });
+
+        $(".insertAboveButton", cTask).click(function() {
+            taskList.insertNew(current, true);
+        });
+
+        $(".insertBelowButton", cTask).click(function() {
+            taskList.insertNew(current, false);
+        });
+
+        $(".moveUpButton", cTask).click(function() {
+            taskList.moveToTop(current);
+        });
+
+        $(".moveDownButton", cTask).click(function() {
+            taskList.moveToBottom(current);
+        });
 
 		$('.title,.main,.comments',cTask).click(function() {
 			
@@ -245,6 +270,10 @@ function task(taskElement, taskList) {
 			current.init();
 
 			if (tempIsNew) {
+                // if we're inserting
+                if (current.beforeTaskId || current.afterTaskId) {
+                    current.taskList.insertIntoList(current);
+                }
 				current.showMoveHandle();
 				current.taskList.sortRefresh();
 			}
@@ -346,7 +375,7 @@ function task(taskElement, taskList) {
 		});
 	};
 
-};
+}
 
 function tasks() {
 
@@ -435,7 +464,90 @@ function tasks() {
 		$('.tasks').prepend(clone);
 	};
 
-};
+    this.insertNew = function(baseTask, before) {
+        var clone = $("#newTask .task").clone();
+
+        var newTask = new task(clone, current);
+		newTask.init(true);
+
+        if (before) {
+            $(baseTask.cTask).before(clone);
+            newTask.beforeTaskId = baseTask.id;
+        }
+        else {
+            $(baseTask.cTask).after(clone);
+            newTask.afterTaskId = baseTask.id;
+        }
+    };
+
+    this.moveToTop = function(baseTask) {
+        var toSwap = new Array();
+        // push baseTask to top of sort order
+        toSwap.push(baseTask.id);
+        for (var i = 0; i < taskOrder.length; i++) {
+            if (taskOrder[i] != baseTask.id) {
+                toSwap.push(taskOrder[i]);
+            }
+        }
+
+        $.post('/tasks/sort', {
+            order : toSwap
+        }, function() {
+            $(baseTask.cTask).detach().prependTo(".tasks");
+            current.setOrder();
+        });
+    };
+
+    this.moveToBottom = function(baseTask) {
+        var toSwap = new Array();
+
+        var found = false;
+
+        for (var i = 0; i < taskOrder.length; i++) {
+            if (found) {
+                toSwap.push(taskOrder[i]);
+            }
+
+            found |= (taskOrder[i] == baseTask.id);
+        }
+
+        // push baseTask to bottom of sort order
+        toSwap.push(baseTask.id);
+
+        $.post('/tasks/sort', {
+            order : toSwap
+        }, function() {
+            $(baseTask.cTask).detach().appendTo(".tasks");
+            current.setOrder();
+        });
+    };
+
+    this.insertIntoList = function(baseTask) {
+        var toSwap = new Array();
+
+        var before = baseTask.beforeTaskId;
+
+        var anchorTaskId = baseTask.beforeTaskId ? baseTask.beforeTaskId : baseTask.afterTaskId;
+
+        for (var i = 0; i < taskOrder.length && taskOrder[i] != anchorTaskId; i++) {
+            toSwap.push(taskOrder[i]);
+        }
+
+        if (!before) {
+            toSwap.push(anchorTaskId);
+        }
+
+        toSwap.push(baseTask.id);
+
+        if (toSwap.length > 1) {
+            $.post('/tasks/sort', {
+                order : toSwap
+            }, function() {
+                current.setOrder();
+            });
+        }
+    }
+}
 
 $(document).ready(function() {
 

@@ -45,14 +45,14 @@ div.tasks {
 div.task {
     border: 1px solid #DDDDDD;
     padding: 5px 5px 5px 0px;
-    margin: 0px 0px 4px 0;
+    margin: 0px 0px 4px 20px;
     background-color: white;
     -moz-box-shadow: 0 1px 1px #DDDDDD;
 }
 
 div.taskPlaceholder {
     background-color: #e5e5e5;;
-    height: 50px;
+    height: 80px;
     margin: 10px 0px;
 }
 
@@ -219,6 +219,40 @@ div.task .showIcon, div.task .hideIcon {
     margin-right: 10px;
 }
 
+div.task .hoverActions {
+    float: left;
+    width: 20px;
+    margin-left: -20px;
+}
+
+div.task .hoverActions .moveUpButton {
+    background-image: url(../images/overlay/arrow_top.gif);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+div.task .hoverActions .moveDownButton {
+    background-image: url(../images/overlay/arrow_down.gif);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+div.task .hoverActions .insertAboveButton {
+    background-image: url(../images/overlay/action_add.gif);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
+div.task .hoverActions .insertBelowButton {
+    background-image: url(../images/overlay/action_add.gif);
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+
 div.task .move {
     float: left;
     cursor: move;
@@ -380,4 +414,16 @@ SPAN.tagMatches SPAN {
 
 .descriptionTextArea {
     width: 100%;
+}
+
+.insertAction {
+    float: left;
+    height: 0;
+    position: relative;
+    margin-top: -15px;
+}
+
+.taskId {
+    color:#cccccc;
+    float:right;    
 }
