@@ -32,7 +32,7 @@
 
    <ul class="tags">
         #{list tagGroup.tags, as: "tag"}
-            <li class="tag" id="tags-${tag.id}">${tag.name} (${tag.id}, ${tag.sortOrder})</li>
+            <li class="tag" id="tags-${tag.id}">${tag.name}</li>
         #{/list}
    </ul>
 #{/list}
@@ -40,7 +40,7 @@
 <h3>Ungrouped (${orphanTags.size()})</h3>
 <ul class="tags">
     #{list orphanTags, as: "tag"}
-       <li class="tag" id="tags-${tag.id}">${tag.name} (${tag.id}, ${tag.sortOrder})</li>
+       <li class="tag" id="tags-${tag.id}">${tag.name}</li>
     #{/list}
 </ul>
 
