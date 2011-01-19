@@ -493,8 +493,9 @@ function tasks() {
         $.post('/tasks/sort', {
             order : toSwap
         }, function() {
-            $(baseTask.cTask).detach().prependTo(".tasks");
-            current.setOrder();
+            $(baseTask.cTask).hide().prependTo(".tasks").fadeIn(1000);
+            $.scrollTo($(baseTask.cTask), 1000, {offset: -20});
+            current.setOrder();            
         });
     };
 
@@ -517,7 +518,8 @@ function tasks() {
         $.post('/tasks/sort', {
             order : toSwap
         }, function() {
-            $(baseTask.cTask).detach().appendTo(".tasks");
+            $(baseTask.cTask).hide().appendTo(".tasks").fadeIn(1000);
+            $.scrollTo($(baseTask.cTask), 1000, {offset: +20});
             current.setOrder();
         });
     };
