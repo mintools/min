@@ -1,6 +1,0 @@
-[
-#{list tags, as: "tag"}
-    "${tag.name}"
-     #{if tag != tags.last()},#{/if}       
-#{/list}
-]
