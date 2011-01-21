@@ -1,20 +1,19 @@
 <div class="contents">
     <div class="hide properties">
-        #{form id:'task-' + (task.id ? task.id : '') + '-form', action:@save(task.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task.id}"/>#{/form}
+        #{form id:'task-' + (task?.id ? task?.id : '') + '-form', action:@save(task?.id), method:'post', enctype:'multipart/form-data' }<input name="id" value="${task?.id}"/>#{/form}
     </div>
     <div class="display">
         <div class="title">
-            <h3>#{if task.title}
+            <h3>#{if task?.title}
                 ${task.title.raw()}
                 #{/if}
                 #{else}
                 Title
                 #{/else}</h3>
-            <!--div class="createdBy">By: ${task.owner}</div-->
         </div>
         <div class="main">
             <div class="description descriptionSummary">
-                #{if task.content}
+                #{if task?.content}
                 ${task.content.raw()}
                 #{/if}
                 #{else}
@@ -24,21 +23,21 @@
         </div>
         <div class="comments">
             <div class="selectedTags">
-                #{if task.tags} 
+                #{if task?.tags}
                 ${task.tags?.join(' ')}  
                 #{/if} 
             </div>
-            #{list task.comments, as: "comment"}
+            #{list task?.comments, as: "comment"}
             #{include "Tasks/comment.html"/}
             #{/list}
         </div>
         <div class="taskInterests">
-            #{list task.interestedMembers, as: "member"}
+            #{list task?.interestedMembers, as: "member"}
             #{include "Members/taskInterest.html"/}
             #{/list}
         </div>
         <div class="thumbnails">
-            #{list task.attachments, as:'attachment'}
+            #{list task?.attachments, as:'attachment'}
             #{include 'Attachments/attachment.html'/}
             #{/list}
         </div>
@@ -49,7 +48,7 @@
             #{if !isNew}<a href="" class="editButton button ui-state-default ui-corner-all right">Edit</a>
             <div class="uploader right">
                 <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-                    <input type="hidden" name="taskId" value="${task.id}"/><input type="file" name="file"/>
+                    <input type="hidden" name="taskId" value="${task?.id}"/><input type="file" name="file"/>
                 </form>
             </div>#{/if}
         </div>

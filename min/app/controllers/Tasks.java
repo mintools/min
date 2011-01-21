@@ -37,7 +37,6 @@ import java.util.*;
 public class Tasks extends Controller {
     private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
-
     public static void index(Long taskId) {
         List<Task> tasks;
 
@@ -49,10 +48,7 @@ public class Tasks extends Controller {
             tasks = Task.findActive();
         }
 
-        // a placeholder for a new task
-        Task task = new Task();
-
-        render(tasks, task);
+        render(tasks);
     }
 
     public static void show(Long taskId) {
@@ -195,17 +191,11 @@ public class Tasks extends Controller {
             }
         }
 
-        // a placeholder for a new task
-        Task task = new Task();
-
-        renderTemplate("Tasks/index.html", tag, tasks, task);
+        renderTemplate("Tasks/index.html", tag, tasks);
     }
 
     public static void trash() {
         List<Task> tasks = Task.findInactive();
-
-        // a placeholder for a new task
-        Task task = new Task();
 
         render(tasks);
     }
@@ -214,10 +204,7 @@ public class Tasks extends Controller {
 
         List<Task> tasks = filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
 
-        // a placeholder for a new task
-        Task task = new Task();
-
-        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks, task);
+        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks);
     }
 
     // todo: add "workingOn" to filter
@@ -279,23 +266,8 @@ public class Tasks extends Controller {
             }
         }
 
-//        // add "no tags in group" predictate (must be done in DB since Lucene does not work well with negation queries
-//        if (noTag != null) {
-//            for (int i = 0; i < noTag.length; i++) {
-//                String tagGroupIdString = noTag[i];
-//                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
-//
-//                Join<Task, Tag> join = taskRoot.join("tags", JoinType.LEFT);
-//                Predicate joinPredicate = join.in(group.tags);
-//
-//                predicates.add(builder.not(joinPredicate));
-//            }
-//        }
-
         // add lucene-related predicate
         BooleanQuery luceneQuery = new BooleanQuery();
-
-//        luceneQuery.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
 
         // add search string
         if (!StringUtils.isEmpty(searchText)) {
@@ -350,17 +322,6 @@ public class Tasks extends Controller {
                 TermQuery noTagsQuery = new TermQuery(new Term("noTagsIn_" + tagGroup.id, "true"));
                 groupQuery.add(noTagsQuery, BooleanClause.Occur.SHOULD);
             }
-
-//                check if "no group" has been selected
-//            if (selectedNoTagGroup.contains(tagGroup)) {
-//                BooleanQuery noGroupTagQuery = new BooleanQuery();
-//                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
-//                    Tag tag = tagIterator.next();
-//                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-//                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
-//                }
-//                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.MUST_NOT);
-//            }
 
             if (!groupQuery.clauses().isEmpty()) luceneQuery.add(groupQuery, BooleanClause.Occur.MUST);
         }
