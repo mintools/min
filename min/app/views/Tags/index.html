@@ -1,5 +1,61 @@
 #{extends 'main.html' /}
 
+<style type="text/css">
+    ul {
+        list-style: none;
+    }
+
+    li {
+        padding: 5px;
+        margin: 5px;
+        -webkit-border-radius: 5px;
+        background-color: #eff3f7;
+        padding-left: 20px;
+        color: gray;
+    }
+    
+    .grouped {
+        background-color: white;
+        padding: 10px;
+        margin: 5px;
+        -webkit-border-radius: 5px;
+        border: 1px solid #cccccc;
+    }
+
+    .grouped .name {
+        color: #408dda;
+        font-size: 12pt;
+        margin-bottom: 10px;
+    }
+
+    #pageContainer {
+        overflow: hidden;
+    }
+
+    #tagGroupContainer {
+        float: left;
+        width: 60%;
+        margin-right: 4%;
+    }
+
+    .tag {
+        padding-left: 20px;
+    }
+
+    .handle {
+        width: 15px;
+        height: 15px;
+        float:left;
+        margin-right: 10px;
+        background-image: url("/public/images/drag-icon.gif");
+        cursor: move;
+    }
+
+    .placeholder {
+        background-color: #cccccc;
+    }
+</style>
+
 <script type="text/javascript">
     $(function() {
        $(".groupSelector").change(function() {
@@ -18,48 +74,61 @@
 
        $('.tags').sortable({
 			items : ".tag",
+            handle : $(".handle"),
+            placeholder : 'placeholder',
 			update : function(event, ui) {
                 $.post("/tags/sort", $(this).sortable('serialize'));                
+			}
+		});
+
+        $('.tagGroups').sortable({
+			items : ".tagGroup",
+            handle : $(".handle"),
+            placeholder : 'placeholder',
+			update : function(event, ui) {
+                $.post("/tags/sortGroup", $(this).sortable('serialize'));   
 			}
 		});
     });
 </script>
 
-<h1>Tag Groups <a href="@{TagGroups.create()}">(add new)</a></h1>
+<div id="pageContainer">
+    <div id="tagGroupContainer">
+        <h1>Tags <a href="@{TagGroups.create()}">(add new group)</a> <a href="@{Tags.create()}">(add new tag)</a></h1>        
 
-#{list models.TagGroup.findAll(), as: "tagGroup"}
-   <h3>${tagGroup.name} (${tagGroup.tags.size()})</h3>
+        <ul class="tagGroups">
+            #{list models.TagGroup.getAll(), as: "tagGroup"}
+               <li class="tagGroup grouped" id="tagGroups-${tagGroup.id}">
+                   <div class="handle"></div>
+                   <div class="name">${tagGroup.name}</div>
+                   <ul class="tags">
+                        #{list tagGroup.tags, as: "tag"}
+                            <li class="tag" id="tags-${tag.id}"><div class="handle"></div>${tag.name}
+                                <div style="float:right;">
+                                   #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}
+                                        #{option}  #{/option}
+                                   #{/select}<a onclick="return confirm('Are you sure you want to delete this tag?');" href="@{Tags.delete(tag.id)}">delete</a>
+                                </div>
+                            </li>
+                        #{/list}
+                   </ul>
+               </li>
+            #{/list}
 
-   <ul class="tags">
-        #{list tagGroup.tags, as: "tag"}
-            <li class="tag" id="tags-${tag.id}">${tag.name}</li>
-        #{/list}
-   </ul>
-#{/list}
-
-<h3>Ungrouped (${orphanTags.size()})</h3>
-<ul class="tags">
-    #{list orphanTags, as: "tag"}
-       <li class="tag" id="tags-${tag.id}">${tag.name}</li>
-    #{/list}
-</ul>
-
-<hr/>        
-
-<h1>All Tags <a href="@{Tags.create()}">(add new)</a></h1>
-
-#{if flash.error}
-    <div class="error">
-        ${flash.error}
+            <li class="grouped">
+                <div class="name">ungrouped</div>
+                <ul class="tags">
+                    #{list orphanTags, as: "tag"}
+                       <li class="tag" id="tags-${tag.id}">${tag.name}
+                           <div style="float:right;">
+                               #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}
+                                    #{option}  #{/option}
+                               #{/select}<a onclick="return confirm('Are you sure you want to delete this tag?');" href="@{Tags.delete(tag.id)}">delete</a>
+                            </div>
+                       </li>    
+                    #{/list}
+                </ul>
+            </li>
+        </ul>
     </div>
-#{/if}
-
-<ul class="tags">
-    #{list models.Tag.findAll(), as: "tag"}
-        <li class="tag">${tag.name} -
-            #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}
-                #{option} Unassigned #{/option}
-            #{/select} [<a onclick="return confirm('Are you sure you want to delete this tag?');" href="@{Tags.delete(tag.id)}">Delete</a>]
-        </li>
-    #{/list}
-</ul>
+</div>

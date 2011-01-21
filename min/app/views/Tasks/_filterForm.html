@@ -10,7 +10,7 @@
         </fieldset>
 
         <div class="column">
-            #{list models.TagGroup.findAll(), as: "tagGroup"}
+            #{list models.TagGroup.getAll(), as: "tagGroup"}
                #{if !tagGroup.tags.isEmpty()}
                    <fieldset>
                         <legend>${tagGroup.name}</legend>

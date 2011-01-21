@@ -41,7 +41,9 @@ public class Tags extends Controller {
         Tag tag = Tag.findById(id);
 
         if (!Task.findTaggedWith(tag.name).isEmpty()) {
-            flash.error("Cannot delete tag due to existing tasks");
+            List<Task> tasks = Task.findTaggedWith(tag.name);
+             
+            renderTemplate("Tags/deleteTagError.html", tasks);
         }
         else {
             tag.delete();
@@ -62,12 +64,20 @@ public class Tags extends Controller {
     }
 
     public static void sort(List<Long> tags) {
-        
         for (int i = 0; i < tags.size(); i++) {
             Long tagId = tags.get(i);
             Tag t = Tag.findById(tagId);
             t.sortOrder = tags.size() - i;
             t.save();
+        }
+    }
+
+    public static void sortGroup(List<Long> tagGroups) {
+        for (int i = 0; i < tagGroups.size(); i++) {
+            Long tagGroupId = tagGroups.get(i);
+            TagGroup group = TagGroup.findById(tagGroupId);
+            group.sortOrder = tagGroups.size() - i;
+            group.save();
         }
     }
 

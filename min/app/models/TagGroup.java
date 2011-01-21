@@ -25,6 +25,8 @@ public class TagGroup extends Model {
     @OrderBy("sortOrder DESC") 
     public List<Tag> tags = new ArrayList<Tag>();
 
+    public Integer sortOrder;
+
     public String toString() {
         return this.name;
     }
@@ -41,5 +43,9 @@ public class TagGroup extends Model {
         }
 
         return false;
+    }
+
+    public static List<TagGroup> getAll() {
+        return TagGroup.find("order by sortOrder desc").fetch(); 
     }
 }

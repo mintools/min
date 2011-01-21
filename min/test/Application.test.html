@@ -1,7 +1,14 @@
 *{ You can use plain selenium command using the selenium tag }*
 
 #{selenium}
-    // Open the home page, and check that no error occured
+    // Try to log in the administration area
+    clearSession()
     open('/')
-    assertNotTitle('Application error')
+    assertTitle('Login')
+    type('username', 'SOY')
+    type('password', 'password')
+    clickAndWait('signin')
+
+    assertTitle('Tasks')
+
 #{/selenium}
