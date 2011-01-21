@@ -179,7 +179,6 @@ function task(taskElement, taskList) {
 	this.edit = function() {
 
 		$(cTask).removeClass('expandMode');
-		current.showSaveButtons();
 		current.showLongSummary();
 		current.makeEditable();
 	};
@@ -245,16 +244,29 @@ function task(taskElement, taskList) {
 			$(this).remove();
 		});
 	};
+	
+	/**
+	 * Remove everything except breaks
+	 */
+	this.filterHtml = function(element){
+		
+		var html = $(element).html().replace(/<br>/g,'-----!!!!!Break!!!!!-----');
+		html = $.trim(html);
+		html = $('<div>' + html + '</div>').text();
+		html = html.replace(/-----!!!!!Break!!!!!-----/g,'<br/>');
+		
+		return html;
+	};
+
 
 	this.save = function() {
-		current.title = $.trim($(".title h3", cTask).html());
-		current.content = $.trim($(".description", cTask).html());
+		current.title = $.trim($(".title h3", cTask).text());
+		current.content = current.filterHtml($(".description", cTask));
         current.selectedTags = $(".tagContainer", cTask).val();
 
 		$(cTask).removeClass('editMode');
 
 		current.makeUnEditable();
-		current.showEditButtons();
 
 		var data = current.getDataForPost();
 		if (!current.isNew) {
@@ -289,8 +301,6 @@ function task(taskElement, taskList) {
 		$(".title h3", cTask).html(current.originalTitle);
 		$(".description", cTask).html(current.originalDesc);
         $(".selectedTags", cTask).html(current.selectedTags);
-
-		current.showEditButtons();
 	};
 
 	this.addInterest = function() {
@@ -311,15 +321,7 @@ function task(taskElement, taskList) {
 		});
 	};
 
-	this.showEditButtons = function() {
-		$('.saveButton, .cancelButton', cTask).hide();
-		$('.editButton, .deleteButton', cTask).show();
-	};
 
-	this.showSaveButtons = function() {
-		$('.editButton, .deleteButton', cTask).hide();
-		$('.saveButton, .cancelButton', cTask).show();
-	};
 
 	this.showShortSummary = function() {
 		$('.description ', cTask).addClass("descriptionSummary");

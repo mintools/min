@@ -1,423 +1,367 @@
 html {
-    background-color: #eff3f7;
+	background-color: #eff3f7;
 }
 
 body {
-    font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif;
-    font-size: .8em;
-} .header {
-    font-size: .7em;
-    font-weight: bold;
-    margin: 0.5%;
+	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif; font-size: .8em;
+}
+
+.header {
+	font-size: .7em; font-weight: bold; margin: 0.5%;
 }
 
 a {
-    text-decoration: none;
-    font-size: 10pt;
-    color: #408dda;
+	text-decoration: none; font-size: 10pt; color: #408dda;
 }
 
 h1 {
-    margin: 0 0 0.5% 5px;
+	margin: 0 0 0.5% 5px;
 }
 
 h3 {
-    font-size: .9em;
+	font-size: .9em;
 }
 
 div.tasks {
-    float: left;
-    width: 98%;
-    margin: 0 0.5%;
-} .right {
-    float: right;
-}.left {
-    float: left;
-} .clear {
-    clear: both;
-}.hide {
-    display: none;
-}.inputTitle {
-    font-weight: bold;
-    font-size: 80%;
+	float: left; width: 98%; margin: 0 0.5%;
+}
+
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
+.hide {
+	display: none;
+}
+
+.inputTitle {
+	font-weight: bold; font-size: 80%;
 }
 
 div.task {
-    border: 1px solid #DDDDDD;
-    padding: 5px 5px 5px 0px;
-    margin: 0px 0px 4px 20px;
-    background-color: white;
-    -moz-box-shadow: 0 1px 1px #DDDDDD;
+	border: 1px solid #DDDDDD; padding: 5px 5px 5px 0px; margin: 0px 0px 4px 20px; background-color: white; -moz-box-shadow: 0 1px 1px #DDDDDD;
 }
 
 div.taskPlaceholder {
-    background-color: #e5e5e5;;
-    height: 80px;
-    margin: 10px 0px;
+	background-color: #e5e5e5;; height: 80px; margin: 10px 0px;
 }
 
 div.task .title {
-    width: 8%;
-    margin-right: 2%;
-    padding: 2px 0px;
-    float: left;
+	width: 8%; margin-right: 2%; padding: 2px 0px; float: left;
 }
 
 div.task .createdBy {
-    font-size: .7em;
-    margin-top: 5px;
+	font-size: .7em; margin-top: 5px;
 }
 
 div.task .main {
-    width: 49%;
-    margin-right: 1%;
-    float: left;
+	width: 49%; margin-right: 1%; float: left;
 }
 
 div.task .comments {
-    width: 23%;
-    margin-right: 1%;
-    float: left;
-    font-size: 0.8em;
-}
-div.task .comments .comment{
-    width: 100%;
-	float:left;
+	width: 23%; margin-right: 1%; float: left; font-size: 0.8em;
 }
 
-div.task .comments .comment .member{
-    width: 25%;
-	float:left;
+div.task .comments .comment {
+	width: 100%; float: left;
 }
-div.task .comments .comment .content{
-    width: 75%;
-	float:left;
+
+div.task .comments .comment .member {
+	width: 25%; float: left;
+}
+
+div.task .comments .comment .content {
+	width: 75%; float: left;
 }
 
 div.task .taskInterests {
-    width: 13%;
-    margin-right: 2%;
-    float: right;
-    height: 27px;
+	width: 13%; margin-right: 2%; float: right; height: 27px;
 }
 
 div.task .taskInterests .taskInterest {
-    float: left;
-    margin-right: 3px;
+	float: left; margin-right: 3px;
 }
 
 div.task .taskInterests .taskInterest a.avatar {
-    border: none;
+	border: none;
 }
 
 div.task .taskInterests .taskInterest .avatar img {
-    width: 25px;
-    height: 25px;
-    float: left;
-    border: 1px solid #DDDDDD;
+	width: 25px; height: 25px; float: left; border: 1px solid #DDDDDD;
 }
 
 div.task .taskInterests .taskInterest img.delete {
-    float: right;
-    display: inline;
-    height: 10px;
-    width: 10px;
+	float: right; display: inline; height: 10px; width: 10px;
 }
 
-div.task .thumbnailsButtons {
-    width: 15%;
-    float: right;
-    clear: right;
+/*
+ * Buttons
+ */
+div.task .editButton {
+	display: block;
 }
 
-div.task .thumbnails {
-    height: 27px;
+div.task.editMode .editButton {
+	display: none;
 }
 
-div.task .thumbnails .attachment {
-    text-align: right;
+div.task.editMode .deleteButton,div.task.editMode .saveButton,div.task.editMode .uploader,div.task.editMode .cancelButton {
+	display: block;
 }
 
-div.task .thumbnails .thumb {
-    float: left;
-    margin-top: 3px;
-    margin-right: 3px;
-}
-
-div.task .thumbnails .thumb img {
-    width: 25px;
-    height: 25px;
-    border: 1px solid #DDDDDD;
-}
-
-div.task .thumbnails .attachment a {
-    border: none;
-    color: white;
-    float: right;
-}
-
-div.task.editMode .thumbnails img {
-    float: right;
-}
-
-div.task.editMode .thumbnails img.delete {
-    float: right;
-    display: inline;
-    width: 10px;
-    height: 10px;
-}
-
-div.task .thumbnails img.delete {
-    display: none;
-}
-
-div.task.expandMode {
-    background-color: #D7F5C4;
-}
-
-div.task.editMode, div.task.editMode input {
-    background-color: #FBEFEF;
-}
-
-div.task .hide {
-    display: none;
-}
-
-div.preview .close {
-    background-image: url(../images/overlay/close.png);
-    cursor: pointer;
-    height: 35px;
-    position: absolute;
-    right: -15px;
-    top: -15px;
-    width: 35px;
-}
-
-div.preview {
-    display: none;
-    background: #DDDDDD;
-    padding: 10px;
-    font-size: 11px;
-    z-index: 1000;
-}
-
-div.taskBar {
-    padding: 0 0.5% 10px 0.5%;
-}
-
-div.task .descriptionSummary {
-    height: 50px;
-    overflow: hidden;
-}
-
-div.task .descriptionShow {
-}
-
-div.task .showIcon, div.task .hideIcon {
-    float: right;
-    position: relative;
-    margin-right: 10px;
-}
-
-div.task .hoverActions {
-    float: left;
-    width: 20px;
-    margin-left: -20px;
-}
-
-div.task .hoverActions .moveUpButton {
-    background-image: url(../images/overlay/arrow_top.gif);
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-}
-
-div.task .hoverActions .moveDownButton {
-    background-image: url(../images/overlay/arrow_down.gif);
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-}
-
-div.task .hoverActions .insertAboveButton {
-    background-image: url(../images/overlay/action_add.gif);
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-}
-
-div.task .hoverActions .insertBelowButton {
-    background-image: url(../images/overlay/action_add.gif);
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-}
-
-div.task .move {
-    float: left;
-    cursor: move;
-    position: relative;
-    margin: 30px 0px 0px 3px;
-}
-
-div.task .move img {
-    position: absolute;
-    top: 50%;
-}
-
-div.task .contents {
-    margin-left: 13px;
+div.task .deleteButton,div.task .saveButton,div.task .uploader,div.task .cancelButton {
+	display: none;
 }
 
 div.task .editingButtons {
-    float: right;
-	margin-top: 2px;
+	float: right; margin-top: 2px; width: 100%;
 }
 
-div.task .editingButtons .button, a.newButton {
-    padding: 0.1em 1em;
-    font: normal normal normal 80% / normal 'Trebuchet MS', sans-serif;
-    position: relative;
-    text-decoration: none;
-    margin-left: 5px;
+div.task .editingButtons .button,a.newButton {
+	padding: 0.1em 1em; font: normal normal normal 80%/normal 'Trebuchet MS', sans-serif; position: relative; text-decoration: none; margin-left: 5px;
 }
+
+/*
+ * Thumb-nails
+ */
+div.task .thumbnailsButtons {
+	
+}
+
+div.task .thumbnails {
+	height: 27px; width: 15%; float: right; clear: right;
+}
+
+div.task .thumbnails .attachment {
+	text-align: right;
+}
+
+div.task .thumbnails .thumb {
+	float: left; margin-top: 3px; margin-right: 3px;
+}
+
+div.task .thumbnails .thumb img {
+	width: 25px; height: 25px; border: 1px solid #DDDDDD;
+}
+
+div.task .thumbnails .attachment a {
+	border: none; color: white; float: right;
+}
+
+div.task.editMode .thumbnails img {
+	float: right;
+}
+
+div.task.editMode .thumbnails img.delete {
+	float: right; display: inline; width: 10px; height: 10px;
+}
+
+div.task .thumbnails img.delete {
+	display: none;
+}
+
+div.task.expandMode {
+	background-color: #D7F5C4;
+}
+
+div.task.editMode,div.task.editMode input {
+	background-color: #FBEFEF;
+}
+
+div.task .hide {
+	display: none;
+}
+
+div.preview .close {
+	background-image: url(../images/overlay/close.png); cursor: pointer; height: 35px; position: absolute; right: -15px; top: -15px; width: 35px;
+}
+
+div.preview {
+	display: none; background: #DDDDDD; padding: 10px; font-size: 11px; z-index: 1000;
+}
+
+div.taskBar {
+	padding: 0 0.5% 10px 0.5%;
+}
+
+div.task .descriptionSummary {
+	height: 50px; overflow: hidden;
+}
+
+div.task .descriptionShow {
+	
+}
+
+div.task .showIcon,div.task .hideIcon {
+	float: right; position: relative; margin-right: 10px;
+}
+
+div.task .hoverActions {
+	float: left; width: 20px; margin-left: -20px;
+}
+
+div.task .hoverActions .moveUpButton {
+	background-image: url(../images/overlay/arrow_top.gif); cursor: pointer; width: 16px; height: 16px;
+}
+
+div.task .hoverActions .moveDownButton {
+	background-image: url(../images/overlay/arrow_down.gif); cursor: pointer; width: 16px; height: 16px;
+}
+
+div.task .hoverActions .insertAboveButton {
+	background-image: url(../images/overlay/action_add.gif); cursor: pointer; width: 16px; height: 16px;
+}
+
+div.task .hoverActions .insertBelowButton {
+	background-image: url(../images/overlay/action_add.gif); cursor: pointer; width: 16px; height: 16px;
+}
+
+div.task .move {
+	float: left; cursor: move; position: relative; margin: 30px 0px 0px 3px;
+}
+
+div.task .move img {
+	position: absolute; top: 50%;
+}
+
+div.task .contents {
+	margin-left: 13px;
+}
+
+
 
 div.task h3 {
-    padding: 0px;
-    margin: 0px;
+	padding: 0px; margin: 0px;
 }
 
 div.task p {
-    padding: 2px 0px;
-    margin: 0px;
+	padding: 2px 0px; margin: 0px;
 }
 
-div.task .edit input, div.task .edit textarea {
-    width: 100%;
+div.task .edit input,div.task .edit textarea {
+	width: 100%;
 }
 
 div.task .tags {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 div.task.editMode .tags .close {
-    display: inline;
+	display: inline;
 }
 
 div.task .tags .close {
-    display: none;
+	display: none;
 }
 
-div.task.expandMode .tags, div.task.editMode .tags {
-    display: block;
+div.task.expandMode .tags,div.task.editMode .tags {
+	display: block;
 }
 
 div.task .tags {
-    display: none;
+	display: none;
 }
 
 div.tags ul {
-    margin: 0;
-    padding: 0;
+	margin: 0; padding: 0;
 }
 
-
 div.task .uploader .file {
-    display: none;
+	display: none;
 }
 
 div.filters {
-    float: right;
-    margin-right: 1%;
-    width: 29%;
-} #notifications {
-    float: none;
-    width: 100%;
-    background-color: red;
-    color: white;
-} .taskSummary .title a {
-    font-size: 14pt;
-    color: #0066ff;
-    margin-bottom: 10px;
-} .taskSummary .content {
-    margin: 5px 0px;
-    font-size: 10pt;
-    color: #333333;
-} .searchTerm {
-    padding-right: 20px;
-    color: red;
-} .tagGroup .tags {
-    margin: 5px 10px;
-} .tagGroup .name {
-    color: #3399ff;
-    margin: 0;
-    font-size: 12pt;
+	float: right; margin-right: 1%; width: 29%;
 }
 
+#notifications {
+	float: none; width: 100%; background-color: red; color: white;
+}
+
+.taskSummary .title a {
+	font-size: 14pt; color: #0066ff; margin-bottom: 10px;
+}
+
+.taskSummary .content {
+	margin: 5px 0px; font-size: 10pt; color: #333333;
+}
+
+.searchTerm {
+	padding-right: 20px; color: red;
+}
+
+.tagGroup .tags {
+	margin: 5px 10px;
+}
+
+.tagGroup .name {
+	color: #3399ff; margin: 0; font-size: 12pt;
+}
 
 div.task.editMode .tags ul.tagit {
-    border: 1px solid #C6C6C6;
+	border: 1px solid #C6C6C6;
 }
 
 div.task .tags ul.tagit {
-    border: none;
+	border: none;
 }
 
 div.tags li {
-    list-style: none;
-} #filter-div {
-    background-color: #e5e8f1;
-    padding: 20px;
-    width: 500px;
-    border: 1px solid #DDDDDD;
-    z-index: 9999;
-    -webkit-box-shadow: #666 0px 2px 3px;
-    -moz-box-shadow: #666 0px 2px 3px;
-    box-shadow: #666 0px 2px 3px;
-    behavior: url(/public/js/pie/PIE.htc);
-} #filter-div td {
-    text-align: center;
-} #filter-div a {
-    border: 1px solid #abbfdd;
-    -moz-box-shadow: -1px 0 1px #666666
-} .actions a {
-    margin-right: 15px;
-} fieldset {
-    padding-top: 10px;
-    border: 1px solid #c3c1c1;
-    margin-bottom: 10px;
-} fieldset legend {
-    font-weight:bold;
+	list-style: none;
+}
+
+#filter-div {
+	background-color: #e5e8f1; padding: 20px; width: 500px; border: 1px solid #DDDDDD; z-index: 9999; -webkit-box-shadow: #666 0px 2px 3px; -moz-box-shadow: #666 0px 2px 3px; box-shadow: #666 0px 2px 3px; behavior: url(/public/js/pie/PIE.htc);
+}
+
+#filter-div td {
+	text-align: center;
+}
+
+#filter-div a {
+	border: 1px solid #abbfdd; -moz-box-shadow: -1px 0 1px #666666
+}
+
+.actions a {
+	margin-right: 15px;
+}
+
+fieldset {
+	padding-top: 10px; border: 1px solid #c3c1c1; margin-bottom: 10px;
+}
+
+fieldset legend {
+	font-weight: bold;
 }
 
 SPAN.tagMatches {
-    margin-left: 10px;
+	margin-left: 10px;
 }
 
 SPAN.tagMatches SPAN {
-    padding: 2px;
-    margin-right: 4px;
-    background-color: #91b9f2;
-    color: #fff;
-    cursor: pointer;
+	padding: 2px; margin-right: 4px; background-color: #91b9f2; color: #fff; cursor: pointer;
 }
 
 .filterContainer {
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .filterContainer .column {
-    width: 48%;
-    float: left;
-    margin-right: 2%;
+	width: 48%; float: left; margin-right: 2%;
 }
 
 .descriptionTextArea {
-    width: 100%;
+	width: 100%;
 }
 
 .taskId {
-    color:#cccccc;
-    font-size: 6pt;
-    text-align: center;
+	color: #cccccc; font-size: 6pt; text-align: center;
 }
