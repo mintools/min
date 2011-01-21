@@ -8,7 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User: soyoung
@@ -25,5 +27,19 @@ public class TagGroup extends Model {
 
     public String toString() {
         return this.name;
+    }
+
+    /**
+     * Returns true if any tag in the specified list belongs to the current group
+     */
+    public boolean hasTags(Set<Tag> tags) {
+        if (tags != null) {
+            for (Iterator<Tag> iterator = tags.iterator(); iterator.hasNext();) {
+                Tag tag = iterator.next();
+                if (this.tags.contains(tag)) return true;
+            }
+        }
+
+        return false;
     }
 }

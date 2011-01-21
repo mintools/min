@@ -8,31 +8,61 @@ Member(Member2):
   password:         password
   email:            soyoung@soyabean.com.au
   avatarFilename:   d0d8249c-850f-4015-9b40-8d63c5d7d0e5.png
-  
+
 Member(Member3):
   username:         Simon
   password:         password
   email:            soyoung@soyabean.com.au
 
 TagGroup(TagGroup1):
-  name:             tagGroup1
+  name:             group1
 
 TagGroup(TagGroup2):
-  name:             tagGroup2
+  name:             group2
 
 Tag(Tag1):
-    name:           tag1
+    name:           tag1InGroup1
     group:          TagGroup1
 
 Tag(Tag2):
-    name:           tag2
+    name:           tag2InGroup1
+    group:          TagGroup1
 
 Tag(Tag3):
-    name:           tag3
+    name:           tag3InGroup1
     group:          TagGroup1
 
 Tag(Tag4):
-    name:           tag4
+    name:           tag4InGroup2
+    group:          TagGroup2
+
+Tag(Tag5):
+    name:           tagWithNoGroup
+
+Tag(Tag6):
+    name:           tagWithNoGroup
+
+Tag(Tag7):
+    name:           tagWithNoGroup
+
+Tag(Tag8):
+    name:           tagWithNoGroup
+
+Tag(Tag9):
+    name:           tagWithNoGroup
+
+Tag(Tag10):
+    name:           tagWithNoGroup
+
+Tag(Tag11):
+    name:           tagWithNoGroup
+
+Tag(Tag12):
+    name:           tagWithNoGroup
+
+Tag(Tag13):
+    name:           tagWithNoGroup
+
 
 Task(Task1):
   isActive:         true
@@ -40,7 +70,7 @@ Task(Task1):
   sortOrder:        1
   owner:            Member1
   title:            Task1 Title
-  content:          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis eros eu risus pulvinar elementum. Ut tortor nisl, rhoncus vel blandit nec, rutrum nec est. In hac habitasse platea dictumst. Quisque a libero in urna lacinia ultricies et et nunc. Ut vel nunc turpis, eget malesuada est.
+  content:          This task has two tags in group1 but no tags in group2
   tags:
                     - Tag1
                     - Tag2
@@ -51,7 +81,7 @@ Task(Task2):
   sortOrder:        2
   owner:            Member1
   title:            Task2 Title
-  content:          Nulla aliquet, arcu eu sagittis fermentum, risus diam posuere ipsum, ac ornare sem turpis ac mi. Morbi at vehicula augue. Nam luctus, nisl in cursus venenatis, est eros sagittis nunc, nec adipiscing lorem lacus sed elit. Pellentesque adipiscing placerat laoreet.
+  content:          This task has two tags in group1 and one tag in group2
   tags:
                     - Tag1
                     - Tag3
@@ -63,7 +93,39 @@ Task(Task3):
   sortOrder:        3
   owner:            Member2
   title:            Task3 Title
-  content:          Etiam volutpat, arcu vel sagittis pretium, dui elit mollis sapien, sit amet vulputate nisl elit vel lorem. Suspendisse ac quam tellus.
+  content:          This task has no tags at all
+
+Task(Task4):
+  isActive:         true
+  createdDate:      2010-12-10
+  sortOrder:        4
+  owner:            Member2
+  title:            Task4 Title
+  content:          This task has tag 13. It's used to test tag matching in lucene
+  tags:
+                    - Tag13
+
+Task(Task5):
+  isActive:         true
+  createdDate:      2010-12-10
+  sortOrder:        5
+  owner:            Member2
+  title:            Task4 Title
+  content:          This task has tag 2. It's used to test checked tags in same group
+  tags:
+                    - Tag2
+
+Task(Task6):
+  isActive:         true
+  createdDate:      2010-12-10
+  sortOrder:        6
+  owner:            Member2
+  title:            Task6 Title
+  content:          This task has tag 1 and 13. It's used to test checked tags in different groups
+  tags:
+                    - Tag1
+                    - Tag13                    
+
 
 Attachment(Attachment1):
   createdDate:      2010-12-01

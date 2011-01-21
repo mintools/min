@@ -37,7 +37,6 @@ import java.util.*;
 public class Tasks extends Controller {
     private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
-
     public static void index(Long taskId) {
         List<Task> tasks;
 
@@ -49,10 +48,7 @@ public class Tasks extends Controller {
             tasks = Task.findActive();
         }
 
-        // a placeholder for a new task
-        Task task = new Task();
-
-        render(tasks, task);
+        render(tasks);
     }
 
     public static void show(Long taskId) {
@@ -195,212 +191,20 @@ public class Tasks extends Controller {
             }
         }
 
-        // a placeholder for a new task
-        Task task = new Task();
-
-        renderTemplate("Tasks/index.html", tag, tasks, task);
+        renderTemplate("Tasks/index.html", tag, tasks);
     }
 
     public static void trash() {
         List<Task> tasks = Task.findInactive();
-
-        // a placeholder for a new task
-        Task task = new Task();
 
         render(tasks);
     }
 
     public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
 
-        CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
+        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
 
-        CriteriaQuery<Task> query = builder.createQuery(Task.class);
-
-        Root<Task> taskRoot = query.from(Task.class);
-
-        List<Predicate> predicates = new ArrayList<Predicate>();
-
-        // task must be active
-        predicates.add(builder.equal(taskRoot.get("isActive"), true));
-
-        // add raisedBy predicate
-        if (raisedBy != null) {
-            ArrayList<Long> memberIds = new ArrayList<Long>();
-            for (int i = 0, l = raisedBy.length; i < l; i++) {
-                String s = raisedBy[i];
-                memberIds.add(Long.parseLong(s));
-            }
-
-            if (memberIds.size() > 0) {
-                predicates.add(taskRoot.get("owner").get("id").in(memberIds));
-            }
-        }
-
-        // add assignedTo predicate
-        List<Predicate> assignedToPredicates = new ArrayList<Predicate>();
-        if (assignedTo != null) {
-            ArrayList<Long> memberIds = new ArrayList<Long>();
-            for (int i = 0, l = assignedTo.length; i < l; i++) {
-                String s = assignedTo[i];
-
-                if ("unassigned".equalsIgnoreCase(s)) {
-                    // treat unassigned differently
-                    assignedToPredicates.add(builder.isNull(taskRoot.get("assignedTo")));
-                }
-                else {
-                    memberIds.add(Long.parseLong(s));
-                }
-            }
-
-            if (memberIds.size() > 0) {
-                assignedToPredicates.add(taskRoot.get("assignedTo").get("id").in(memberIds));
-            }
-
-            // OR the unassigned and asignedTo predicates
-            if (assignedToPredicates.size() > 0) {
-               Iterator i = assignedToPredicates.iterator();
-                Predicate finalPredicate = (Predicate) i.next();
-
-                while (i.hasNext()) {
-                    finalPredicate = builder.or(finalPredicate, (Predicate) i.next());
-                }
-
-                predicates.add(finalPredicate);
-            }
-        }
-
-//        // add "no tags in group" predictate (must be done in DB since Lucene does not work well with negation queries
-//        if (noTag != null) {
-//            for (int i = 0; i < noTag.length; i++) {
-//                String tagGroupIdString = noTag[i];
-//                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
-//
-//                Join<Task, Tag> join = taskRoot.join("tags", JoinType.LEFT);
-//                Predicate joinPredicate = join.in(group.tags);
-//
-//                predicates.add(builder.not(joinPredicate));
-//            }
-//        }
-
-        // add lucene-related predicate
-        BooleanQuery luceneQuery = new BooleanQuery();
-
-//        luceneQuery.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
-
-        // add search string
-        if (!StringUtils.isEmpty(searchText)) {
-            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-            QueryParser parser = new QueryParser(Version.LUCENE_30, "content", analyzer);
-
-            Query textSearchQuery = parser.parse(searchText);
-
-            luceneQuery.add(textSearchQuery, BooleanClause.Occur.MUST);
-            analyzer.close();
-        }
-
-        // iterate through all tagGroups and all tags, checking if they have been checked by the user
-        List<Tag> selectedTags = new ArrayList();
-
-        if (checkedTags != null) {
-            for (int i = 0; i < checkedTags.length; i++) {
-                String tagIdString = checkedTags[i];
-                Tag tag = Tag.findById(Long.parseLong(tagIdString));
-                selectedTags.add(tag);
-            }                
-        }
-
-        List<TagGroup> selectedNoTagGroup = new ArrayList();
-        if (noTag != null) {
-            for (int i = 0; i < noTag.length; i++) {
-                String tagGroupIdString = noTag[i];
-                TagGroup group = TagGroup.findById(Long.parseLong(tagGroupIdString));
-                selectedNoTagGroup.add(group);
-            }
-        }
-
-        List<TagGroup> groups = TagGroup.findAll();
-        for (Iterator<TagGroup> iterator = groups.iterator(); iterator.hasNext();) {
-            TagGroup tagGroup = iterator.next();
-
-            BooleanQuery groupQuery = new BooleanQuery();
-
-            for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
-                Tag tag = tagIterator.next();
-                // check if tag has been selected
-                if (selectedTags.contains(tag)) {
-                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-                    groupQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
-                    // tag has been used, remove it
-                    selectedTags.remove(tag);
-                }
-            }
-
-//                check if "no group" has been selected
-            if (selectedNoTagGroup.contains(tagGroup)) {
-                BooleanQuery noGroupTagQuery = new BooleanQuery();
-                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
-                    Tag tag = tagIterator.next();
-                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
-                }
-                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.MUST_NOT);
-            }
-
-            if (!groupQuery.clauses().isEmpty()) luceneQuery.add(groupQuery, BooleanClause.Occur.MUST);
-        }
-
-        // go through remaining tags in selectedTags list (ie. those that are not in a group)
-        BooleanQuery ungroupedTagQuery = new BooleanQuery();
-        for (Iterator<Tag> iterator = selectedTags.iterator(); iterator.hasNext();) {
-            Tag tag = iterator.next();
-
-            TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-            ungroupedTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
-        }
-        if (!ungroupedTagQuery.clauses().isEmpty()) luceneQuery.add(ungroupedTagQuery, BooleanClause.Occur.MUST);
-
-        boolean noResults = false;
-
-        // create lucene predicate
-        if (!luceneQuery.clauses().isEmpty()) {
-            Long[] ids = TaskIndex.searchTaskIds(luceneQuery, 10);
-
-            if (ids != null && ids.length > 0) {
-                predicates.add(taskRoot.get("id").in(ids));
-            }
-            else {
-                // lucene hasn't returned anything, shortcut the rest of the search
-                noResults = true;
-            }
-        }
-
-        List<Task> tasks;
-
-        if (noResults) {
-            tasks = new ArrayList<Task>();
-        }
-        else {
-            // aggregate all predicates
-            if (predicates.size() > 0) {
-                Iterator i = predicates.iterator();
-                Predicate finalPredicate = (Predicate) i.next();
-
-                while (i.hasNext()) {
-                    finalPredicate = builder.and(finalPredicate, (Predicate) i.next());
-                }
-
-                query.where(finalPredicate);
-            }
-
-            // execute query
-            TypedQuery<Task> q = JPA.em().createQuery(query);
-            tasks = q.getResultList();
-        }
-
-        // a placeholder for a new task
-        Task task = new Task();
-
-        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks, task);
+        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks);
     }
 
     public static void sort(Long[] order) {
