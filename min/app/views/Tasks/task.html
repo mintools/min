@@ -10,6 +10,12 @@
                 #{else}
                 Title
                 #{/else}</h3>
+            <div class="assignedTo">
+                Assigned: ${task?.assignedTo}
+            </div>
+            <div class="createdBy">
+                Creator: ${task?.owner}
+            </div>
         </div>
         <div class="main">
             <div class="description descriptionSummary">
@@ -22,11 +28,6 @@
             </div>
         </div>
         <div class="comments">
-            <div class="selectedTags">
-                #{if task?.tags}
-                ${task.tags?.join(' ')}  
-                #{/if} 
-            </div>
             #{list task?.comments, as: "comment"}
             #{include "Tasks/comment.html"/}
             #{/list}
@@ -50,7 +51,16 @@
                 <form action="/tasks/addAttachment" method="POST" accept-charset="utf-8" enctype="multipart/form-data">
                     <input type="hidden" name="taskId" value="${task?.id}"/><input type="file" name="file"/>
                 </form>
-            </div>#{/if}
+            </div>
+            <div class="tags">
+                <span class="left">Tags: &nbsp;&nbsp;</span>
+                <div class="selectedTags">
+                    #{if task.tags} 
+                    ${task.tags?.join(' ')}  
+                    #{/if} 
+                </div>
+            </div>
+            #{/if}
         </div>
     </div>
 </div>
