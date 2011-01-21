@@ -23,24 +23,10 @@ import java.util.List;
 @CRUD.For(Task.class)
 public class Tasks extends CRUD {
     public static void reindex() throws Exception {
-        IndexWriter writer = null;
-        try {
-            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
-            writer = new IndexWriter(FSDirectory.open(new File(TaskIndex.INDEX_PATH)), analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
-
-            List<Task> tasks = Task.findAll();
-            for (Iterator<Task> iterator = tasks.iterator(); iterator.hasNext();) {
-                Task task = iterator.next();
-
-                TaskIndex.addTaskToIndex(task, writer);
-            }
-        } finally {
-            if (writer != null) {
-                writer.optimize();
-                writer.close();
-            }
-        }
+        TaskIndex.rebuildIndex();
 
         render();
     }
+
+
 }

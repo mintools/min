@@ -212,6 +212,16 @@ public class Tasks extends Controller {
 
     public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
 
+        List<Task> tasks = filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
+
+        // a placeholder for a new task
+        Task task = new Task();
+
+        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks, task);
+    }
+
+    // todo: add "workingOn" to filter
+    public static List<Task> filterTasks(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
         CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
 
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
@@ -306,7 +316,7 @@ public class Tasks extends Controller {
                 String tagIdString = checkedTags[i];
                 Tag tag = Tag.findById(Long.parseLong(tagIdString));
                 selectedTags.add(tag);
-            }                
+            }
         }
 
         List<TagGroup> selectedNoTagGroup = new ArrayList();
@@ -328,23 +338,29 @@ public class Tasks extends Controller {
                 Tag tag = tagIterator.next();
                 // check if tag has been selected
                 if (selectedTags.contains(tag)) {
-                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
+                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.id.toString()));
                     groupQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
                     // tag has been used, remove it
                     selectedTags.remove(tag);
                 }
             }
 
-//                check if "no group" has been selected
+            // check if "no group" has been selected
             if (selectedNoTagGroup.contains(tagGroup)) {
-                BooleanQuery noGroupTagQuery = new BooleanQuery();
-                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
-                    Tag tag = tagIterator.next();
-                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
-                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
-                }
-                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.MUST_NOT);
+                TermQuery noTagsQuery = new TermQuery(new Term("noTagsIn_" + tagGroup.id, "true"));
+                groupQuery.add(noTagsQuery, BooleanClause.Occur.SHOULD);
             }
+
+//                check if "no group" has been selected
+//            if (selectedNoTagGroup.contains(tagGroup)) {
+//                BooleanQuery noGroupTagQuery = new BooleanQuery();
+//                for (Iterator<Tag> tagIterator = tagGroup.tags.iterator(); tagIterator.hasNext();) {
+//                    Tag tag = tagIterator.next();
+//                    TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
+//                    noGroupTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
+//                }
+//                groupQuery.add(noGroupTagQuery, BooleanClause.Occur.MUST_NOT);
+//            }
 
             if (!groupQuery.clauses().isEmpty()) luceneQuery.add(groupQuery, BooleanClause.Occur.MUST);
         }
@@ -354,7 +370,7 @@ public class Tasks extends Controller {
         for (Iterator<Tag> iterator = selectedTags.iterator(); iterator.hasNext();) {
             Tag tag = iterator.next();
 
-            TermQuery tagQuery = new TermQuery(new Term("tags", tag.name));
+            TermQuery tagQuery = new TermQuery(new Term("tags", tag.id.toString()));
             ungroupedTagQuery.add(tagQuery, BooleanClause.Occur.SHOULD);
         }
         if (!ungroupedTagQuery.clauses().isEmpty()) luceneQuery.add(ungroupedTagQuery, BooleanClause.Occur.MUST);
@@ -396,11 +412,7 @@ public class Tasks extends Controller {
             TypedQuery<Task> q = JPA.em().createQuery(query);
             tasks = q.getResultList();
         }
-
-        // a placeholder for a new task
-        Task task = new Task();
-
-        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks, task);
+        return tasks;
     }
 
     public static void sort(Long[] order) {

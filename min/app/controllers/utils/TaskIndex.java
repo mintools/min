@@ -1,6 +1,7 @@
 package controllers.utils;
 
 import models.Tag;
+import models.TagGroup;
 import models.Task;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -14,6 +15,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import play.Play;
+import play.db.jpa.JPABase;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +29,26 @@ import java.util.List;
  */
 public class TaskIndex {
     public static final String INDEX_PATH = Play.configuration.getProperty("index.path");
+
+    public static void rebuildIndex() throws Exception {
+        IndexWriter writer = null;
+        try {
+            Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_CURRENT);
+            writer = new IndexWriter(FSDirectory.open(new File(TaskIndex.INDEX_PATH)), analyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+
+            List<Task> tasks = Task.findAll();
+            for (Iterator<Task> iterator = tasks.iterator(); iterator.hasNext();) {
+                Task task = iterator.next();
+
+                TaskIndex.addTaskToIndex(task, writer);
+            }
+        } finally {
+            if (writer != null) {
+                writer.optimize();
+                writer.close();
+            }
+        }
+    }
 
     public static void addTaskToIndex(Task task) throws Exception {
         IndexWriter writer = null;
@@ -57,16 +79,28 @@ public class TaskIndex {
             document.add(new Field("content", task.content, Field.Store.YES, Field.Index.ANALYZED));
         }
 
+        List<TagGroup> groups = TagGroup.findAll();
+
+        // add tags to index
         if (task.tags != null) {
             StringBuffer tagsString = new StringBuffer();
             for (Iterator<Tag> i = task.tags.iterator(); i.hasNext();) {
                 Tag tag = i.next();
-                tagsString.append(tag.name);
+                tagsString.append(tag.id);
                 tagsString.append(" ");
             }
 
             document.add(new Field("tags", tagsString.toString(), Field.Store.YES, Field.Index.ANALYZED));
         }
+
+        // add special field to indicate if document has NO tags of a TagGroup
+        for (Iterator<TagGroup> iterator = groups.iterator(); iterator.hasNext();) {
+            TagGroup group = iterator.next();
+            if (!group.hasTags(task.tags)) {
+                document.add(new Field("noTagsIn_" + group.id, "true", Field.Store.YES, Field.Index.NOT_ANALYZED));        
+            }
+        }
+
 
 //        if (!StringUtils.isEmpty(task.tagsString)) {
 //            document.add(new Field("tags", task.tagsString, Field.Store.YES, Field.Index.ANALYZED));
