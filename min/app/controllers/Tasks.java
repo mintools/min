@@ -379,7 +379,7 @@ public class Tasks extends Controller {
 
         // create lucene predicate
         if (!luceneQuery.clauses().isEmpty()) {
-            Long[] ids = TaskIndex.searchTaskIds(luceneQuery, 10);
+            Long[] ids = TaskIndex.searchTaskIds(luceneQuery, 50);
 
             if (ids != null && ids.length > 0) {
                 predicates.add(taskRoot.get("id").in(ids));
@@ -406,6 +406,7 @@ public class Tasks extends Controller {
                 }
 
                 query.where(finalPredicate);
+                query.orderBy(builder.desc(taskRoot.get("sortOrder")));
             }
 
             // execute query
