@@ -204,7 +204,8 @@ public class Tasks extends Controller {
 
         List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
 
-        renderTemplate("Tasks/index.html", checkedTags, assignedTo, raisedBy, noTag, workingOn, searchText, tasks);
+        params.flash();
+        renderTemplate("Tasks/index.html", tasks);
     }
 
     public static void sort(Long[] order) {
