@@ -100,7 +100,11 @@
                         <div class="selectedTags">
                             <input class="tagContainer" type="text" name="selectedTags" value="${task?.tags?.join(' ')}"/>
                         </div>
-                    </div>                    
+                    </div>
+                    <div>
+                        <label for="attachments">Add Attachments</label>
+                        <input type="file" name="attachments" class="multi"/>
+                    </div>
                 </div>
                 <div class="comments">
                     #{list task?.comments, as: "comment"}
@@ -116,8 +120,6 @@
                     #{list task?.attachments, as:'attachment'}
                     #{include 'Attachments/attachment.html'/}
                     #{/list}
-
-                    <input type="file" name="attachments" class="multi"/>
                 </div>
                 <div class="editingButtons">
                     <a href="javascript:void(0);" class="cancelButton button ui-state-default ui-corner-all right">Cancel</a>
