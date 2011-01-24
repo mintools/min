@@ -1,0 +1,6 @@
+*.pyc
+*.db
+*.settings
+*.project
+min/conf/application.conf
+min/index

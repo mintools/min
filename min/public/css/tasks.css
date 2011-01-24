@@ -169,13 +169,11 @@ div.taskContainer.editMode .task {
 }
 
 div.taskContainer.editMode .description {
-    border: 1px #cccccc solid;
-    padding: 5px;
+	border: 1px #cccccc solid; padding: 5px;
 }
 
 div.taskContainer.editMode .titleField {
-    border: 1px #cccccc solid;
-    padding: 5px;
+	border: 1px #cccccc solid; padding: 5px;
 }
 
 div.taskContainer .thumbnails img.delete {
@@ -204,6 +202,10 @@ div.preview {
 
 div.taskBar {
 	padding: 0 0.5% 10px 0.5%;
+}
+
+div.taskContainer .description {
+	min-height: 60px; overflow: hidden;
 }
 
 div.taskContainer .descriptionSummary {
@@ -262,11 +264,11 @@ div.taskContainer .edit input,div.taskContainer .edit textarea {
  * Tags
  */
 div.taskContainer .tags {
-    font-size: 0.8em; color: gray; overflow: hidden;
+	font-size: 0.8em; color: gray; overflow: hidden;
 }
 
 div.taskContainer .tags .tag {
-    float: left; padding: 1px 5px; background-color: #afc6dd; color: white; margin-right: 2px;
+	float: left; padding: 1px 5px; background-color: #afc6dd; color: white; margin-right: 2px;
 }
 
 div.taskContainer.editMode .tags .close {
@@ -374,9 +376,9 @@ SPAN.tagMatches SPAN {
 }
 
 .error {
-    color: red;
+	color: red;
 }
 
 label {
-    font-size: 0.8em; color: gray;
+	font-size: 0.8em; color: gray;
 }

@@ -453,7 +453,7 @@ function tasks() {
                 current.setOrder();
             });
         }
-    }
+    };
 }
 
 $(document).ready(function() {
