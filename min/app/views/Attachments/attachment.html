@@ -1,18 +1,18 @@
 <div class="attachment">
-	<input type="hidden" name="attachmentId" value="${attachment.id}">
+	<input type="hidden" name="attachmentId" value="${attachment.id}"/>
     #{if "image".equals(attachment?.type)}
 		<div class="preview" style="display:none" id="${attachment.name}">
 		    <img src="/public/files/${attachment.filename}">
 		</div>
+        <img class="delete" src="/public/images/delete.png"/>
 		<div class="thumb">
-			<img class="delete" src="/public/images/delete.png"/>
 			<img src="/public/files/thumbnail_${attachment.name}.png" alt="${attachment.title}" title="${attachment.title}" rel="#${attachment.name}"/>
 			
 		</div>
 	#{/if}
     #{else}
-		<div class="thumb">
-			<img class="delete" src="/public/images/delete.png"/>
+        <img class="delete" src="/public/images/delete.png"/>
+        <div class="thumb">
 			<a href="/public/files/${attachment.filename}" target="_blank" class="file">
 				<img src="/public/images/unknownFile.png" alt="${attachment.title}" title="${attachment.title}">
 			</a>

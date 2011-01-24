@@ -51,8 +51,8 @@ function task(taskElement, taskList) {
 
         /*
 		 * Buttons
-		 */
-		$('.title,.main,.comments',cTask).click(function() {
+		 */        
+		$('.title',cTask).click(function() {
 			if (!current.editMode) {
 				current.toggle();
 			}
@@ -98,7 +98,7 @@ function task(taskElement, taskList) {
 			return false;
 		});
 
-		$(".thumbnails .attachment img.delete", cTask).click(function() {
+		$(".attachments .attachment img.delete", cTask).click(function() {
 			current.confirmDeleteAttachment($(this).parents('.attachment').first());
 			return false;
 		});
@@ -119,7 +119,7 @@ function task(taskElement, taskList) {
             taskList.moveToBottom(current);
         });
 
-		$(".thumbnails .attachment .thumb img[rel]", cTask).overlay({
+		$(".attachments .attachment .thumb img[rel]", cTask).overlay({
 			mask : {
 				color : '#ebecff',
 				loadSpeed : 200,
