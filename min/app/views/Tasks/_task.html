@@ -26,31 +26,39 @@
             </div>
             <div class="main">
                 <div class="description descriptionSummary">
-                    ${task.content?.nl2br()}
+                    ${task.content?.raw()}
                 </div>
+
                 #{if task.tags}
-                <div class="tags">
-                    #{list task.tags, as: "tag"}
-                    <div class="tag">
-                        ${tag}
+                    <div class="tags">
+                        #{list task.tags, as: "tag"}
+                        <div class="tag">
+                            ${tag}
+                        </div>
+                        #{/list}
                     </div>
-                    #{/list}
-                </div>
-                #{/if}
+                #{/if}                
             </div>
             <div class="comments">
                 #{list task?.comments, as: "comment"}
                 #{include "Tasks/comment.html"/}
                 #{/list}
             </div>
+            <div class="thumbnails">
+                #{if task?.attachments}
+                    <img src="@{'/public/images/attachment_icon.png'}"/>
+                #{/if}
+                #{if task?.attachments}
+                    <div class="attachments">
+                        #{list task?.attachments, as: "attachment"}
+                            #{include 'Attachments/attachment.html'/}
+                        #{/list}
+                    </div>
+                #{/if}
+            </div>
             <div class="taskInterests">
                 #{list task?.interestedMembers, as: "member"}
                 #{include "Members/taskInterest.html"/}
-                #{/list}
-            </div>
-            <div class="thumbnails">
-                #{list task?.attachments, as:'attachment'}
-                #{include 'Attachments/attachment.html'/}
                 #{/list}
             </div>
             <div class="editingButtons">
@@ -73,35 +81,43 @@
                 <input type="hidden" name="task.id" value="${task?.id}"/>
 
                 <div class="title">
-                    <label for="task.title">Title</label><br/>
-                    <div class="titleField">
-                        <div contentEditable="true" class="taskTitleField">${task?.title?.raw()}</div>
-                    </div>
-                    <span class="error">${errors.forKey('task.title')}</span>
+                    <div class="fieldGroup">
+                        <label for="task.title">Title</label><br/>
+                        <div class="titleField">
+                            <div contentEditable="true" class="taskTitleField">${task?.title?.raw()}</div>
+                        </div>
+                        <span class="error">${errors.forKey('task.title')}</span>
+                    </div>    
 
-                    <div class="assignedTo">
-                        Assign to:
-                        #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
-                        #{option} Unassigned #{/option}
-                    #{/select}
-                    </div>
-                    <div class="createdBy">
-                        Creator: ${task?.owner}
-                    </div>
+                    <div class="fieldGroup">
+                        <div class="assignedTo">
+                            Assign to:
+                            #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
+                            #{option} Unassigned #{/option}
+                        #{/select}
+                        </div>
+                        <div class="createdBy">
+                            Creator: ${task?.owner}
+                        </div>
+                    </div>                                                
                 </div>
                 <div class="main">
-                    <label for="task.content">Description</label><br/>
-                    <div class="description descriptionSummary">
-                        <div contentEditable="true" class="taskContentField">${task?.content?.raw()}</div>
+                    <div class="fieldGroup">
+                        <label for="task.content">Description</label><br/>
+                        <div class="description descriptionSummary">
+                            <div contentEditable="true" class="taskContentField">${task?.content?.raw()}</div>
+                        </div>
+                        <span class="error">${errors.forKey('task.content')}</span>
                     </div>
-                    <span class="error">${errors.forKey('task.content')}</span>
-                    <div class="tags">
-                        <label for="selectedTags">Tags</label>
-                        <div class="selectedTags">
-                            <input class="tagContainer" type="text" name="selectedTags" value="${task?.tags?.join(' ')}"/>
+                    <div class="fieldGroup">
+                        <div class="tags">
+                            <label for="selectedTags">Tags</label>
+                            <div class="selectedTags">
+                                <input class="tagContainer" type="text" name="selectedTags" value="${task?.tags?.join(' ')}"/>
+                            </div>
                         </div>
                     </div>
-                    <div>
+                    <div class="fieldGroup">
                         <label for="attachments">Add Attachments</label>
                         <input type="file" name="attachments" class="multi"/>
                     </div>
@@ -111,14 +127,16 @@
                     #{include "Tasks/comment.html"/}
                     #{/list}
                 </div>
+                <div class="thumbnails">
+                    <div class="attachments">
+                        #{list task?.attachments, as:'attachment'}
+                        #{include 'Attachments/attachment.html'/}
+                        #{/list}
+                    </div>
+                </div>
                 <div class="taskInterests">
                     #{list task?.interestedMembers, as: "member"}
                     #{include "Members/taskInterest.html"/}
-                    #{/list}
-                </div>
-                <div class="thumbnails">
-                    #{list task?.attachments, as:'attachment'}
-                    #{include 'Attachments/attachment.html'/}
                     #{/list}
                 </div>
                 <div class="editingButtons">

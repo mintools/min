@@ -255,7 +255,7 @@ public class Tasks extends Controller {
             BufferedImage srcImage = ImageIO.read(file);
 
             // scale to thumbnail
-            ResampleOp resampleOp = new ResampleOp(50, 50);
+            ResampleOp resampleOp = new ResampleOp(100, 100);
             BufferedImage thumbnail = resampleOp.filter(srcImage, null);
 
             // write the thumbnail
