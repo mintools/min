@@ -69,6 +69,11 @@ function task(taskElement, taskList) {
 			return false;
 		});
 
+        $(".taskForm", cTask).submit(function() {
+            current.save();
+			return false;
+        });
+
 		$(".saveButton", cTask).click(function() {
 			current.save();
 			return false;
