@@ -51,10 +51,9 @@ public class Tasks extends Controller {
         render(tasks);
     }
 
-    public static void show(Long taskId) {
-        Task task = Task.findById(taskId);
-        boolean editing = Boolean.parseBoolean(params.get("editing"));
-        renderTemplate("Tasks/task.html", task, editing);
+    public static void show(Long id, boolean editMode) {
+        Task task = Task.findById(id);
+        renderTemplate("Tasks/_task.html", task, editMode);
     }
 
     public static void save(@Valid Task task, File[] attachments, String selectedTags) throws Exception {
@@ -64,8 +63,8 @@ public class Tasks extends Controller {
         notFoundIfNull(loggedInUser);
 
         if (Validation.hasErrors()) {
-            boolean editing = true;
-            renderTemplate("Tasks/_show.html", task, editing);
+            boolean editMode = true;
+            renderTemplate("Tasks/_task.html", task, editMode);
         } else {
             if (task.createdDate == null) {
                 task.createdDate = new Date();
@@ -113,7 +112,8 @@ public class Tasks extends Controller {
 
             TaskIndex.addTaskToIndex(task);
 
-            renderTemplate("Tasks/task.html", task);
+            boolean editMode = false;
+            renderTemplate("Tasks/_task.html", task, editMode);
         }
     }
 

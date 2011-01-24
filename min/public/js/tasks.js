@@ -7,21 +7,31 @@ function task(taskElement, taskList) {
 
 	this.taskList = taskList;
 	this.isNew = false;
-	this.mode = '';
+    this.isEditMode = false;
     this.cTask = cTask;
 
 	/**
 	 * expand
 	 */
 
-	this.init = function(isNew) {
-		current.isNew = isNew;
-
+	this.init = function() {
 		/*
 		 * Variables
 		 */
-		current.refreshVars();
+		current.id = $(".task", cTask).attr("data-id");
+		current.editMode = $(".task", cTask).attr("data-editMode") == 'true';
+        current.isNew = $(".task", cTask).attr("data-isNew") == 'true';
 
+        if (current.editMode) {
+            $(cTask).addClass("editMode");
+        }
+        else {
+            $(cTask).removeClass("editMode");
+        }
+
+        /*
+         * Events
+         */
         $(cTask).mouseenter(function(e) {
             if (!current.isNew) $(".hoverAction", cTask).show();
         });
@@ -29,6 +39,64 @@ function task(taskElement, taskList) {
         $(cTask).mouseleave(function(e) {
             if (!current.isNew) $(".hoverAction", cTask).hide();
         });
+
+        /*
+         * Plugins
+         */
+        $('.tagContainer', cTask).tagSuggest({
+            delay: 250
+        });
+
+        $(".multi", cTask).MultiFile();        
+
+        /*
+		 * Buttons
+		 */
+		$('.title,.main,.comments',cTask).click(function() {
+			if (!current.editMode) {
+				current.toggle();
+			}
+			return true;
+		});
+
+		$(".editButton", cTask).click(function() {
+			current.edit();
+			return false;
+		});
+
+		$(".deleteButton", cTask).click(function() {
+			current.confirmDelete();
+			return false;
+		});
+
+		$(".saveButton", cTask).click(function() {
+			current.save();
+			return false;
+		});
+
+		$(".cancelButton", cTask).click(function() {
+            if (current.isNew) {
+                current.remove();
+            } else {
+                current.cancel();
+            }
+			return false;
+		});
+
+		$(".addInterestButton", cTask).click(function() {
+			current.addInterest();
+			return false;
+		});
+
+		$(".removeInterestButton", cTask).click(function() {
+			current.removeInterest($(this).closest(".taskInterest"));
+			return false;
+		});
+
+		$(".thumbnails .attachment img.delete", cTask).click(function() {
+			current.confirmDeleteAttachment($(this).parents('.attachment').first());
+			return false;
+		});
 
         $(".insertAboveButton", cTask).click(function() {
             taskList.insertNew(current, true);
@@ -46,62 +114,6 @@ function task(taskElement, taskList) {
             taskList.moveToBottom(current);
         });
 
-		$('.title,.main,.comments',cTask).click(function() {
-			
-			if (!current.isEditMode()) {
-				current.toggle();
-			}
-			return true;
-		});
-		
-		/*
-		 * Buttons
-		 */
-		$(".editButton", cTask).click(function() {
-			current.edit();
-			return false;
-		});
-
-		$(".deleteButton", cTask).click(function() {
-			if (isNew) {
-				current.remove();
-			} else {
-				current.deleteButton();
-			}
-			return false;
-		});
-
-		$(".saveButton", cTask).click(function() {
-			current.save();
-			return false;
-		});
-
-		$(".cancelButton", cTask).click(function() {
-			current.cancel();
-			return false;
-		});
-
-		$(".addInterestButton", cTask).click(function() {
-			current.addInterest();
-			return false;
-		});
-
-		$(".removeInterestButton", cTask).live("click", function() {
-			current.removeInterest($(this).closest(".taskInterest"));
-			return false;
-		});
-
-		$(".thumbnails .attachment img.delete", cTask).click(function() {
-			current.deleteAttachmentConfirm($(this).parents('.attachment').first());
-			return false;
-		});
-
-
-		if (isNew) {
-			current.makeEditable();
-			current.showLongSummary();
-		}
-
 		$(".thumbnails .attachment .thumb img[rel]", cTask).overlay({
 			mask : {
 				color : '#ebecff',
@@ -110,81 +122,82 @@ function task(taskElement, taskList) {
 			},
 			closeOnClick : true
 		});
-
-		/*
-		 * Save their original state
-		 */
-		current.originalTitle = $(".title h3", cTask).html();
-		current.originalDesc = $(".description", cTask).html();
-
-		current.createUploader();
-
-	};
-
-	this.refreshVars = function() {
-
-		current.actionUrl = $("form", cTask).attr("action");
-		current.authenticityToken = $("input[name='authenticityToken']", cTask).val();
-
-		current.id = $("input[name='id']", cTask).val();
-		current.title = $.trim($(".title h3", cTask).html());
-		current.content = $.trim($(".description", cTask).html());
-        current.selectedTags = $.trim($(".selectedTags", cTask).text());
-	};
-
-	this.refresh = function() {
-
-		$.get('/tasks/show', {
-			taskId : current.id
-		}, function(data) {
-			// console.log(data);
-
-			$(".contents", cTask).replaceWith(data);
-			current.init();
-		});
-	};
-
-	this.getDataForPost = function() {
-
-//		current.refreshVars();
-
-		var rtnData = {};
-		rtnData.task = {};
-
-		rtnData.authenticityToken = current.authenticityToken;
-		rtnData["task.id"] = current.id;
-		rtnData["task.title"] = current.title;
-		rtnData["task.content"] = current.content;
-		rtnData["selectedTags"] = current.selectedTags;        
-
-		return rtnData;
 	};
 
 	this.toggle = function() {
-		if (current.expanded) {
-			$(cTask).removeClass('expandMode');
-			current.showShortSummary();
-		} else {
-			$(cTask).addClass('expandMode');
+		current.expand(!current.expanded);
+	};
+
+    this.expand = function(expand) {
+        if (expand) {
+            $(cTask).addClass('expandMode');
 			current.showLongSummary();
-
-		}
-		current.expanded = !current.expanded;
-	};
-
-	this.isEditMode = function() {
-		return $(cTask).hasClass('editMode');
-	};
+            current.expanded = true;
+        }
+        else {
+            $(cTask).removeClass('expandMode');
+			current.showShortSummary();
+            current.expanded = false;
+        }
+    };
 
 	this.edit = function() {
 
-		$(cTask).removeClass('expandMode');
-		current.showLongSummary();
-		current.makeEditable();
+        $.get('/tasks/show', {
+            id: current.id,
+            editMode: true
+        }, function(data) {
+           $(".task", cTask).replaceWith(data);
+            current.expand(true);
+            current.init();
+        });
 	};
 
-	this.deleteButton = function() {
+    this.save = function() {
+        var wasNew = current.isNew;
 
+        // add hidden fields with contents of editable divs before submitting
+        var title = $(".taskTitleField", cTask).html();
+        var description = $(".taskContentField", cTask).html();
+
+        $(".taskTitleField", cTask).after("<input type='hidden' name='task.title' value='"+title+"'/>");
+        $(".taskContentField", cTask).after("<input type='hidden' name='task.content' value='"+description+"'/>");
+
+        var options = {
+            success: function(data) {
+                $('.task', cTask).replaceWith(data);
+                current.init();
+
+                if (wasNew) {
+                    // if we're inserting
+                    if (current.beforeTaskId || current.afterTaskId) {
+                        current.taskList.insertIntoList(current);
+                    }
+                    current.taskList.sortRefresh();
+                }
+
+                current.expand(false);
+                taskList.loadSort();
+            },
+            type: 'post',
+            timeout:   3000
+        };
+
+        $(".taskForm", cTask).ajaxSubmit(options);
+	};
+
+	this.cancel = function() {
+        $.get('/tasks/show', {
+            id: current.id
+        }, function(data) {
+           $(".task", cTask).replaceWith(data);
+            current.init();
+            current.expand(false);
+            taskList.loadSort();
+        });
+	};
+
+	this.confirmDelete = function() {
 		dialog.makeConfirmation({
 			"Yes" : function() {
 				current.deleteTask();
@@ -201,9 +214,6 @@ function task(taskElement, taskList) {
 	};
 
 	this.deleteTask = function() {
-
-		// console.log("Deleted");
-
 		$.get("/tasks/delete", {
 			taskId : current.id
 		}, function(data) {
@@ -211,7 +221,7 @@ function task(taskElement, taskList) {
 		});
 	};
 
-	this.deleteAttachmentConfirm = function(attachment) {
+	this.confirmDeleteAttachment = function(attachment) {
 		dialog.makeConfirmation({
 			"Yes" : function() {
 				current.deleteAttachment(attachment);
@@ -244,64 +254,6 @@ function task(taskElement, taskList) {
 			$(this).remove();
 		});
 	};
-	
-	/**
-	 * Remove everything except breaks
-	 */
-	this.filterHtml = function(element){
-		
-		var html = $(element).html().replace(/<br>/g,'-----!!!!!Break!!!!!-----');
-		html = $.trim(html);
-		html = $('<div>' + html + '</div>').text();
-		html = html.replace(/-----!!!!!Break!!!!!-----/g,'<br/>');
-		
-		return html;
-	};
-
-
-	this.save = function() {
-		current.title = $.trim($(".title h3", cTask).text());
-		current.content = current.filterHtml($(".description", cTask));
-        current.selectedTags = $(".tagContainer", cTask).val();
-
-		$(cTask).removeClass('editMode');
-
-		current.makeUnEditable();
-
-		var data = current.getDataForPost();
-		if (!current.isNew) {
-			data.action = "save";
-		}
-
-		$.post(current.actionUrl, data, function(data) {
-
-			var tempIsNew = current.isNew;
-			$('.contents', cTask).replaceWith(data);
-
-			current.init();
-
-			if (tempIsNew) {
-                // if we're inserting
-                if (current.beforeTaskId || current.afterTaskId) {
-                    current.taskList.insertIntoList(current);
-                }
-				current.showMoveHandle();
-				current.taskList.sortRefresh();
-			}
-
-		}, "html");
-	};
-
-	this.cancel = function() {
-
-		$(cTask).removeClass('editMode');
-		current.makeUnEditable();
-		current.showShortSummary();
-
-		$(".title h3", cTask).html(current.originalTitle);
-		$(".description", cTask).html(current.originalDesc);
-        $(".selectedTags", cTask).html(current.selectedTags);
-	};
 
 	this.addInterest = function() {
 		$.get("/tasks/addInterest", {
@@ -321,57 +273,12 @@ function task(taskElement, taskList) {
 		});
 	};
 
-
-
 	this.showShortSummary = function() {
 		$('.description ', cTask).addClass("descriptionSummary");
 	};
 
 	this.showLongSummary = function() {
 		$('.description ', cTask).removeClass("descriptionSummary");
-	};
-
-	this.makeUnEditable = function() {
-
-		$('.title h3', cTask).attr('contentEditable', false);
-
-		$('.description', cTask).attr('contentEditable', false);
-	};
-
-	this.makeEditable = function() {
-		$(cTask).addClass('editMode');
-		$('.title h3', cTask).attr('contentEditable', true).keypress(function(event) {
-			return event.which != 13;
-		});
-
-		$('.description', cTask).attr('contentEditable', true);
-
-        $('.selectedTags', cTask).html('<input class="tagContainer" type="text" name="selectedTags" value="' + (current.selectedTags ? current.selectedTags: "") + '"/>');
-        $('.tagContainer', cTask).tagSuggest({
-            delay: 250
-        });               
-	};
-
-	this.showMoveHandle = function() {
-		$('.move', cTask).removeClass('hide');
-	};
-
-	this.createUploader = function() {
-		$("input[type=file]", cTask).filestyle({
-			image : "public/images/newAttachment.png",
-			imageheight : 18,
-			imagewidth : 25,
-			width : 40
-		}).change(function() {
-			// console.log('upload file');
-
-			var form = $(".uploader form", cTask).ajaxSubmit({
-				dataType : "xml",
-				success : function(data) {
-					current.refresh();
-				}
-			});
-		});
 	};
 }
 
@@ -384,7 +291,7 @@ function tasks() {
 		/*
 		 * Initialise tasks
 		 */
-		$('.task').each(function() {
+		$('.taskContainer').each(function() {
 			var aTask = new task(this, current);
 
 			aTask.init();
@@ -402,14 +309,14 @@ function tasks() {
 	this.loadSort = function() {
 
 		$('.tasks').sortable({
-			items : ".task",
+			items : ".taskContainer",
 			placeholder : 'taskPlaceholder',
 			handle : $(".move"),
 			update : function(event, ui) {
 				var current = 0;
 				var toSwap = new Array();
 				// console.log(taskOrder);
-				$(".tasks .task .properties").each(function() {
+				$(".tasks .taskContainer").each(function() {
 
 					var tempTask = new task($(this));
 					tempTask.init();
@@ -448,25 +355,25 @@ function tasks() {
 
 	this.setOrder = function() {
 		taskOrder = new Array();
-		$(".tasks .task .properties").each(function() {
-			taskOrder.push($("input[name='id']", this).val());
+		$(".tasks .task").each(function() {
+			taskOrder.push($(this).attr("data-id"));
 		});
 	};
 
 	this.addNew = function() {
-		var clone = $("#newTask .task").clone();
+		var clone = $("#newTask .taskContainer").clone();
 
 		var newTask = new task(clone, current);
-		newTask.init(true);
+		newTask.init();
 
 		$('.tasks').prepend(clone);
 	};
 
     this.insertNew = function(baseTask, before) {
-        var clone = $("#newTask .task").clone();
+        var clone = $("#newTask .taskContainer").clone();
 
         var newTask = new task(clone, current);
-		newTask.init(true);
+		newTask.init();
 
         if (before) {
             $(baseTask.cTask).before(clone);

@@ -36,37 +36,21 @@
 <div class="taskBar">
     <a href="" class="newButton button ui-state-default ui-corner-all">New Task</a>
     <div id="newTask" class="hide">
-        <div class="task">
-            <div class="hoverActions">
-                <div class="hoverAction insertAboveButton hide"></div>
-                <div class="hoverAction moveUpButton hide"></div>
-                <div class="hoverAction taskId hide">${task?.id}</div>
-                <div class="hoverAction moveDownButton hide"></div>
-                <div class="hoverAction insertBelowButton hide"></div>
-            </div>
-            <div class="move hide">
-                <img src="@{'/public/images/arrow-move.png'}"/>
-            </div>
-			#{set isNew:true/}
-            	#{include 'Tasks/task.html'/}
-            #{set isNew:false/}
+        #{set isNew:true/}
+        #{set editMode:true/}
+        <div class="taskContainer">
+            #{include 'Tasks/_task.html'/}
         </div>
+        #{set isNew:false/}
+        #{set editMode:false/}
     </div>
 </div>
 <div class="tasks">
     #{list tasks, as:'task'}
-    <div class="task">
-        <div class="hoverActions">
-            <div class="hoverAction insertAboveButton hide"></div>
-            <div class="hoverAction moveUpButton hide"></div>
-            <div class="hoverAction taskId hide">${task?.id}</div>
-            <div class="hoverAction moveDownButton hide"></div>
-            <div class="hoverAction insertBelowButton hide"></div>            
+        <div class="taskContainer">
+            #{include 'Tasks/_task.html'/}
         </div>
-        <div class="move">
-            <img src="@{'/public/images/arrow-move.png'}"/>
-        </div>#{include 'Tasks/task.html'/}
-    </div>#{/list}
+    #{/list}
 </div>        
     
 <div id="mask">

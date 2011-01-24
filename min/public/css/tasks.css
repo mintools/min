@@ -46,7 +46,7 @@ div.tasks {
 	font-weight: bold; font-size: 80%;
 }
 
-div.task {
+div.taskContainer {
 	border: 1px solid #DDDDDD; padding: 5px 5px 5px 0px; margin: 0px 0px 4px 20px; background-color: white; -moz-box-shadow: 0 1px 1px #DDDDDD;
 }
 
@@ -54,153 +54,143 @@ div.taskPlaceholder {
 	background-color: #e5e5e5;; height: 80px; margin: 10px 0px;
 }
 
-div.task .title {
-	width: 8%; margin-right: 2%; padding: 2px 0px; float: left;
+div.taskContainer .title {
+	width: 100px; margin-right: 2%; float: left;
 }
 
-div.task .title h3 {
-	padding: 5px 0 5px 0;
+div.taskContainer.editMode .display {
+	margin-left: 15px;
 }
 
-div.task.editMode .title h3 {
-	border: 1px solid #DDDDDD
-}
-
-div.task .createdBy {
+div.taskContainer .createdBy {
 	display: none;
 }
 
-div.task.expandMode .createdBy {
+div.taskContainer.expandMode .createdBy {
 	color: gray; font-size: .7em; margin-top: 5px; display: block;
 }
 
-div.task .assignedTo {
+div.taskContainer .assignedTo {
 	color: gray; font-size: .7em; margin-top: 5px; font-size: .7em;
 }
 
-div.task .main {
+div.taskContainer .main {
 	width: 49%; margin-right: 1%; float: left;
 }
 
-div.task .main .description {
-	padding: 5px;
-}
-
-div.task.editMode .main .description {
-	border: 1px #DDDDDD solid;
-}
-
-div.task .comments {
+div.taskContainer .comments {
 	width: 23%; margin-right: 1%; float: left; font-size: 0.8em;
 }
 
-div.task .comments .comment {
+div.taskContainer .comments .comment {
 	width: 100%; float: left;
 }
 
-div.task .comments .comment .member {
+div.taskContainer .comments .comment .member {
 	width: 25%; float: left;
 }
 
-div.task .comments .comment .content {
+div.taskContainer .comments .comment .content {
 	width: 75%; float: left;
 }
 
-div.task .taskInterests {
+div.taskContainer .taskInterests {
 	width: 13%; margin-right: 2%; float: right; height: 27px;
 }
 
-div.task .taskInterests .taskInterest {
+div.taskContainer .taskInterests .taskInterest {
 	float: left; margin-right: 3px;
 }
 
-div.task .taskInterests .taskInterest a.avatar {
+div.taskContainer .taskInterests .taskInterest a.avatar {
 	border: none;
 }
 
-div.task .taskInterests .taskInterest .avatar img {
+div.taskContainer .taskInterests .taskInterest .avatar img {
 	width: 25px; height: 25px; float: left; border: 1px solid #DDDDDD;
 }
 
-div.task .taskInterests .taskInterest img.delete {
+div.taskContainer .taskInterests .taskInterest img.delete {
 	float: right; display: inline; height: 10px; width: 10px;
 }
 
 /*
  * Buttons
  */
-div.task .editButton {
+div.taskContainer .editButton {
 	display: block;
 }
 
-div.task.editMode .editButton {
-	display: none;
-}
-
-div.task.editMode .deleteButton,div.task.editMode .saveButton,div.task.editMode .uploader,div.task.editMode .cancelButton {
-	display: block;
-}
-
-div.task .deleteButton,div.task .saveButton,div.task .uploader,div.task .cancelButton {
-	display: none;
-}
-
-div.task .editingButtons {
+div.taskContainer .editingButtons {
 	float: right; margin-top: 2px; width: 100%;
 }
 
-div.task .editingButtons .button,a.newButton {
+div.taskContainer .editingButtons .button,a.newButton {
 	padding: 0.1em 1em; font: normal normal normal 80%/normal 'Trebuchet MS', sans-serif; position: relative; text-decoration: none; margin-left: 5px;
 }
 
 /*
  * Thumb-nails
  */
-div.task .thumbnailsButtons {
+div.taskContainer .thumbnailsButtons {
 	
 }
 
-div.task .thumbnails {
+div.taskContainer .thumbnails {
 	height: 27px; width: 15%; float: right; clear: right;
 }
 
-div.task .thumbnails .attachment {
+div.taskContainer .thumbnails .attachment {
 	text-align: right;
 }
 
-div.task .thumbnails .thumb {
+div.taskContainer .thumbnails .thumb {
 	float: left; margin-top: 3px; margin-right: 3px;
 }
 
-div.task .thumbnails .thumb img {
+div.taskContainer .thumbnails .thumb img {
 	width: 25px; height: 25px; border: 1px solid #DDDDDD;
 }
 
-div.task .thumbnails .attachment a {
+div.taskContainer .thumbnails .attachment a {
 	border: none; color: white; float: right;
 }
 
-div.task.editMode .thumbnails img {
+div.taskContainer.editMode .thumbnails img {
 	float: right;
 }
 
-div.task.editMode .thumbnails img.delete {
+div.taskContainer.editMode .thumbnails img.delete {
 	float: right; display: inline; width: 10px; height: 10px;
 }
 
-div.task .thumbnails img.delete {
+div.taskContainer.editMode .task {
+	padding: 5px;
+}
+
+div.taskContainer.editMode .description {
+    border: 1px #cccccc solid;
+    padding: 5px;
+}
+
+div.taskContainer.editMode .titleField {
+    border: 1px #cccccc solid;
+    padding: 5px;
+}
+
+div.taskContainer .thumbnails img.delete {
 	display: none;
 }
 
-div.task.expandMode {
+div.taskContainer.expandMode {
 	background-color: #D7F5C4;
 }
 
-div.task.editMode,div.task.editMode input {
-	background-color: #FBEFEF;
+div.taskContainer.editMode,div.taskContainer.editMode input {
+	background-color: #fbfbef;
 }
 
-div.task .hide {
+div.taskContainer .hide {
 	display: none;
 }
 
@@ -216,90 +206,86 @@ div.taskBar {
 	padding: 0 0.5% 10px 0.5%;
 }
 
-div.task .descriptionSummary {
-	height: 50px; overflow: hidden;
+div.taskContainer .descriptionSummary {
+	height: 60px; overflow: hidden;
 }
 
-div.task .descriptionShow {
-	
-}
-
-div.task .showIcon,div.task .hideIcon {
+div.taskContainer .showIcon,div.taskContainer .hideIcon {
 	float: right; position: relative; margin-right: 10px;
 }
 
-div.task .hoverActions {
+div.taskContainer .hoverActions {
 	float: left; width: 20px; margin-left: -20px;
 }
 
-div.task .hoverActions .moveUpButton {
+div.taskContainer .hoverActions .moveUpButton {
 	background-image: url(../images/overlay/arrow_top.gif); cursor: pointer; width: 16px; height: 16px;
 }
 
-div.task .hoverActions .moveDownButton {
+div.taskContainer .hoverActions .moveDownButton {
 	background-image: url(../images/overlay/arrow_down.gif); cursor: pointer; width: 16px; height: 16px;
 }
 
-div.task .hoverActions .insertAboveButton {
+div.taskContainer .hoverActions .insertAboveButton {
 	background-image: url(../images/overlay/action_add.gif); cursor: pointer; width: 16px; height: 16px;
 }
 
-div.task .hoverActions .insertBelowButton {
+div.taskContainer .hoverActions .insertBelowButton {
 	background-image: url(../images/overlay/action_add.gif); cursor: pointer; width: 16px; height: 16px;
 }
 
-div.task .move {
-	float: left; cursor: move; position: relative; margin: 30px 0px 0px 3px;
+div.taskContainer .move {
+	float: left; cursor: move; position: relative; margin: 30px 0px 0px 3px; width: 15px;
 }
 
-div.task .move img {
+div.taskContainer .move img {
 	position: absolute; top: 50%;
 }
 
-div.task .contents {
+div.taskContainer .contents {
 	margin-left: 13px;
 }
 
-div.task h3 {
+div.taskContainer h3 {
 	padding: 0px; margin: 0px;
 }
 
-div.task p {
+div.taskContainer p {
 	padding: 2px 0px; margin: 0px;
 }
 
-div.task .edit input,div.task .edit textarea {
+div.taskContainer .edit input,div.taskContainer .edit textarea {
 	width: 100%;
 }
 
 /**
  * Tags
  */
-div.task .tags {
-	margin-left: 10%; width: 49%; padding: 5px; float: left; font-size: 0.8em; color: gray;
+div.taskContainer .tags {
+    font-size: 0.8em; color: gray; overflow: hidden;
 }
 
-div.task.editMode .tags .close {
+div.taskContainer .tags .tag {
+    float: left; padding: 1px 5px; background-color: #afc6dd; color: white; margin-right: 2px;
+}
+
+div.taskContainer.editMode .tags .close {
 	display: inline;
 }
 
-div.task .tags .close {
+div.taskContainer .tags .close {
 	display: none;
 }
 
-div.task.expandMode .tags,div.task.editMode .tags {
+div.taskContainer.expandMode .tags,div.taskContainer.editMode .tags {
 	display: block;
-}
-
-div.task .tags .selectedTags {float left;
-	
 }
 
 div.tags ul {
 	margin: 0; padding: 0;
 }
 
-div.task .uploader .file {
+div.taskContainer .uploader .file {
 	display: none;
 }
 
@@ -331,11 +317,11 @@ div.filters {
 	color: #3399ff; margin: 0; font-size: 12pt;
 }
 
-div.task.editMode .tags ul.tagit {
+div.taskContainer.editMode .tags ul.tagit {
 	border: 1px solid #C6C6C6;
 }
 
-div.task .tags ul.tagit {
+div.taskContainer .tags ul.tagit {
 	border: none;
 }
 
@@ -352,7 +338,7 @@ div.tags li {
 }
 
 #filter-div a {
-	border: 1px solid #abbfdd; -moz-box-shadow: -1px 0 1px #666666
+	border: 1px solid #abbfdd; -moz-box-shadow: -1px 0 1px #666666;
 }
 
 .actions a {
@@ -383,11 +369,14 @@ SPAN.tagMatches SPAN {
 	width: 48%; float: left; margin-right: 2%;
 }
 
-.descriptionTextArea {
-	width: 100%;
-}
-
 .taskId {
 	color: #cccccc; font-size: 6pt; text-align: center;
 }
 
+.error {
+    color: red;
+}
+
+label {
+    font-size: 0.8em; color: gray;
+}
