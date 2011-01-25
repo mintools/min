@@ -4,3 +4,5 @@
 *.project
 min/conf/application.conf
 min/index
+min/.classpath
+min/eclipse
