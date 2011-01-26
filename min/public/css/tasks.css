@@ -187,7 +187,7 @@ div.taskContainer.editMode .titleField {
 }
 
 div.taskContainer.expandMode {
-	background-color: #f5ffee;
+    border: 2px #92c8ec solid;
 }
 
 div.taskContainer.editMode,div.taskContainer.editMode input {
@@ -265,16 +265,65 @@ div.taskContainer .edit input,div.taskContainer .edit textarea {
 /**
  * Tags
  */
+
+div.taskContainer .tagGroupSlot-1 {
+    padding: 2px;
+    width: 100px;
+    margin-left: 0;
+    position: absolute;
+    background-color: #e7e7fa;
+    height: 18px;
+    text-align: center;
+}
+
+div.taskContainer .tagGroupSlot-2 {
+    padding: 2px;
+    width: 100px;
+    margin-left: 110px;
+    position: absolute;
+    background-color: #f3ffe6;
+    height: 18px;
+    text-align: center;
+}
+
+div.taskContainer .tagGroupSlot-3 {
+    padding: 2px;
+    width: 100px;
+    margin-left: 220px;
+    position: absolute;
+    background-color: #f9e7e7;
+    height: 18px;
+    text-align: center;
+}
+
+div.taskContainer .tagGroupSlot-4 {
+    padding: 2px;
+    width: 100px;
+    margin-left: 330px;
+    position: absolute;
+    background-color: #ffffcc;
+    height: 18px;
+    text-align: center;
+}
+
+div.taskContainer .tagGroupSlot- {
+    padding: 2px;
+    width: 100px;
+    margin-left: 440px;
+    position: absolute;
+    background-color: #e9e1ee;
+    height: 18px;
+    text-align: center;
+}
+
 div.taskContainer .tags {
     padding: 5px;
-    border: 1px #cccccc solid;
     font-size: 0.8em; color: gray; overflow: hidden;
-    -webkit-border-radius: 5px;
-    margin-top: 10px;
+    height: 30px;
 }
 
 div.taskContainer .tags .tag {
-    float: left; padding: 1px 5px; background-color: #afc6dd; color: white; margin-right: 2px;
+    float: left; padding: 1px 5px; background-color: #afc6dd; color: white; margin: 2px;
 }
 
 div.taskContainer.editMode .tags .close {

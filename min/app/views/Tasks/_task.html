@@ -32,9 +32,11 @@
                 #{if task.tags}
                     <div class="tags">
                         #{list task.tags, as: "tag"}
-                        <div class="tag">
-                            ${tag}
-                        </div>
+                            <div class="tagGroupSlot-${tag.group?.id}">
+                                <div class="tag">
+                                    ${tag}
+                                </div>
+                            </div>
                         #{/list}
                     </div>
                 #{/if}                
