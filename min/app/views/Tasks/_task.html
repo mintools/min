@@ -1,35 +1,37 @@
 #{set isNew: !task?.id/}
-
 <div class="task" data-id="${task?.id}" data-editMode="${editMode}" data-isNew="${isNew}">
-
     #{if !editMode}
-        <div class="hoverActions">
-            <div class="hoverAction insertAboveButton hide"></div>
-            <div class="hoverAction moveUpButton hide"></div>
-            <div class="hoverAction taskId hide">${task?.id}</div>
-            <div class="hoverAction moveDownButton hide"></div>
-            <div class="hoverAction insertBelowButton hide"></div>
+    <div class="hoverActions">
+        <div class="hoverAction insertAboveButton hide">
         </div>
-        <div class="move">
-            <img src="@{'/public/images/arrow-move.png'}"/>
+        <div class="hoverAction moveUpButton hide">
         </div>
-
-        <div class="display">
-            <div class="title">
-                <h3>${task.title?.raw()}</h3>
-                <div class="assignedTo">
-                    #{if task?.assignedTo}Assigned to ${task?.assignedTo}#{/if}#{else}Unassigned#{/else}
-                </div>
-                <div class="createdBy">
-                    Creator: ${task?.owner}
-                </div>
+        <div class="hoverAction taskId hide">
+            ${task?.id}
+        </div>
+        <div class="hoverAction moveDownButton hide">
+        </div>
+        <div class="hoverAction insertBelowButton hide">
+        </div>
+    </div>
+    <div class="move">
+        <img src="@{'/public/images/arrow-move.png'}"/>
+    </div>
+    <div class="display">
+        <div class="title">
+            <h3>${task.title?.raw()}</h3>
+            <div class="assignedTo">
+                #{if task?.assignedTo}Assigned to ${task?.assignedTo}#{/if}#{else}Unassigned#{/else}
             </div>
-            <div class="main">
-                <div class="description descriptionSummary">
-                    ${task.content?.raw()}
-                </div>
-
-                #{if task.tags}
+            <div class="createdBy">
+                Creator: ${task?.owner}
+            </div>
+        </div>
+        <div class="main">
+            <div class="description descriptionSummary">
+                ${task.content?.raw()}
+            </div>
+            #{if task.tags}
                     <div class="tags">
                         #{list task.tags, as: "tag"}
                             <div class="tagGroupSlot-${tag.group?.id}">
@@ -39,116 +41,118 @@
                             </div>
                         #{/list}
                     </div>
-                #{/if}                
-            </div>
-            <div class="comments">
-                #{list task?.comments, as: "comment"}
-                #{include "Tasks/comment.html"/}
+                #{/if}
+        </div>
+        <div class="comments">
+            #{list task?.comments, as: "comment"}
+            #{include "Tasks/comment.html"/}
+            #{/list}
+        </div>
+
+		<div class="thumbnails">
+            #{if task?.attachments}<img src="@{'/public/images/attachment_icon.png'}"/>#{/if}
+            #{if task?.attachments}
+            <div class="attachments">
+                #{list task?.attachments, as: "attachment"}
+                #{include 'Attachments/attachment.html'/}
                 #{/list}
             </div>
-            <div class="thumbnails">
-                #{if task?.attachments}
-                    <img src="@{'/public/images/attachment_icon.png'}"/>
-                #{/if}
-                #{if task?.attachments}
-                    <div class="attachments">
-                        #{list task?.attachments, as: "attachment"}
-                            #{include 'Attachments/attachment.html'/}
-                        #{/list}
-                    </div>
-                #{/if}
-            </div>
-            <div class="taskInterests">
-                #{list task?.interestedMembers, as: "member"}
-                #{include "Members/taskInterest.html"/}
-                #{/list}
-            </div>
-            <div class="editingButtons">
-                <a href="javascript:void(0);" class="editButton button ui-state-default ui-corner-all right">Edit</a>
-            </div>
+            #{/if}
+
         </div>
-        <div class="clear">
+		 <!--div class="taskInterests">
+            #{list task?.interestedMembers, as: "member"}
+            #{include "Members/taskInterest.html"/}
+            #{/list}
+        </div-->
+        <div class="tagsButtons">
+            <a href="javascript:void(0);" class="editButton button ui-state-default ui-corner-all right">Edit</a>
         </div>
+
+    </div>
+    <div class="clear">
+    </div>
     #{/if}
-
     #{else}
-        #{ifErrors}
-            <p class="error">
-                Please fix the validation errors
-            </p>
-        #{/ifErrors}
-
-        <div class="display">
-            #{form class:'taskForm', action:@Tasks.save(), method:'post', enctype:'multipart/form-data' }
-                <input type="hidden" name="task.id" value="${task?.id}"/>
-
-                <div class="title">
-                    <div class="fieldGroup">
-                        <label for="task.title">Title</label><br/>
-                        <div class="titleField">
-                            <div contentEditable="true" class="taskTitleField">${task?.title?.raw()}</div>
-                        </div>
-                        <span class="error">${errors.forKey('task.title')}</span>
-                    </div>    
-
-                    <div class="fieldGroup">
-                        <div class="assignedTo">
-                            Assign to:
-                            #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
-                            #{option} Unassigned #{/option}
-                        #{/select}
-                        </div>
-                        <div class="createdBy">
-                            Creator: ${task?.owner}
-                        </div>
-                    </div>                                                
+    #{ifErrors}
+    <p class="error">
+        Please fix the validation errors
+    </p>
+    #{/ifErrors}
+    <div class="display">
+        #{form class:'taskForm', action:@Tasks.save(), method:'post', enctype:'multipart/form-data' }<input type="hidden" name="task.id" value="${task?.id}"/>
+        <div class="title">
+            <label for="task.title">
+                Title
+            </label>
+            <br/>
+            <div class="titleField">
+                <div contentEditable="true" class="taskTitleField">
+                    ${task?.title?.raw()}
                 </div>
-                <div class="main">
-                    <div class="fieldGroup">
-                        <label for="task.content">Description</label><br/>
-                        <div class="description descriptionSummary">
-                            <div contentEditable="true" class="taskContentField">${task?.content?.raw()}</div>
-                        </div>
-                        <span class="error">${errors.forKey('task.content')}</span>
-                    </div>
-                    <div class="fieldGroup">
-                        <div class="tags">
-                            <label for="selectedTags">Tags</label>
-                            <div class="selectedTags">
-                                <input class="tagContainer" type="text" name="selectedTags" value="${task?.tags?.join(' ')}"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fieldGroup">
-                        <label for="attachments">Add Attachments</label>
-                        <input type="file" name="attachments" class="multi"/>
-                    </div>
+            </div>
+            <span class="error">${errors.forKey('task.title')}</span>
+            <div class="assignedTo">
+                Assign to:
+                #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
+                #{option} Unassigned #{/option}
+                #{/select}
+            </div>
+            <div class="createdBy">
+                Creator: ${task?.owner}
+            </div>
+        </div>
+        <div class="main">
+            <label for="task.content">
+                Description
+            </label>
+            <br/>
+            <div class="description descriptionSummary">
+                <div contentEditable="true" class="taskContentField">
+                    ${task?.content?.raw()}
                 </div>
-                <div class="comments">
-                    #{list task?.comments, as: "comment"}
-                    #{include "Tasks/comment.html"/}
-                    #{/list}
+            </div>
+            <span class="error">${errors.forKey('task.content')}</span>
+            <label for="selectedTags">
+                Tags
+            </label>
+            <br/>
+            <div class="tags">
+                <div class="selectedTags">
+                    <input class="tagContainer" type="text" name="selectedTags" value="${task?.tags?.join(' ')}"/>
                 </div>
-                <div class="thumbnails">
-                    <div class="attachments">
-                        #{list task?.attachments, as:'attachment'}
-                        #{include 'Attachments/attachment.html'/}
-                        #{/list}
-                    </div>
-                </div>
-                <div class="taskInterests">
-                    #{list task?.interestedMembers, as: "member"}
-                    #{include "Members/taskInterest.html"/}
-                    #{/list}
-                </div>
-                <div class="editingButtons">
-                    <a href="javascript:void(0);" class="cancelButton button ui-state-default ui-corner-all right">Cancel</a>
-                    #{if !isNew}<a href="javascript:void(0);" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>#{/if}
-                    <a href="javascript:void(0);" class="saveButton button ui-state-default ui-corner-all right">Save</a>
-                </div>
-            #{/form}
-        </div>        
+            </div>
+        </div>
+        <div class="comments">
+            #{list task?.comments, as: "comment"}
+            #{include "Tasks/comment.html"/}
+            #{/list}
+        </div>
+        <div class="addAttachment">
+            <label for="attachments">
+                Add Attachments
+            </label>
+            <input type="file" name="attachments" class="multi"/>
+            <div class="attachments">
+                #{list task?.attachments, as:'attachment'}
+                #{include 'Attachments/attachment.html'/}
+                #{/list}
+            </div>
+        </div>
+        <div class="taskInterests">
+            #{list task?.interestedMembers, as: "member"}
+            #{include "Members/taskInterest.html"/}
+            #{/list}
+        </div>
         <div class="clear">
         </div>
+        <div class="tagsButtons">
+            <a href="javascript:void(0);" class="cancelButton button ui-state-default ui-corner-all right">Cancel</a>
+            #{if !isNew}<a href="javascript:void(0);" class="deleteButton button ui-state-default ui-corner-all right">Delete</a>#{/if}<a href="javascript:void(0);" class="saveButton button ui-state-default ui-corner-all right">Save</a>
+        </div>
+    </div>
+    #{/form}
+    <div class="clear">
+    </div>
     #{/else}
 </div>
