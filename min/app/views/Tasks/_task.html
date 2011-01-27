@@ -32,16 +32,16 @@
                 ${task.content?.raw()}
             </div>
             #{if task.tags}
-                    <div class="tags">
-                        #{list task.tags, as: "tag"}
-                            <div class="tagGroupSlot-${tag.group?.id}">
-                        <div class="tag">
-                            ${tag}
-                        </div>
-                            </div>
-                        #{/list}
+            <div class="tags">
+                #{list task.tags, as: "tag"}
+                <div class="tagGroupSlot-${tag.group?.id}">
+                    <div class="tag">
+                        ${tag}
                     </div>
-                #{/if}
+                </div>
+                #{/list}
+            </div>
+            #{/if}
         </div>
         <div class="comments">
             #{list task?.comments, as: "comment"}
