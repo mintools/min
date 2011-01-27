@@ -19,7 +19,7 @@
     </div>
     <div class="display">
         <div class="title">
-            <h3>${task.title?.raw()}</h3>
+            <h3>${task.title?.escape().nl2br()}</h3>
             <div class="assignedTo">
                 #{if task?.assignedTo}Assigned to ${task?.assignedTo}#{/if}#{else}Unassigned#{/else}
             </div>
@@ -29,7 +29,7 @@
         </div>
         <div class="main">
             <div class="description descriptionSummary">
-                ${task.content?.raw()}
+                ${task.content?.escape().nl2br()}
             </div>
             #{if task.tags}
             <div class="tags">
@@ -87,9 +87,7 @@
             </label>
             <br/>
             <div class="titleField">
-                <div contentEditable="true" class="taskTitleField">
-                    ${task?.title?.raw()}
-                </div>
+                <textarea rows="4" cols="10" name="task.title">${task?.title}</textarea>
             </div>
             <span class="error">${errors.forKey('task.title')}</span>
             <div class="assignedTo">
@@ -108,9 +106,7 @@
             </label>
             <br/>
             <div class="description descriptionSummary">
-                <div contentEditable="true" class="taskContentField">
-                    ${task?.content?.raw()}
-                </div>
+                <textarea rows="10" cols="70" name="task.content">${task?.content}</textarea>
             </div>
             <span class="error">${errors.forKey('task.content')}</span>
             <label for="selectedTags">

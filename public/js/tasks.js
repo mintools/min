@@ -47,7 +47,7 @@ function task(taskElement, taskList) {
             delay: 250
         });
 
-        $(".multi", cTask).MultiFile();        
+        $(".multi", cTask).MultiFile();
 
         /*
 		 * Buttons
@@ -162,29 +162,18 @@ function task(taskElement, taskList) {
 	 * Remove everything except breaks
 	 */
 	this.filterHtml = function(element){
-		
+
 		var html = $(element).html().replace(/<br>/g,'-----!!!!!Break!!!!!-----');
 		html = $.trim(html);
 		html = $('<div>' + html + '</div>').text();
 		html = html.replace(/-----!!!!!Break!!!!!-----/g,'<br/>');
-		
+
 		return html;
 	};
 
 
     this.save = function() {
         var wasNew = current.isNew;
-
-        // add hidden fields with contents of editable divs before submitting
-//        var title = $(".taskTitleField", cTask).html();
-//        var description = $(".taskContentField", cTask).html();
-        
-    	var title = $.trim($(".taskTitleField", cTask).text());
-		var description = current.filterHtml($(".taskContentField", cTask));
-		
-        $(".taskTitleField", cTask).after("<input type='hidden' name='task.title' value='"+title+"'/>");
-        $(".taskContentField", cTask).after("<input type='hidden' name='task.content' class='taskContentValue' value=''/>");
-        $(".taskContentValue",cTask).val(description);
 
         var options = {
             success: function(data) {
@@ -423,7 +412,7 @@ function tasks() {
         }, function() {
             $(baseTask.cTask).hide().prependTo(".tasks").fadeIn(1000);
             $.scrollTo($(baseTask.cTask), 1000, {offset: -20});
-            current.setOrder();            
+            current.setOrder();
         });
     };
 
@@ -487,5 +476,9 @@ $(document).ready(function() {
 	/*
 	 * Make the tasks sortable. Only submit the reordered tasks.
 	 */
+
+    $("#filterForm").submit(function() {
+
+    });
 
 });

@@ -176,7 +176,6 @@ div.taskContainer.editMode .task {
 }
 
 div.taskContainer.editMode .description {
-	border: 1px #cccccc solid; padding: 5px;
 }
 
 div.taskContainer.editMode .description .taskContentField {
@@ -184,7 +183,6 @@ div.taskContainer.editMode .description .taskContentField {
 }
 
 div.taskContainer.editMode .titleField {
-	border: 1px #cccccc solid; padding: 5px;
 }
 
 div.taskContainer.editMode .titleField .taskTitleField {

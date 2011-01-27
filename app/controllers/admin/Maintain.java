@@ -26,4 +26,21 @@ public class Maintain extends Controller {
             task.save();
         }
     }
+
+    public static void migrate2() {
+        List<Task> tasks = Task.find("from Task t order by t.sortOrder desc").fetch();
+
+        long i = 1;
+        for (Task task : tasks) {
+            // change newlines to <br>
+            task.title = task.title.replaceAll("<br.{0,}?>", "\n").trim();
+            task.content = task.content.replaceAll("<br.{0,}?>", "\n").trim();
+
+            // remove all other html tags
+            task.title = task.title.replaceAll("\\<.*?>","");
+            task.content = task.content.replaceAll("\\<.*?>","");
+
+            task.save();
+        }
+    }
 }
