@@ -51,7 +51,7 @@ function task(taskElement, taskList) {
 
         /*
 		 * Buttons
-		 */        
+		 */
 		$('.title',cTask).click(function() {
 			if (!current.editMode) {
 				current.toggle();
@@ -158,15 +158,33 @@ function task(taskElement, taskList) {
         });
 	};
 
+	/**
+	 * Remove everything except breaks
+	 */
+	this.filterHtml = function(element){
+		
+		var html = $(element).html().replace(/<br>/g,'-----!!!!!Break!!!!!-----');
+		html = $.trim(html);
+		html = $('<div>' + html + '</div>').text();
+		html = html.replace(/-----!!!!!Break!!!!!-----/g,'<br/>');
+		
+		return html;
+	};
+
+
     this.save = function() {
         var wasNew = current.isNew;
 
         // add hidden fields with contents of editable divs before submitting
-        var title = $(".taskTitleField", cTask).html();
-        var description = $(".taskContentField", cTask).html();
-
+//        var title = $(".taskTitleField", cTask).html();
+//        var description = $(".taskContentField", cTask).html();
+        
+    	var title = $.trim($(".taskTitleField", cTask).text());
+		var description = current.filterHtml($(".taskContentField", cTask));
+		
         $(".taskTitleField", cTask).after("<input type='hidden' name='task.title' value='"+title+"'/>");
-        $(".taskContentField", cTask).after("<input type='hidden' name='task.content' value='"+description+"'/>");
+        $(".taskContentField", cTask).after("<input type='hidden' name='task.content' class='taskContentValue' value=''/>");
+        $(".taskContentValue",cTask).val(description);
 
         var options = {
             success: function(data) {
@@ -458,7 +476,7 @@ function tasks() {
                 current.setOrder();
             });
         }
-    }
+    };
 }
 
 $(document).ready(function() {
