@@ -52,7 +52,7 @@ function task(taskElement, taskList) {
         /*
 		 * Buttons
 		 */
-		$('.title',cTask).click(function() {
+		$('.title,.main,.comments',cTask).click(function() {
 			if (!current.editMode) {
 				current.toggle();
 			}
