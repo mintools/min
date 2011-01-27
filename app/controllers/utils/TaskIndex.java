@@ -78,12 +78,20 @@ public class TaskIndex {
         Query query = parser.parse("id:" + task.id);
         writer.deleteDocuments(query);
 
+        // this is an aggregate of all the text content in the task - used for searching
+        StringBuilder allTextContentString = new StringBuilder();
+
         Document document = new Document();
         document.add(new Field("id", task.id.toString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
         document.add(new Field("title", task.title, Field.Store.YES, Field.Index.ANALYZED));
 
+        allTextContentString.append(task.title);
+        allTextContentString.append(" ");
+
         if (!StringUtils.isEmpty(task.content)) {
             document.add(new Field("content", task.content, Field.Store.YES, Field.Index.ANALYZED));
+            allTextContentString.append(task.content);
+            allTextContentString.append(" ");
         }
 
         List<TagGroup> groups = TagGroup.findAll();
@@ -107,6 +115,8 @@ public class TaskIndex {
                 document.add(new Field("noTagsIn_" + group.id, "true", Field.Store.YES, Field.Index.NOT_ANALYZED));        
             }
         }
+
+        document.add(new Field("allText", allTextContentString.toString(), Field.Store.NO, Field.Index.ANALYZED));
 
         writer.addDocument(document);
     }
@@ -194,7 +204,7 @@ public class TaskIndex {
         // add search string
         if (!StringUtils.isEmpty(searchText)) {
             Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_30);
-            QueryParser parser = new QueryParser(Version.LUCENE_30, "content", analyzer);
+            QueryParser parser = new QueryParser(Version.LUCENE_30, "allText", analyzer);
 
             Query textSearchQuery = parser.parse(searchText);
 
