@@ -118,9 +118,24 @@
             </label>
             <br/>
             <div class="tags">
-                <div class="selectedTags">
-                    <input size="80" class="tagContainer" type="text" name="selectedTags" value="${(task?.tags) ? task.tags.join(' ') : models.TagGroup.getDefaultTags().join(' ')}"/>
-                </div>
+                #{list models.TagGroup.getAll(), as: "tagGroup"}
+                    <div class="tagGroup">
+                        <label for="blah">${tagGroup.name}</label>
+                        <br/>
+                        <select name="task.tags.id" #{if !tagGroup.mutex}multiple="multiple"#{/if}>
+                            <option value=""></option>
+                            #{list tagGroup.tags, as: "tag"}
+                                #{if task?.tags}
+                                    <option value="${tag.id}" #{if task.tags.contains(tag)}selected#{/if}>${tag.name}</option>
+                                #{/if}
+                                #{else}
+                                    <option value="${tag.id}" #{if models.TagGroup.getDefaultTags().contains(tag)}selected#{/if}>${tag.name}</option>                                    
+                                #{/else}
+                            #{/list}
+                        </select>
+
+                    </div>
+                #{/list}
             </div>
         </div>
         <div class="comments">

@@ -56,7 +56,7 @@ public class Tasks extends Controller {
         renderTemplate("Tasks/_task.html", task, editMode);
     }
 
-    public static void save(@Valid Task task, File[] attachments, String selectedTags) throws Exception {
+    public static void save(@Valid Task task, File[] attachments) throws Exception {
 
         Member loggedInUser = Member.connected();
 
@@ -75,20 +75,20 @@ public class Tasks extends Controller {
             }
 
             // overwrite tags todo: find a better way of doing this
-            if (task.tags != null) task.tags.clear();
+//            if (task.tags != null) task.tags.clear();
 
             // todo: tags are stored in BOTH db and lucene index. <-- is this ok?
             // todo: we need to enforce the mutex rules for tagGroups
             // todo: remove hardcoding
 
-            // get selected tags
-            if (!StringUtils.isEmpty(selectedTags)) {
-                StringTokenizer tokens = new StringTokenizer(selectedTags, " ", false);
-                while (tokens.hasMoreTokens()) {
-                    String tag = tokens.nextToken();                    
-                    task.tagItWith(tag);
-                }
-            }
+//            // get selected tags
+//            if (!StringUtils.isEmpty(selectedTags)) {
+//                StringTokenizer tokens = new StringTokenizer(selectedTags, " ", false);
+//                while (tokens.hasMoreTokens()) {
+//                    String tag = tokens.nextToken();
+//                    task.tagItWith(tag);
+//                }
+//            }
 
             // add attachments
             if (attachments != null) {
