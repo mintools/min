@@ -53,7 +53,7 @@ public class TagGroup extends Model {
     }
 
     public static List<TagGroup> getAll() {
-        return TagGroup.find("order by sortOrder desc").fetch(); 
+        return TagGroup.find("order by sortOrder desc").fetch();
     }
 
     public static List<Tag> getDefaultTags() {
