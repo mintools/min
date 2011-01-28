@@ -51,12 +51,10 @@
                             ${member.username}
                         </td>
                         <td>
-                            <input type="checkbox" name="raisedBy" value="${member.id}" #{if
-                            flash.raisedBy?.contains(member.id.toString())}checked#{/if}/>
+                            <input type="checkbox" name="raisedBy" value="${member.id}" #{if flash.raisedBy?.contains(member.id.toString())}checked#{/if}/>
                         </td>
                         <td>
-                            <input type="checkbox" name="assignedTo" value="${member.id}" #{if
-                            flash.assignedTo?.contains(member.id.toString())}checked#{/if}/>
+                            <input type="checkbox" name="assignedTo" value="${member.id}" #{if flash.assignedTo?.contains(member.id.toString())}checked#{/if}/>
                         </td>
                     </tr>
                     #{/list}
@@ -67,8 +65,7 @@
                         <td>
                         </td>
                         <td>
-                            <input type="checkbox" name="assignedTo" value="unassigned" #{if
-                            flash.assignedTo?.contains('unassigned')}checked#{/if}/>
+                            <input type="checkbox" name="assignedTo" value="unassigned" #{if flash.assignedTo?.contains('unassigned')}checked#{/if}/>
                         </td>
                     </tr>
                 </table>
