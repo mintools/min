@@ -277,7 +277,7 @@ div.taskContainer .tags {
     padding: 5px;
     font-size: 0.8em; color: gray; overflow: hidden;
     overflow:hidden;
-    height: 18px;
+    height: 15px;
 }
 
 div.taskContainer.expandMode .tags {
@@ -285,7 +285,7 @@ div.taskContainer.expandMode .tags {
 }
 
 .tags ol.tagGroup {
-    padding: 5px 2px;
+    padding: 3px 4px 10px 4px;
     width: 100px;
     text-align: center;
     list-style: none;
@@ -294,6 +294,7 @@ div.taskContainer.expandMode .tags {
 }
 
 .tags ol.tagGroup .tag {
+    -webkit-border-radius: 10px;
     background-color: #f3e6f5;
     margin-bottom: 2px;
     padding: 2px 4px;
