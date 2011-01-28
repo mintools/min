@@ -3,10 +3,7 @@ package models;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,6 +17,11 @@ import java.util.Set;
 public class TagGroup extends Model {
     @Required
     public String name;
+
+    public Boolean mutex;
+
+    @OneToOne(optional = true)
+    public Tag defaultTag;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     @OrderBy("sortOrder DESC") 
@@ -45,7 +47,16 @@ public class TagGroup extends Model {
         return false;
     }
 
+    public void setDefault(Tag tag) {
+        this.defaultTag = tag;
+        this.save();
+    }
+
     public static List<TagGroup> getAll() {
         return TagGroup.find("order by sortOrder desc").fetch(); 
+    }
+
+    public static List<Tag> getDefaultTags() {
+        return Tag.find("select distinct t from Tag t, TagGroup g where g.defaultTag = t").fetch();
     }
 }

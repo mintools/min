@@ -7,9 +7,7 @@ import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * User: soyoung
@@ -46,6 +44,11 @@ public class Tags extends Controller {
             renderTemplate("Tags/deleteTagError.html", tasks);
         }
         else {
+            // if tag is currently a default, remove the tagGroup's default
+            if (tag.isDefault()) {
+                tag.group.setDefault(null);
+            }
+
             tag.delete();
         }
         index();
@@ -54,6 +57,11 @@ public class Tags extends Controller {
     public static void assignGroup(Long tagId, Long groupId) {
         Tag tag = Tag.findById(tagId);
 
+        // if tag is currently a default, remove the tagGroup's default
+        if (tag.isDefault()) {
+            tag.group.setDefault(null);
+        }
+
         if (groupId == null) {
             tag.group = null;
         }
@@ -61,6 +69,21 @@ public class Tags extends Controller {
             tag.group = TagGroup.findById(groupId);
         }
         tag.save();        
+    }
+
+    public static void changeMutex(Long groupId, Boolean isMutex) {
+        TagGroup tagGroup = TagGroup.findById(groupId);
+
+        tagGroup.mutex = isMutex;
+
+        tagGroup.save();   
+    }
+
+    public static void setDefault(Long groupId, Long tagId) {
+        TagGroup tagGroup = TagGroup.findById(groupId);
+        Tag tag = Tag.findById(tagId);
+
+        tagGroup.setDefault(tag);
     }
 
     public static void sort(List<Long> tags) {

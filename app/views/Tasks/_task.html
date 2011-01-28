@@ -115,7 +115,7 @@
             <br/>
             <div class="tags">
                 <div class="selectedTags">
-                    <input class="tagContainer" type="text" name="selectedTags" value="${task?.tags?.join(' ')}"/>
+                    <input size="80" class="tagContainer" type="text" name="selectedTags" value="${(task?.tags) ? task.tags.join(' ') : models.TagGroup.getDefaultTags().join(' ')}"/>
                 </div>
             </div>
         </div>

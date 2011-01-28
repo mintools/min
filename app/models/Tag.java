@@ -25,6 +25,13 @@ public class Tag extends Model implements Comparable<Tag> {
         return name.compareTo(otherTag.name);
     }
 
+    /**
+     * @return true if the tag is the default of its group
+     */
+    public boolean isDefault() {
+       return group != null && this.equals(group.defaultTag); 
+    }
+
     public static Tag findOrCreateByName(String name) {
         Tag tag = Tag.find("from Tag t where upper(t.name) = ?", name.toUpperCase()).first();
         if (tag == null) {
