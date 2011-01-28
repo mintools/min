@@ -37,6 +37,7 @@ public class Tag extends Model implements Comparable<Tag> {
         if (tag == null) {
             tag = new Tag();
             tag.name = name;
+            tag.group = TagGroup.find("byName", "Other").first();
         }
         tag.save();
         return tag;

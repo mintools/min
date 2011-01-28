@@ -258,6 +258,7 @@ public class TaskIndex {
             if (!groupQuery.clauses().isEmpty()) luceneQuery.add(groupQuery, BooleanClause.Occur.MUST);
         }
 
+        // todo: the following shouldn't happen anymore as everything should now be in the "Other" group 
         // go through remaining tags in selectedTags list (ie. those that are not in a group)
         BooleanQuery ungroupedTagQuery = new BooleanQuery();
         for (Iterator<Tag> iterator = selectedTags.iterator(); iterator.hasNext();) {

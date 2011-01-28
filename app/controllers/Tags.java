@@ -21,18 +21,12 @@ public class Tags extends Controller {
     }
 
     public static void create() {
-        Tag tag = new Tag();        
-        render(tag);
+        render();
     }
 
-    public static void save(@Valid Tag tag) {
-        if (Validation.hasErrors()) {
-            boolean editing = true;
-            renderTemplate("Tags/create.html", tag);
-        } else {
-            tag.save();
-            index();
-        }
+    public static void save(String name) {
+        Tag.findOrCreateByName(name);
+        index();
     }
 
     public static void delete(Long id) {

@@ -14,16 +14,18 @@ import java.util.List;
  */
 public class TagGroups extends Controller {
     public static void create() {
-        TagGroup tagGroup = new TagGroup();
-        render(tagGroup);
+        render();
     }
 
-    public static void save(@Valid TagGroup tagGroup) {
-        if (Validation.hasErrors()) {
-            renderTemplate("TagGroups/create.html", tagGroup);
-        } else {
-            tagGroup.save();
-            Tags.index();
+    public static void save(String name) {
+        TagGroup group = TagGroup.find("byName", name).first();
+
+        if (group == null) {
+            group = new TagGroup();
+            group.name = name;
+            group.save();
         }
+
+        Tags.index();
     }
 }

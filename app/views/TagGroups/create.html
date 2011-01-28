@@ -2,8 +2,8 @@
 
 <h1>Create new TagGroup</h1>
 #{form action:@TagGroups.save(), method:'post'}
-    Group Name: <input name="tagGroup.name" value="${tagGroup.name}"/>
-    <span class="error">${errors.forKey('tagGroup.name')}</span>
+    Group Name: <input name="name" value="${name}"/>
+    <span class="error">${errors.forKey('name')}</span>
 
     <div>
         <a href="@{Tags.index()}">cancel</a>

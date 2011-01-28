@@ -25,16 +25,6 @@
                    </fieldset>
                 #{/if}
             #{/list}
-
-            <fieldset>
-                <legend>Other</legend>
-
-                <ul class="tags">
-                #{list models.Tag.ungrouped(), as: "tag"}
-                    <li><input type="checkbox" name="checkedTags" value="${tag.id}" #{if flash.checkedTags?.contains(tag.id.toString())}checked #{/if}/>${tag}</li>
-                #{/list}
-                </ul>
-            </fieldset>
         </div>
 
         <div class="column">
@@ -44,16 +34,16 @@
                 </legend>
                 <table>
                     <thead>
-                        <tr>
-                            <th>
-                            </th>
-                            <th>
-                                Raised By
-                            </th>
-                            <th>
-                                Assigned To
-                            </th>
-                        </tr>
+                    <tr>
+                        <th>
+                        </th>
+                        <th>
+                            Raised By
+                        </th>
+                        <th>
+                            Assigned To
+                        </th>
+                    </tr>
                     </thead>
                     #{list allMembers, as: "member"}
                     <tr>
@@ -61,12 +51,15 @@
                             ${member.username}
                         </td>
                         <td>
-                            <input type="checkbox" name="raisedBy" value="${member.id}" #{if  flash.raisedBy?.contains(member.id.toString())}checked#{/if}/>
+                            <input type="checkbox" name="raisedBy" value="${member.id}" #{if
+                            flash.raisedBy?.contains(member.id.toString())}checked#{/if}/>
                         </td>
                         <td>
-                            <input type="checkbox" name="assignedTo" value="${member.id}" #{if  flash.assignedTo?.contains(member.id.toString())}checked#{/if}/>
+                            <input type="checkbox" name="assignedTo" value="${member.id}" #{if
+                            flash.assignedTo?.contains(member.id.toString())}checked#{/if}/>
                         </td>
-                    </tr>#{/list}
+                    </tr>
+                    #{/list}
                     <tr>
                         <td>
                             Unassigned
@@ -74,14 +67,17 @@
                         <td>
                         </td>
                         <td>
-                            <input type="checkbox" name="assignedTo" value="unassigned" #{if  flash.assignedTo?.contains('unassigned')}checked#{/if}/></td>
-                            </tr>
-                        </table>
-                        </fieldset>
-                    </div>
-                    <div class="clear">
-                    </div>
-                    <hr/><input type="submit" name="action" value="Filter"/>
+                            <input type="checkbox" name="assignedTo" value="unassigned" #{if
+                            flash.assignedTo?.contains('unassigned')}checked#{/if}/>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </div>
+        <div class="clear">
+        </div>
+        <hr/>
+        <input type="submit" name="action" value="Filter"/>
     </div>
        
 #{/form}
