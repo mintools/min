@@ -273,64 +273,31 @@ div.taskContainer .edit input,div.taskContainer .edit textarea {
  * Tags
  */
 
-div.taskContainer .tagGroupSlot-1 {
-    padding: 2px;
-    width: 100px;
-    margin-left: 0;
-    position: absolute;
-    background-color: #e7e7fa;
-    height: 18px;
-    text-align: center;
-}
-
-div.taskContainer .tagGroupSlot-2 {
-    padding: 2px;
-    width: 100px;
-    margin-left: 110px;
-    position: absolute;
-    background-color: #f3ffe6;
-    height: 18px;
-    text-align: center;
-}
-
-div.taskContainer .tagGroupSlot-3 {
-    padding: 2px;
-    width: 100px;
-    margin-left: 220px;
-    position: absolute;
-    background-color: #f9e7e7;
-    height: 18px;
-    text-align: center;
-}
-
-div.taskContainer .tagGroupSlot-4 {
-    padding: 2px;
-    width: 100px;
-    margin-left: 330px;
-    position: absolute;
-    background-color: #ffffcc;
-    height: 18px;
-    text-align: center;
-}
-
-div.taskContainer .tagGroupSlot- {
-    padding: 2px;
-    width: 100px;
-    margin-left: 440px;
-    position: absolute;
-    background-color: #e9e1ee;
-    height: 18px;
-    text-align: center;
-}
-
 div.taskContainer .tags {
     padding: 5px;
     font-size: 0.8em; color: gray; overflow: hidden;
-    height: 30px;
+    overflow:hidden;
+    height: 18px;
 }
 
-div.taskContainer .tags .tag {
-    float: left; padding: 1px 5px; background-color: #afc6dd; color: white; margin: 2px;
+div.taskContainer.expandMode .tags {
+    height: auto;
+}
+
+.tags ol.tagGroup {
+    padding: 5px;
+    width: 100px;
+    text-align: center;
+    list-style: none;
+    float: left;
+    margin: 0;
+}
+
+.tags ol.tagGroup .tag {
+    background-color: #e9f4e9;
+    -webkit-border-radius: 10px;
+    margin-bottom: 2px;
+    padding: 2px 5px;
 }
 
 div.taskContainer.editMode .tags .close {

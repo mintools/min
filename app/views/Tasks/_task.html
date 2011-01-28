@@ -31,17 +31,21 @@
             <div class="description descriptionSummary">
                 ${task.content?.escape().nl2br()}
             </div>
-            #{if task.tags}
-            <div class="tags">
-                #{list task.tags, as: "tag"}
-                <div class="tagGroupSlot-${tag.group?.id}">
-                    <div class="tag">
-                        ${tag}
-                    </div>
-                </div>
+
+            #{if task?.tags}
+                <div class="tags">
+                #{list models.TagGroup.getAll(), as: "tagGroup"}
+                    <ol class="tagGroup">                        
+                        #{list tagGroup.tags, as: "tag"}
+                            #{if task?.tags?.contains(tag)}
+                                <li class="tag">${tag.name}</li>
+                            #{/if}
+                        #{/list}
+                    </ol>
                 #{/list}
-            </div>
+                </div>
             #{/if}
+            
         </div>
         <div class="comments">
             #{list task?.comments, as: "comment"}
