@@ -60,6 +60,7 @@ public class Tags extends Controller {
         // if tag is currently a default, remove the tagGroup's default
         if (tag.isDefault()) {
             tag.group.setDefault(null);
+            tag.group.save();
         }
 
         if (groupId == null) {
