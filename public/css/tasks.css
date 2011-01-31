@@ -6,6 +6,10 @@ body {
 	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif; font-size: .8em;
 }
 
+body textarea, body select, body input {
+	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif; font-size: .9em;
+}
+
 .header {
 	font-size: .7em; font-weight: bold; margin: 0.5%;
 }
@@ -80,6 +84,10 @@ div.taskContainer.expandMode .createdBy {
 
 div.taskContainer .assignedTo {
 	color: gray; font-size: .7em; margin-top: 5px; font-size: .7em; width: 100%;
+}
+
+div.taskContainer .assignedTo select {
+	width: 100%;
 }
 
 div.taskContainer .main {
@@ -160,7 +168,7 @@ div.taskContainer .attachments .attachment img {
  * Thumb-nails
  */
 div.taskContainer .thumbnailsButtons {
-
+	
 }
 
 div.taskContainer .thumbnails {
@@ -175,14 +183,17 @@ div.taskContainer.editMode .task {
 	padding: 0;
 }
 
-div.taskContainer.editMode .description {
+div.taskContainer.editMode .description textarea{
+	width:99%;
 }
 
 div.taskContainer.editMode .description .taskContentField {
 	min-height: 40px;
 }
 
-div.taskContainer.editMode .titleField {
+div.taskContainer.editMode .titleField textarea {
+	width: 100%;
+	font-weight: bold;
 }
 
 div.taskContainer.editMode .titleField .taskTitleField {
@@ -190,7 +201,7 @@ div.taskContainer.editMode .titleField .taskTitleField {
 }
 
 div.taskContainer.expandMode {
-    border: 2px #92c8ec solid;
+	border: 2px #92c8ec solid;
 }
 
 div.taskContainer.editMode,div.taskContainer.editMode input {
@@ -272,37 +283,24 @@ div.taskContainer .edit input,div.taskContainer .edit textarea {
 /**
  * Tags
  */
-
 div.taskContainer .tags {
-    padding: 5px;
-    font-size: 0.8em;
-    color: gray;
-    overflow:hidden;
-    height: 15px;
+	padding: 5px; font-size: 0.8em; color: gray; overflow: hidden; height: 15px;
 }
 
 div.taskContainer.expandMode .tags {
-    height: auto;
+	height: auto;
 }
 
 .tags .tagGroup {
-    padding: 3px 2px 10px 2px;
-    width: 100px;
-    text-align: center;
-    list-style: none;
-    float: left;
-    margin: 0;
+	padding: 3px 2px 10px 2px; width: 100px; text-align: center; list-style: none; float: left; margin: 0;
 }
 
 .tags .tagGroup .tag {
-    -webkit-border-radius: 10px;
-    background-color: #f3e6f5;
-    margin-bottom: 2px;
-    padding: 2px 2px;
+	-webkit-border-radius: 10px; background-color: #f3e6f5; margin-bottom: 2px; padding: 2px 2px;
 }
 
 .tags .tagGroup select {
-    width: 100px;
+	width: 100px;
 }
 
 div.taskContainer.editMode .tags .close {

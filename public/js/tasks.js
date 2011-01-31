@@ -7,8 +7,8 @@ function task(taskElement, taskList) {
 
 	this.taskList = taskList;
 	this.isNew = false;
-    this.isEditMode = false;
-    this.cTask = cTask;
+	this.isEditMode = false;
+	this.cTask = cTask;
 
 	/**
 	 * expand
@@ -20,39 +20,42 @@ function task(taskElement, taskList) {
 		 */
 		current.id = $(".task", cTask).attr("data-id");
 		current.editMode = $(".task", cTask).attr("data-editMode") == 'true';
-        current.isNew = $(".task", cTask).attr("data-isNew") == 'true';
+		current.isNew = $(".task", cTask).attr("data-isNew") == 'true';
 
-        if (current.editMode) {
-            $(cTask).addClass("editMode");
-        }
-        else {
-            $(cTask).removeClass("editMode");
-        }
+		if (current.editMode) {
+			$(cTask).addClass("editMode");
+		} else {
+			$(cTask).removeClass("editMode");
+		}
 
-        /*
-         * Events
-         */
-        $(cTask).mouseenter(function(e) {
-            if (!current.isNew) $(".hoverAction", cTask).show();
-        });
+		/*
+		 * Events
+		 */
+		$(cTask).mouseenter(function(e) {
+			if (!current.isNew) {
+				$(".hoverAction", cTask).show();
+			}
+		});
 
-        $(cTask).mouseleave(function(e) {
-            if (!current.isNew) $(".hoverAction", cTask).hide();
-        });
+		$(cTask).mouseleave(function(e) {
+			if (!current.isNew) {
+				$(".hoverAction", cTask).hide();
+			}
+		});
 
-        /*
-         * Plugins
-         */
-        $('.tagContainer', cTask).tagSuggest({
-            delay: 250
-        });
+		/*
+		 * Plugins
+		 */
+		$('.tagContainer', cTask).tagSuggest({
+			delay : 250
+		});
 
-        $(".multi", cTask).MultiFile();
+		$(".multi", cTask).MultiFile();
 
-        /*
+		/*
 		 * Buttons
 		 */
-		$('.title,.main,.comments',cTask).click(function() {
+		$('.title,.main,.comments', cTask).click(function() {
 			if (!current.editMode) {
 				current.toggle();
 			}
@@ -69,10 +72,10 @@ function task(taskElement, taskList) {
 			return false;
 		});
 
-        $(".taskForm", cTask).submit(function() {
-            current.save();
+		$(".taskForm", cTask).submit(function() {
+			current.save();
 			return false;
-        });
+		});
 
 		$(".saveButton", cTask).click(function() {
 			current.save();
@@ -80,11 +83,11 @@ function task(taskElement, taskList) {
 		});
 
 		$(".cancelButton", cTask).click(function() {
-            if (current.isNew) {
-                current.remove();
-            } else {
-                current.cancel();
-            }
+			if (current.isNew) {
+				current.remove();
+			} else {
+				current.cancel();
+			}
 			return false;
 		});
 
@@ -103,21 +106,21 @@ function task(taskElement, taskList) {
 			return false;
 		});
 
-        $(".insertAboveButton", cTask).click(function() {
-            taskList.insertNew(current, true);
-        });
+		$(".insertAboveButton", cTask).click(function() {
+			taskList.insertNew(current, true);
+		});
 
-        $(".insertBelowButton", cTask).click(function() {
-            taskList.insertNew(current, false);
-        });
+		$(".insertBelowButton", cTask).click(function() {
+			taskList.insertNew(current, false);
+		});
 
-        $(".moveUpButton", cTask).click(function() {
-            taskList.moveToTop(current);
-        });
+		$(".moveUpButton", cTask).click(function() {
+			taskList.moveToTop(current);
+		});
 
-        $(".moveDownButton", cTask).click(function() {
-            taskList.moveToBottom(current);
-        });
+		$(".moveDownButton", cTask).click(function() {
+			taskList.moveToBottom(current);
+		});
 
 		$(".attachments .attachment .thumb img[rel]", cTask).overlay({
 			mask : {
@@ -133,80 +136,78 @@ function task(taskElement, taskList) {
 		current.expand(!current.expanded);
 	};
 
-    this.expand = function(expand) {
-        if (expand) {
-            $(cTask).addClass('expandMode');
+	this.expand = function(expand) {
+		if (expand) {
+			$(cTask).addClass('expandMode');
 			current.showLongSummary();
-            current.expanded = true;
-        }
-        else {
-            $(cTask).removeClass('expandMode');
+			current.expanded = true;
+		} else {
+			$(cTask).removeClass('expandMode');
 			current.showShortSummary();
-            current.expanded = false;
-        }
-    };
+			current.expanded = false;
+		}
+	};
 
 	this.edit = function() {
 
-        $.get('/tasks/show', {
-            id: current.id,
-            editMode: true
-        }, function(data) {
-           $(".task", cTask).replaceWith(data);
-            current.expand(true);
-            current.init();
-        });
+		$.get('/tasks/show', {
+			id : current.id,
+			editMode : true
+		}, function(data) {
+			$(".task", cTask).replaceWith(data);
+			current.expand(true);
+			current.init();
+		});
 	};
 
 	/**
 	 * Remove everything except breaks
 	 */
-	this.filterHtml = function(element){
+	this.filterHtml = function(element) {
 
-		var html = $(element).html().replace(/<br>/g,'-----!!!!!Break!!!!!-----');
+		var html = $(element).html().replace(/<br>/g, '-----!!!!!Break!!!!!-----');
 		html = $.trim(html);
 		html = $('<div>' + html + '</div>').text();
-		html = html.replace(/-----!!!!!Break!!!!!-----/g,'<br/>');
+		html = html.replace(/-----!!!!!Break!!!!!-----/g, '<br/>');
 
 		return html;
 	};
 
+	this.save = function() {
+		var wasNew = current.isNew;
 
-    this.save = function() {
-        var wasNew = current.isNew;
+		var options = {
+			success : function(data) {
+				$('.task', cTask).replaceWith(data);
+				current.init();
 
-        var options = {
-            success: function(data) {
-                $('.task', cTask).replaceWith(data);
-                current.init();
+				if (wasNew) {
+					// if we're inserting
+					if (current.beforeTaskId || current.afterTaskId) {
+						current.taskList.insertIntoList(current);
+					}
+					current.taskList.sortRefresh();
+				}
 
-                if (wasNew) {
-                    // if we're inserting
-                    if (current.beforeTaskId || current.afterTaskId) {
-                        current.taskList.insertIntoList(current);
-                    }
-                    current.taskList.sortRefresh();
-                }
+				current.expand(false);
+				taskList.loadSort();
+			},
+			type : 'post',
+			timeout : 3000
+		};
 
-                current.expand(false);
-                taskList.loadSort();
-            },
-            type: 'post',
-            timeout:   3000
-        };
-
-        $(".taskForm", cTask).ajaxSubmit(options);
+		$(".taskForm", cTask).ajaxSubmit(options);
 	};
 
 	this.cancel = function() {
-        $.get('/tasks/show', {
-            id: current.id
-        }, function(data) {
-           $(".task", cTask).replaceWith(data);
-            current.init();
-            current.expand(false);
-            taskList.loadSort();
-        });
+		$.get('/tasks/show', {
+			id : current.id
+		}, function(data) {
+			$(".task", cTask).replaceWith(data);
+			current.init();
+			current.expand(false);
+			taskList.loadSort();
+		});
 	};
 
 	this.confirmDelete = function() {
@@ -250,7 +251,7 @@ function task(taskElement, taskList) {
 	};
 
 	this.deleteAttachment = function(attachment) {
-		//console.log(attachment);
+		// console.log(attachment);
 
 		var attId = $('input[name=attachmentId]', attachment).val();
 
@@ -296,7 +297,7 @@ function task(taskElement, taskList) {
 
 function tasks() {
 
-	var taskOrder = new Array();
+	var taskOrder = [];
 	var current = this;
 
 	this.init = function() {
@@ -326,7 +327,7 @@ function tasks() {
 			handle : $(".move"),
 			update : function(event, ui) {
 				var current = 0;
-				var toSwap = new Array();
+				var toSwap = [];
 				// console.log(taskOrder);
 				$(".tasks .taskContainer").each(function() {
 
@@ -366,7 +367,7 @@ function tasks() {
 	};
 
 	this.setOrder = function() {
-		taskOrder = new Array();
+		taskOrder = [];
 		$(".tasks .task").each(function() {
 			taskOrder.push($(this).attr("data-id"));
 		});
@@ -381,91 +382,94 @@ function tasks() {
 		$('.tasks').prepend(clone);
 	};
 
-    this.insertNew = function(baseTask, before) {
-        var clone = $("#newTask .taskContainer").clone();
+	this.insertNew = function(baseTask, before) {
+		var clone = $("#newTask .taskContainer").clone();
 
-        var newTask = new task(clone, current);
+		var newTask = new task(clone, current);
 		newTask.init();
 
-        if (before) {
-            $(baseTask.cTask).before(clone);
-            newTask.beforeTaskId = baseTask.id;
-        }
-        else {
-            $(baseTask.cTask).after(clone);
-            newTask.afterTaskId = baseTask.id;
-        }
-    };
+		if (before) {
+			$(baseTask.cTask).before(clone);
+			newTask.beforeTaskId = baseTask.id;
+		} else {
+			$(baseTask.cTask).after(clone);
+			newTask.afterTaskId = baseTask.id;
+		}
+	};
 
-    this.moveToTop = function(baseTask) {
-        var toSwap = new Array();
-        // push baseTask to top of sort order
-        toSwap.push(baseTask.id);
-        for (var i = 0; i < taskOrder.length; i++) {
-            if (taskOrder[i] != baseTask.id) {
-                toSwap.push(taskOrder[i]);
-            }
-        }
+	this.moveToTop = function(baseTask) {
+		var toSwap = [];
+		// push baseTask to top of sort order
+		toSwap.push(baseTask.id);
+		for ( var i = 0; i < taskOrder.length; i++) {
+			if (taskOrder[i] != baseTask.id) {
+				toSwap.push(taskOrder[i]);
+			}
+		}
 
-        $.post('/tasks/sort', {
-            order : toSwap
-        }, function() {
-            $(baseTask.cTask).hide().prependTo(".tasks").fadeIn(1000);
-            $.scrollTo($(baseTask.cTask), 1000, {offset: -20});
-            current.setOrder();
-        });
-    };
+		$.post('/tasks/sort', {
+			order : toSwap
+		}, function() {
+			$(baseTask.cTask).hide().prependTo(".tasks").fadeIn(1000);
+			$.scrollTo($(baseTask.cTask), 1000, {
+				offset : -20
+			});
+			current.setOrder();
+		});
+	};
 
-    this.moveToBottom = function(baseTask) {
-        var toSwap = new Array();
+	this.moveToBottom = function(baseTask) {
+		var toSwap = [];
 
-        var found = false;
+		var found = false;
 
-        for (var i = 0; i < taskOrder.length; i++) {
-            if (found) {
-                toSwap.push(taskOrder[i]);
-            }
+		for ( var i = 0; i < taskOrder.length; i++) {
+			if (found) {
+				toSwap.push(taskOrder[i]);
+			}
 
-            found |= (taskOrder[i] == baseTask.id);
-        }
+			found |= (taskOrder[i] == baseTask.id);
+		}
 
-        // push baseTask to bottom of sort order
-        toSwap.push(baseTask.id);
+		// push baseTask to bottom of sort order
+		toSwap.push(baseTask.id);
 
-        $.post('/tasks/sort', {
-            order : toSwap
-        }, function() {
-            $(baseTask.cTask).hide().appendTo(".tasks").fadeIn(1000);
-            $.scrollTo($(baseTask.cTask), 1000, {offset: +20});
-            current.setOrder();
-        });
-    };
+		$.post('/tasks/sort', {
+			order : toSwap
+		}, function() {
+			$(baseTask.cTask).hide().appendTo(".tasks").fadeIn(1000);
+			$.scrollTo($(baseTask.cTask), 1000, {
+				offset : +20
+			});
+			current.setOrder();
+		});
+	};
 
-    this.insertIntoList = function(baseTask) {
-        var toSwap = new Array();
+	this.insertIntoList = function(baseTask) {
+		var toSwap = [];
 
-        var before = baseTask.beforeTaskId;
+		var before = baseTask.beforeTaskId;
 
-        var anchorTaskId = baseTask.beforeTaskId ? baseTask.beforeTaskId : baseTask.afterTaskId;
+		var anchorTaskId = baseTask.beforeTaskId ? baseTask.beforeTaskId : baseTask.afterTaskId;
 
-        for (var i = 0; i < taskOrder.length && taskOrder[i] != anchorTaskId; i++) {
-            toSwap.push(taskOrder[i]);
-        }
+		for ( var i = 0; i < taskOrder.length && taskOrder[i] != anchorTaskId; i++) {
+			toSwap.push(taskOrder[i]);
+		}
 
-        if (!before) {
-            toSwap.push(anchorTaskId);
-        }
+		if (!before) {
+			toSwap.push(anchorTaskId);
+		}
 
-        toSwap.push(baseTask.id);
+		toSwap.push(baseTask.id);
 
-        if (toSwap.length > 1) {
-            $.post('/tasks/sort', {
-                order : toSwap
-            }, function() {
-                current.setOrder();
-            });
-        }
-    };
+		if (toSwap.length > 1) {
+			$.post('/tasks/sort', {
+				order : toSwap
+			}, function() {
+				current.setOrder();
+			});
+		}
+	};
 }
 
 $(document).ready(function() {
@@ -477,8 +481,8 @@ $(document).ready(function() {
 	 * Make the tasks sortable. Only submit the reordered tasks.
 	 */
 
-    $("#filterForm").submit(function() {
+	$("#filterForm").submit(function() {
 
-    });
+	});
 
 });
