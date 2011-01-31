@@ -3,5 +3,5 @@
 	<input type="hidden" name="memberId" value="${member.id}">
 
     #{include "Members/avatar.html"/}
-    #{if models.Member.connected() == member}<a class="removeInterestButton" href="#"><img class="delete" src="/public/images/delete.png"/></a>#{/if}
+    #{if controllers.Security.connected() == member.username}<a class="removeInterestButton" href="#"><img class="delete" src="/public/images/delete.png"/></a>#{/if}
 </div>

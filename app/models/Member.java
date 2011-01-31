@@ -80,14 +80,6 @@ public class Member extends Model {
         return Member.find("from Member m where m.username = ? and m.password = ?", username, password).first();
     }
 
-    public static Member connected() {
-        String username = Scope.Session.current().get("username");
-        if (StringUtils.isNotEmpty(username)) {
-            return Member.find("byUsername", username).first();
-        }
-        return null;
-    }
-
     public static List<Member> getMembers() {
         return Member.find("from Member m order by m.username asc").fetch();
     }

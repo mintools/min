@@ -20,7 +20,7 @@ import java.util.UUID;
  * User: soyoung
  * Date: Dec 31, 2010
  */
-public class Members extends Controller {
+public class Members extends BaseController {
     private static final String FILES_DIR = Play.configuration.getProperty("avatarStorage.location");
 
     public static void show(Long id) {

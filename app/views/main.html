@@ -38,8 +38,8 @@
                 #{get 'headerActions' /}
             </div>
 			<div class="loggedInAs right">
-                #{if models.Member.connected()}
-                Logged in as ${models.Member.connected().username}
+                #{if controllers.Security.connected()}
+                Logged in as ${controllers.Security.connected()}
 					<a href="/logout">Log out</a>
                 #{/if}
             </div>

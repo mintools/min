@@ -13,7 +13,7 @@ import java.util.List;
  * User: soyoung
  * Date: Jan 5, 2011
  */
-public class Tags extends Controller {
+public class Tags extends BaseController {
     public static void index() {
         List<Tag> orphanTags = Tag.find("select t from models.Tag as t where t.group = null").fetch();
 

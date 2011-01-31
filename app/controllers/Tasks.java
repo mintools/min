@@ -34,7 +34,7 @@ import java.util.*;
  * Date: Dec 21, 2010
  */
 @With(Secure.class)
-public class Tasks extends Controller {
+public class Tasks extends BaseController {
     private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
     public static void index(Long taskId) {
@@ -58,7 +58,7 @@ public class Tasks extends Controller {
 
     public static void save(@Valid Task task, File[] attachments) throws Exception {
 
-        Member loggedInUser = Member.connected();
+        Member loggedInUser = getLoggedInMember();
 
         notFoundIfNull(loggedInUser);
 
@@ -136,7 +136,7 @@ public class Tasks extends Controller {
 
     public static void addInterest(Long id) {
         Task task = Task.findById(id);
-        Member member = Member.connected();
+        Member member = getLoggedInMember();
 
         member.addInterest(task);
 
@@ -145,7 +145,7 @@ public class Tasks extends Controller {
 
     public static void removeInterest(Long id) {
         Task task = Task.findById(id);
-        Member member = Member.connected();
+        Member member = getLoggedInMember();
 
         member.removeInterest(task);
 

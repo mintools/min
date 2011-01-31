@@ -31,9 +31,9 @@
     });
 </script>
 #{/set}
-#{if models.Member.connected()}
+#{if controllers.Security.connected()}
 <div class="header">
-    Logged in as ${models.Member.connected().username} (<a href="/logout">log out</a>)
+    Logged in as ${controllers.Security.connected()} (<a href="/logout">log out</a>)
 </div>
 #{/if}
 #{if tag}

@@ -12,7 +12,7 @@ import java.util.List;
  * User: soyoung
  * Date: Jan 5, 2011
  */
-public class TagGroups extends Controller {
+public class TagGroups extends BaseController {
     public static void create() {
         render();
     }
