@@ -263,7 +263,7 @@ function task(taskElement, taskList) {
 	};
 
 	this.remove = function() {
-		$(cTask).fadeOut(600, function() {
+		$(cTask).fadeOut(300, function() {
 			$(this).remove();
 		});
 	};

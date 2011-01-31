@@ -291,6 +291,10 @@ div.taskContainer.expandMode .tags {
 	height: auto;
 }
 
+div.taskContainer.editMode .tags {
+	height: auto;
+}
+
 .tags .tagGroup {
 	padding: 3px 2px 10px 2px; width: 100px; text-align: center; list-style: none; float: left; margin: 0;
 }
