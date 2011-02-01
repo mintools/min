@@ -422,3 +422,22 @@ label {
 .fieldGroup {
 	padding: 0px;
 }
+
+.filterActions {
+    overflow: hidden;
+    padding: 5px;
+    color: gray;
+    font-size: smaller;
+}
+
+.filterActions .clearButton {
+    float: right;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.filterActions .bookmarkButton {
+    float: right;
+    margin-left: 20px;
+    cursor: pointer;
+}

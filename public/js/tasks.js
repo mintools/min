@@ -310,6 +310,8 @@ function tasks() {
 			aTask.init();
 		});
 
+        // clear previously added listeners first
+        $("a.newButton").unbind();
 		$("a.newButton").click(function() {
 			current.addNew();
 			return false;
@@ -471,18 +473,3 @@ function tasks() {
 		}
 	};
 }
-
-$(document).ready(function() {
-
-	theTasks = new tasks();
-	theTasks.init();
-
-	/*
-	 * Make the tasks sortable. Only submit the reordered tasks.
-	 */
-
-	$("#filterForm").submit(function() {
-
-	});
-
-});

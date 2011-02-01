@@ -2,11 +2,15 @@
 
 #{form id:'filterForm', action:@Tasks.filter(), method:'post'}
     <div class="filterContainer">
-
+        <div class="filterActions">
+            <div class="bookmarkButton">Bookmark</div>
+            <div class="clearButton">Clear Filters</div>            
+        </div>
+        
         <fieldset>
             <legend>Filter Text</legend>
 
-            <input type="text" name="searchText" value="${flash.searchText}" size="30"/>
+            <input type="text" name="searchText" value="${flash.searchText}" size="30"/><input type="submit" name="action" value="Filter"/>
         </fieldset>
 
         <div class="column">
@@ -73,8 +77,6 @@
         </div>
         <div class="clear">
         </div>
-        <hr/>
-        <input type="submit" name="action" value="Filter"/>
     </div>
        
 #{/form}

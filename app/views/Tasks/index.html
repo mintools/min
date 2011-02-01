@@ -6,6 +6,9 @@
 </script>
 <script type="text/javascript">
     $(function(){
+        theTasks = new tasks();
+        theTasks.init();
+
         $.getJSON('@{Tags.getTags()}', function(data) {
             setGlobalTags(data);
         });
@@ -20,6 +23,36 @@
             speed: 300,                               //speed of animation
             action: 'click',                          //options: 'click' or 'hover', action to trigger animation
             fixedPosition: true                      //options: true makes it stick(fixed position) on scroll
+        });
+
+        $("#filterForm input:checkbox").change(function() {
+            $("#filterForm").submit();
+        });
+
+        $("#filterForm").submit(function() {
+            var options = {
+                success : function(data) {
+                    $('.tasks').html(data);
+                    theTasks = new tasks();
+                    theTasks.init();
+                },
+                type : 'post',
+                timeout : 3000
+            };
+
+            $("#filterForm").ajaxSubmit(options);
+
+            return false;
+        });
+
+        $("#filterForm .clearButton").click(function() {
+            $("#filterForm input:checkbox").removeAttr('checked');
+            $("#filterForm input:text").val('');
+            $("#filterForm").submit();
+        });
+
+        $("#filterForm .bookmarkButton").click(function() {
+            alert("Bookmark this url: http://" + window.location.host + "?" + $("#filterForm input:checkbox,input:text").serialize());
         });
     });
 </script>
@@ -46,11 +79,7 @@
     </div>
 </div>
 <div class="tasks">
-    #{list tasks, as:'task'}
-        <div class="taskContainer">
-            #{include 'Tasks/_task.html'/}
-        </div>
-    #{/list}
+    #{include 'Tasks/_tasks.html'/}
 </div>        
     
 <div id="mask">

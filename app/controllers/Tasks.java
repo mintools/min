@@ -37,18 +37,19 @@ import java.util.*;
 public class Tasks extends BaseController {
     private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
-    public static void index(Long taskId) {
-        List<Task> tasks;
+    public static void index(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
 
-        if (taskId != null) {
-            tasks = new ArrayList<Task>();
-            Task task = Task.findById(taskId);
-            tasks.add(task);
-        } else {
-            tasks = Task.findActive();
-        }
-
+        params.flash();
         render(tasks);
+    }
+
+    public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+
+        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
+
+        params.flash();
+        renderTemplate("Tasks/_tasks.html", tasks);
     }
 
     public static void show(Long id, boolean editMode) {
@@ -172,12 +173,12 @@ public class Tasks extends BaseController {
         task.deactivate();
     }
 
+
     public static void undelete(Long taskId) {
 //        Task.deleteById(taskId);
         Task task = Task.findById(taskId);
         task.activate();
     }
-
 
     public static void listTagged(String tag) throws Exception {
         List<Task> tasks = null;
@@ -198,14 +199,6 @@ public class Tasks extends BaseController {
         List<Task> tasks = Task.findInactive();
 
         render(tasks);
-    }
-
-    public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
-
-        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
-
-        params.flash();
-        renderTemplate("Tasks/index.html", tasks);
     }
 
     public static void sort(Long[] order) {
