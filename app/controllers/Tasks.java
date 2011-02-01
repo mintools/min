@@ -38,6 +38,8 @@ public class Tasks extends BaseController {
     private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
 
     public static void index(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+        flash.clear();
+        
         List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
 
         params.flash();
