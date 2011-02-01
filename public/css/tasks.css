@@ -51,7 +51,7 @@ div.tasks {
 }
 
 div.taskContainer {
-	border: 1px solid #DDDDDD; padding: 5px 5px 5px 0px; margin: 0px 0px 4px 20px; background-color: white; -moz-box-shadow: 0 1px 1px #DDDDDD; min-height: 75px;
+	border: 1px solid #DDDDDD; padding: 5px 5px 3px 0px; margin: 0px 0px 4px 20px; background-color: white; -moz-box-shadow: 0 1px 1px #DDDDDD; 
 }
 
 div.taskPlaceholder {
@@ -67,6 +67,7 @@ div.taskContainer.editMode .title {
 }
 
 div.addAttachment {
+    margin-top: 10px;
 	float: left;
 }
 
@@ -95,7 +96,28 @@ div.taskContainer .main {
 }
 
 div.taskContainer .comments {
-	width: 23%; margin-right: 1%; float: left; font-size: 0.8em; min-height: 10px;
+    width: 23%;
+    margin-right: 1%;
+    float: left;
+    overflow: hidden;
+    height: 65px;
+}
+
+div.taskContainer.ediMode .comments {
+    height: auto;
+}
+
+div.taskContainer.expandMode .comments {
+    height: auto;
+}
+
+div.taskContainer .comments .commentsList {
+    font-size: 0.8em;
+    overflow: hidden;
+}
+
+div.taskContainer.editMode .comments textarea {
+	margin-bottom: 2px;
 }
 
 div.taskContainer .comments .comment {
@@ -103,11 +125,11 @@ div.taskContainer .comments .comment {
 }
 
 div.taskContainer .comments .comment .member {
-	width: 25%; float: left;
+	width: 20%; float: left;
 }
 
 div.taskContainer .comments .comment .content {
-	width: 75%; float: left;
+	width: 80%; float: left;
 }
 
 div.taskContainer .taskInterests {
@@ -138,7 +160,14 @@ div.taskContainer .editButton {
 }
 
 div.taskContainer .tagsButtons {
+    position: absolute;
+    right: 40px;
+}
+
+div.taskContainer.editMode .tagsButtons {
+    position: relative;
 	float: right; margin-top: 2px; width: 30%;
+    right: 0;
 }
 
 div.taskContainer .tagsButtons .button,a.newButton {
@@ -172,7 +201,7 @@ div.taskContainer .thumbnailsButtons {
 }
 
 div.taskContainer .thumbnails {
-	text-align: right; width: 130px; float: left; clear: right;
+	text-align: right; width: 100px; float: left; clear: right;
 }
 
 div.taskContainer .attachment img.delete {

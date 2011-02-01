@@ -59,11 +59,11 @@ public class Tasks extends BaseController {
         renderTemplate("Tasks/_task.html", task, editMode);
     }
 
-    public static void save(@Valid Task task, File[] attachments) throws Exception {
+    public static void save(@Valid Task task, File[] attachments, String newComment) throws Exception {
 
-        Member loggedInUser = getLoggedInMember();
+        Member loggedInMember = getLoggedInMember();
 
-        notFoundIfNull(loggedInUser);
+        notFoundIfNull(loggedInMember);
 
         if (Validation.hasErrors()) {
             boolean editMode = true;
@@ -74,7 +74,7 @@ public class Tasks extends BaseController {
             }
 
             if (task.owner == null) {
-                task.owner = loggedInUser;
+                task.owner = loggedInMember;
             }
 
             // overwrite tags todo: find a better way of doing this
@@ -101,6 +101,11 @@ public class Tasks extends BaseController {
                     attachment.task = task;
                     task.attachments.add(attachment);
                 }
+            }
+
+            // add comment
+            if (newComment != null) {
+                task.addComment(loggedInMember, newComment);
             }
 
             task.isActive = true;

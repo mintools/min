@@ -41,6 +41,7 @@ public class Task extends Model {
     public List<TaskInterest> taskInterests = new ArrayList<TaskInterest>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OrderBy("createdDate DESC")
     public List<Comment> comments = new ArrayList<Comment>();
 
     public Task tagItWith(String name) {

@@ -2,16 +2,14 @@
 <div class="task" data-id="${task?.id}" data-editMode="${editMode}" data-isNew="${isNew}">
     #{if !editMode}
     <div class="hoverActions">
-        <div class="hoverAction insertAboveButton hide">
-        </div>
         <div class="hoverAction moveUpButton hide">
         </div>
         <div class="hoverAction taskId hide">
             ${task?.id}
         </div>
-        <div class="hoverAction moveDownButton hide">
-        </div>
         <div class="hoverAction insertBelowButton hide">
+        </div>
+        <div class="hoverAction moveDownButton hide">
         </div>
     </div>
     <div class="move">
@@ -48,9 +46,11 @@
             
         </div>
         <div class="comments">
-            #{list task?.comments, as: "comment"}
-            #{include "Tasks/comment.html"/}
-            #{/list}
+            <div class="commentsList">
+                #{list task?.comments, as: "comment"}
+                    #{include "Tasks/comment.html"/}
+                #{/list}
+            </div>
         </div>
 
 		<div class="thumbnails">
@@ -109,7 +109,7 @@
                 Description
             </label>
             <br/>
-            <div class="description descriptionSummary">
+            <div class="description">
                 <textarea rows="10" cols="70" name="task.content">${task?.content}</textarea>
             </div>
             <span class="error">${errors.forKey('task.content')}</span>
@@ -139,9 +139,18 @@
             </div>
         </div>
         <div class="comments">
-            #{list task?.comments, as: "comment"}
-            #{include "Tasks/comment.html"/}
-            #{/list}
+            <label for="comment">
+                Add Comment
+            </label>
+            <textarea rows="4" cols="32" name="newComment"></textarea>
+
+            #{if task?.comments}
+                <div class="commentsList">
+                    #{list task?.comments, as: "comment"}
+                        #{include "Tasks/comment.html"/}
+                    #{/list}
+                </div>
+            #{/if}
         </div>
         <div class="addAttachment">
             <label for="attachments">
