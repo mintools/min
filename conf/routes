@@ -7,6 +7,8 @@
 # Home page
 GET     /                                       Tasks.index
 
+GET     /members/{username}                     Members.showByUsername
+
 # Authentication
 GET     /login                                  Secure.login
 GET     /logout                                 Secure.logout

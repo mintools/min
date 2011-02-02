@@ -34,13 +34,13 @@ public class Task extends Model {
     @Column(length = 4000)
     public String content;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
     public List<Attachment> attachments = new ArrayList<Attachment>();
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
-    public List<TaskInterest> taskInterests = new ArrayList<TaskInterest>();
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
+    public List<WorkingOn> workingOn = new ArrayList<WorkingOn>();
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("createdDate DESC")
     public List<Comment> comments = new ArrayList<Comment>();
 
@@ -67,12 +67,20 @@ public class Task extends Model {
         return comment;
     }
 
-    public List<Member> getInterestedMembers() {
+    public List<Member> getWorkers() {
         // can only call this method after the Task has been persisted
         if (this.id == null) {
             return null;
         }
-        return Member.find("select m from Member m join m.taskInterests t where t.task = ?", this).fetch();
+        return Member.find("select m from Member m join m.workingOn t where t.task = ?", this).fetch();
+    }
+
+    public void setWorkers(List<Member> members) {
+        workingOn.clear();
+        for (Iterator<Member> iterator = members.iterator(); iterator.hasNext();) {
+            Member member = iterator.next();
+            workingOn.add(new WorkingOn(member, this));
+        }
     }
 
     public static List<Task> findTaggedWith(String tag) {

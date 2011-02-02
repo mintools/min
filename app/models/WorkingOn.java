@@ -1,0 +1,36 @@
+package models;
+
+import play.db.jpa.Model;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import java.util.Date;
+
+/**
+ * User: soyoung
+ * Date: Jan 10, 2011
+ */
+@Entity
+public class WorkingOn extends Model {
+    @ManyToOne(optional = false)
+    public Member member;
+
+    public Date dateAssigned;
+
+    @ManyToOne(optional = false)
+    public Task task;
+
+    public WorkingOn(Member member, Task task) {
+        this.member = member;
+        this.task = task;
+        this.dateAssigned = new Date();
+    }
+
+    public static WorkingOn findWorkingOn(Member member, Task task) {
+        return WorkingOn.find("from WorkingOn as t where t.member = ? and t.task = ?", member, task).first();
+    }
+
+    public static void removeWorkingOn(Member member, Task task) {
+        WorkingOn.delete("from WorkingOn as t where t.member = ? and t.task = ?", member, task);
+    }
+}

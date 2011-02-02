@@ -28,6 +28,11 @@ public class Members extends BaseController {
         render(member);
     }
 
+    public static void showByUsername(String username) {
+        Member member = Member.find("byUsername", username).first();
+        renderTemplate("Members/show.html", member);
+    }
+
     public static void create() {
         Member member = new Member();
         render(member);

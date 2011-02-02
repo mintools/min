@@ -80,15 +80,24 @@ div.taskContainer .createdBy {
 }
 
 div.taskContainer.expandMode .createdBy {
-	color: gray; font-size: .7em; margin-top: 5px; display: block;
+	color: gray; font-size: .7em; margin: 5px 0; display: block;
 }
 
 div.taskContainer .assignedTo {
-	color: gray; font-size: .7em; margin-top: 5px; font-size: .7em; width: 100%;
+	color: gray; font-size: .7em; margin: 5px 0; font-size: .7em; width: 100%;
 }
 
 div.taskContainer .assignedTo select {
 	width: 100%;
+}
+
+div.taskContainer .workingOn {
+    display: none;
+    color: gray; font-size: .7em; margin-top: 5px; font-size: .7em; width: 100%;
+}
+
+div.taskContainer.expandMode .workingOn {
+    display: block;
 }
 
 div.taskContainer .main {
@@ -130,26 +139,6 @@ div.taskContainer .comments .comment .member {
 
 div.taskContainer .comments .comment .content {
 	width: 80%; float: left;
-}
-
-div.taskContainer .taskInterests {
-	width: 13%; margin-right: 2%; float: right; height: 27px;
-}
-
-div.taskContainer .taskInterests .taskInterest {
-	float: left; margin-right: 3px;
-}
-
-div.taskContainer .taskInterests .taskInterest a.avatar {
-	border: none;
-}
-
-div.taskContainer .taskInterests .taskInterest .avatar img {
-	width: 25px; height: 25px; float: left; border: 1px solid #DDDDDD;
-}
-
-div.taskContainer .taskInterests .taskInterest img.delete {
-	float: right; display: inline; height: 10px; width: 10px;
 }
 
 /*

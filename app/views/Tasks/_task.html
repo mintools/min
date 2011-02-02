@@ -24,6 +24,12 @@
             <div class="createdBy">
                 Creator: ${task?.owner}
             </div>
+            <div class="workingOn">
+                Being worked on by:
+                #{list task?.workers, as: "member"}
+                    <li>${member.username}</li>
+                #{/list}
+            </div>
         </div>
         <div class="main">
             <div class="description descriptionSummary">
@@ -64,11 +70,6 @@
             #{/if}
 
         </div>
-		 <!--div class="taskInterests">
-            #{list task?.interestedMembers, as: "member"}
-            #{include "Members/taskInterest.html"/}
-            #{/list}
-        </div-->
         <div class="tagsButtons">
             <a href="javascript:void(0);" class="editButton button ui-state-default ui-corner-all right">Edit</a>
         </div>
@@ -94,14 +95,23 @@
                 <textarea rows="4" cols="10" name="task.title">${task?.title}</textarea>
             </div>
             <span class="error">${errors.forKey('task.title')}</span>
+            <div class="createdBy">
+                Creator: ${task?.owner}
+            </div>
             <div class="assignedTo">
                 Assign to:
                 #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
-                #{option} Unassigned #{/option}
+                    #{option} Unassigned #{/option}
                 #{/select}
             </div>
-            <div class="createdBy">
-                Creator: ${task?.owner}
+            <div class="workingOn">
+                Being worked on by:
+                <select name="workerIds" multiple="multiple">
+                    <option value=""></option>
+                    #{list models.Member.findAll(), as: "member"}
+                        <option value="${member.id}" #{if task?.workers?.contains(member)}selected#{/if}>${member.username}</option>
+                    #{/list}
+                </select>
             </div>
         </div>
         <div class="main">
@@ -162,11 +172,6 @@
                 #{include 'Attachments/attachment.html'/}
                 #{/list}
             </div>
-        </div>
-        <div class="taskInterests">
-            #{list task?.interestedMembers, as: "member"}
-            #{include "Members/taskInterest.html"/}
-            #{/list}
         </div>
         <div class="clear">
         </div>

@@ -1,5 +1,24 @@
 #{extends 'main.html' /}
 
+#{set isNew:false/}
+#{set 'moreScripts' }
+<script type="text/javascript" src="@{'/public/js/tasks.js'}">
+</script>
+<script type="text/javascript">
+    $(function(){
+        raisedTasks = new tasks({tasksSel: '#raisedTasks', locked: true});
+        raisedTasks.init();
+
+        assignedTasks = new tasks({tasksSel: '#assignedTasks', locked: true});
+        assignedTasks.init();
+
+        $.getJSON('@{Tags.getTags()}', function(data) {
+            setGlobalTags(data);
+        });
+    });
+</script>
+#{/set}
+
 <div>
     <a href="@{Tasks.index()}">Back to Task List</a>
 </div>
@@ -8,20 +27,20 @@
 
 <h2>Tasks raised by ${member.username}</h2>
 
-<div class="tasks">
+<div id="raisedTasks">
     #{list member.raisedTasks, as: "task"}
-    <div class="task">
-        #{include 'Tasks/task.html'/}
+    <div class="taskContainer">
+        #{include 'Tasks/_task.html'/}
     </div>
     #{/list}
 </div>
 
 <h2>Tasks assigned to ${member.username}</h2>
 
-<div class="tasks">
+<div id="assignedTasks">
     #{list member.assignedTasks, as: "task"}
-    <div class="task">
-        #{include 'Tasks/task.html'/}
+    <div class="taskContainer">
+        #{include 'Tasks/_task.html'/}
     </div>
     #{/list}
-</div>        
+</div>

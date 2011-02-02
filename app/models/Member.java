@@ -4,11 +4,11 @@ import org.apache.commons.lang.StringUtils;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.db.jpa.Model;
-import play.mvc.Scope;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,46 +31,48 @@ public class Member extends Model {
     public String avatarFilename;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OrderBy("sortOrder DESC")
     public List<Task> raisedTasks;
 
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
+    @OrderBy("sortOrder DESC")
     public List<Task> assignedTasks;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    public List<TaskInterest> taskInterests;
+    public List<WorkingOn> workingOn;
 
     public Member() {
         this.raisedTasks = new ArrayList<Task>();
         this.assignedTasks = new ArrayList<Task>();
-        this.taskInterests = new ArrayList<TaskInterest>();
+        this.workingOn = new ArrayList<WorkingOn>();
     }
 
     public String toString() {
         return username;
     }
 
-    public boolean isInterestedIn(Task task) {
+    public boolean isWorkingOn(Task task) {
         if (task != null) {
-            for (Iterator<TaskInterest> iterator = taskInterests.iterator(); iterator.hasNext();) {
-                TaskInterest interest = iterator.next();
-                if (interest.task == task) return true;
+            for (Iterator<WorkingOn> iterator = workingOn.iterator(); iterator.hasNext();) {
+                WorkingOn item = iterator.next();
+                if (item.task == task) return true;
             }
         }
 
         return false;
     }
 
-    public Member addInterest(Task task) {
-        if (TaskInterest.findTaskInterest(this, task) == null) {
-            TaskInterest taskInterest = new TaskInterest(this, task);
-            this.taskInterests.add(taskInterest);
+    public Member workOn(Task task) {
+        if (WorkingOn.findWorkingOn(this, task) == null) {
+            WorkingOn item = new WorkingOn(this, task);
+            this.workingOn.add(item);
             this.save();
         }
         return this;
     }
 
-    public Member removeInterest(Task task) {
-        TaskInterest.removeTaskInterest(this, task);
+    public Member stopWorkingOn(Task task) {
+        WorkingOn.removeWorkingOn(this, task);
 
         return this;
     }

@@ -1,4 +1,4 @@
-function task(taskElement, taskList) {
+function task(taskElement, taskList, locked) {
 
 	var cTask = taskElement;
 	var current = this;
@@ -31,17 +31,19 @@ function task(taskElement, taskList) {
 		/*
 		 * Events
 		 */
-		$(cTask).mouseenter(function(e) {
-			if (!current.isNew) {
-				$(".hoverAction", cTask).show();
-			}
-		});
+        if (!locked) {
+            $(cTask).mouseenter(function(e) {
+                if (!current.isNew) {
+                    $(".hoverAction", cTask).show();
+                }
+            });
 
-		$(cTask).mouseleave(function(e) {
-			if (!current.isNew) {
-				$(".hoverAction", cTask).hide();
-			}
-		});
+            $(cTask).mouseleave(function(e) {
+                if (!current.isNew) {
+                    $(".hoverAction", cTask).hide();
+                }
+            });
+        }
 
 		/*
 		 * Plugins
@@ -88,16 +90,6 @@ function task(taskElement, taskList) {
 			} else {
 				current.cancel();
 			}
-			return false;
-		});
-
-		$(".addInterestButton", cTask).click(function() {
-			current.addInterest();
-			return false;
-		});
-
-		$(".removeInterestButton", cTask).click(function() {
-			current.removeInterest($(this).closest(".taskInterest"));
 			return false;
 		});
 
@@ -268,24 +260,6 @@ function task(taskElement, taskList) {
 		});
 	};
 
-	this.addInterest = function() {
-		$.get("/tasks/addInterest", {
-			id : current.id
-		}, function(data) {
-			$('.taskInterests', cTask).append(data);
-			$('.addInterestButton', cTask).hide();
-		});
-	};
-
-	this.removeInterest = function(parent) {
-		$.get("/tasks/removeInterest", {
-			id : current.id
-		}, function(data) {
-			parent.remove();
-			$('.addInterestButton', cTask).show();
-		});
-	};
-
 	this.showShortSummary = function() {
 		$('.description ', cTask).addClass("descriptionSummary");
 	};
@@ -295,17 +269,24 @@ function task(taskElement, taskList) {
 	};
 }
 
-function tasks() {
+function tasks(options) {
+
+    options = $.extend(true, {
+        tasksSel: '.tasks',
+        locked: false
+	}, options);
 
 	var taskOrder = [];
 	var current = this;
+
+    var tasksElement = $(options.tasksSel);
 
 	this.init = function() {
 		/*
 		 * Initialise tasks
 		 */
 		$('.taskContainer').each(function() {
-			var aTask = new task(this, current);
+			var aTask = new task(this, current, options.locked);
 
 			aTask.init();
 		});
@@ -323,46 +304,48 @@ function tasks() {
 
 	this.loadSort = function() {
 
-		$('.tasks').sortable({
-			items : ".taskContainer",
-			placeholder : 'taskPlaceholder',
-			handle : $(".move"),
-			update : function(event, ui) {
-				var current = 0;
-				var toSwap = [];
-				// console.log(taskOrder);
-				$(".tasks .taskContainer").each(function() {
+        if (!options.locked) {
+            tasksElement.sortable({
+                items : '.taskContainer',
+                placeholder : 'taskPlaceholder',
+                handle : $(".move"),
+                update : function(event, ui) {
+                    var current = 0;
+                    var toSwap = [];
+                    // console.log(taskOrder);
+                    $('.taskContainer', tasksElement).each(function() {
 
-					var tempTask = new task($(this));
-					tempTask.init();
+                        var tempTask = new task($(this));
+                        tempTask.init();
 
-					if (taskOrder[current] !== tempTask.id) {
-						toSwap.push(tempTask.id);
-						taskOrder[current] = tempTask.id;
-					}
-					current++;
-				});
+                        if (taskOrder[current] !== tempTask.id) {
+                            toSwap.push(tempTask.id);
+                            taskOrder[current] = tempTask.id;
+                        }
+                        current++;
+                    });
 
-				$.post('/tasks/sort', {
-					order : toSwap
-				}, function() {
+                    $.post('/tasks/sort', {
+                        order : toSwap
+                    }, function() {
 
-					// todo: perhaps stop a spinning progress indicator or
-					// something
-					$("#notifications").text("saved");
-					$("#notifications").show();
-					$("#notifications").fadeOut(2000);
-				});
+                        // todo: perhaps stop a spinning progress indicator or
+                        // something
+                        $("#notifications").text("saved");
+                        $("#notifications").show();
+                        $("#notifications").fadeOut(2000);
+                    });
 
-				// console.log(newOrder);
-			}
-		});
+                    // console.log(newOrder);
+                }
+            });
+        }
 	};
 
 	this.sortRefresh = function() {
 
 		// console.log("sortable again");
-		$('.tasks').sortable('destroy');
+		tasksElement.sortable('destroy');
 
 		current.loadSort();
 		current.setOrder();
@@ -370,7 +353,7 @@ function tasks() {
 
 	this.setOrder = function() {
 		taskOrder = [];
-		$(".tasks .task").each(function() {
+		$(".task", tasksElement).each(function() {
 			taskOrder.push($(this).attr("data-id"));
 		});
 	};
@@ -378,16 +361,16 @@ function tasks() {
 	this.addNew = function() {
 		var clone = $("#newTask .taskContainer").clone();
 
-		var newTask = new task(clone, current);
+		var newTask = new task(clone, current, options.locked);
 		newTask.init();
 
-		$('.tasks').prepend(clone);
+		tasksElement.prepend(clone);
 	};
 
 	this.insertNew = function(baseTask, before) {
 		var clone = $("#newTask .taskContainer").clone();
 
-		var newTask = new task(clone, current);
+		var newTask = new task(clone, current, options.locked);
 		newTask.init();
 
 		if (before) {

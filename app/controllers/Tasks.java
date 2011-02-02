@@ -2,32 +2,28 @@ package controllers;
 
 import com.mortennobel.imagescaling.ResampleOp;
 import controllers.utils.TaskIndex;
-import models.*;
+import models.Attachment;
+import models.Comment;
+import models.Member;
+import models.Task;
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.search.*;
-import org.apache.lucene.util.Version;
+import org.apache.lucene.search.TermQuery;
 import play.Play;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
-import play.db.jpa.JPA;
-import play.mvc.Controller;
 import play.mvc.With;
 
 import javax.imageio.ImageIO;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * User: soyoung
@@ -59,7 +55,7 @@ public class Tasks extends BaseController {
         renderTemplate("Tasks/_task.html", task, editMode);
     }
 
-    public static void save(@Valid Task task, File[] attachments, String newComment) throws Exception {
+    public static void save(@Valid Task task, File[] attachments, String newComment, Long[] workerIds) throws Exception {
 
         Member loggedInMember = getLoggedInMember();
 
@@ -77,22 +73,6 @@ public class Tasks extends BaseController {
                 task.owner = loggedInMember;
             }
 
-            // overwrite tags todo: find a better way of doing this
-//            if (task.tags != null) task.tags.clear();
-
-            // todo: tags are stored in BOTH db and lucene index. <-- is this ok?
-            // todo: we need to enforce the mutex rules for tagGroups
-            // todo: remove hardcoding
-
-//            // get selected tags
-//            if (!StringUtils.isEmpty(selectedTags)) {
-//                StringTokenizer tokens = new StringTokenizer(selectedTags, " ", false);
-//                while (tokens.hasMoreTokens()) {
-//                    String tag = tokens.nextToken();
-//                    task.tagItWith(tag);
-//                }
-//            }
-
             // add attachments
             if (attachments != null) {
                 for (File file : attachments) {
@@ -104,9 +84,25 @@ public class Tasks extends BaseController {
             }
 
             // add comment
-            if (newComment != null) {
+            if (!StringUtils.isEmpty(newComment)) {
                 task.addComment(loggedInMember, newComment);
             }
+
+            // add workers
+            if (workerIds != null) {
+                List<Member> workers = new ArrayList<Member>();
+                for (int i = 0; i < workerIds.length; i++) {
+                    Long workerId = workerIds[i];
+                    if (workerId != null) {
+                        Member member = Member.findById(workerId);
+                        workers.add(member);
+                    }
+                }
+                task.setWorkers(workers);
+            }
+//            if (workers != null) {
+//                task.setWorkers(workers);
+//            }
 
             task.isActive = true;
             task.save();
@@ -140,24 +136,6 @@ public class Tasks extends BaseController {
     public static void deleteAttachment(Long id) {
         Attachment attachment = Attachment.findById(id);
         attachment.delete();
-    }
-
-    public static void addInterest(Long id) {
-        Task task = Task.findById(id);
-        Member member = getLoggedInMember();
-
-        member.addInterest(task);
-
-        renderTemplate("Members/taskInterest.html", member, task);
-    }
-
-    public static void removeInterest(Long id) {
-        Task task = Task.findById(id);
-        Member member = getLoggedInMember();
-
-        member.removeInterest(task);
-
-        renderTemplate("Members/avatar.html", member);
     }
 
     public static void addComment(Long id, Long memberId, String content) {
