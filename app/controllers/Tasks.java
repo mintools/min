@@ -1,6 +1,5 @@
 package controllers;
 
-import com.mortennobel.imagescaling.ResampleOp;
 import controllers.utils.TaskIndex;
 import models.Attachment;
 import models.Comment;
@@ -9,21 +8,14 @@ import models.Task;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
-import play.Play;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.With;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * User: soyoung
@@ -31,11 +23,11 @@ import java.util.UUID;
  */
 @With(Secure.class)
 public class Tasks extends BaseController {
-    private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
+
 
     public static void index(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
         flash.clear();
-        
+
         List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
 
         params.flash();
@@ -76,7 +68,7 @@ public class Tasks extends BaseController {
             // add attachments
             if (attachments != null) {
                 for (File file : attachments) {
-                    Attachment attachment = createAttachment(file);
+                    Attachment attachment = Attachment.createAttachment(file);
 
                     attachment.task = task;
                     task.attachments.add(attachment);
@@ -124,7 +116,7 @@ public class Tasks extends BaseController {
     public static void addAttachment(Long taskId, File file) throws Exception {
         Task task = Task.findById(taskId);
 
-        Attachment attachment = createAttachment(file);
+        Attachment attachment = Attachment.createAttachment(file);
 
         attachment.task = task;
         task.attachments.add(attachment);
@@ -202,56 +194,5 @@ public class Tasks extends BaseController {
             task.sortOrder = ordering.get(i);
             task.save();
         }
-    }
-
-    private static Attachment createAttachment(File file) throws IOException {
-        // Destination directory
-        File dir = new File(FILES_DIR);
-
-        String filename = file.getName();
-        String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-        // generate a filename
-        String uuid = UUID.randomUUID().toString();
-
-        // attach it to task
-        Attachment attachment = new Attachment();
-
-        attachment.title = filename;
-        attachment.name = uuid;
-        attachment.createdDate = new Date();
-        attachment.filename = attachment.name + "." + extension;
-
-        // check if the file is an image
-        if ("png".equalsIgnoreCase(extension) ||
-                "gif".equalsIgnoreCase(extension) ||
-                "jpg".equalsIgnoreCase(extension)) {
-
-            attachment.type = "image";
-
-            // read the image
-            BufferedImage srcImage = ImageIO.read(file);
-
-            // scale to thumbnail
-            ResampleOp resampleOp = new ResampleOp(100, 100);
-            BufferedImage thumbnail = resampleOp.filter(srcImage, null);
-
-            // write the thumbnail
-            ImageIO.write(thumbnail, "png", new File(dir, "thumbnail_" + uuid + ".png"));
-        }
-
-        // todo: is there a better way?
-        FileInputStream in = new FileInputStream(file);
-        File outFile = new File(dir, uuid + "." + extension);
-
-        FileOutputStream out = new FileOutputStream(outFile);
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-        return attachment;
     }
 }
