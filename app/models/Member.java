@@ -62,21 +62,6 @@ public class Member extends Model {
         return false;
     }
 
-    public Member workOn(Task task) {
-        if (WorkingOn.findWorkingOn(this, task) == null) {
-            WorkingOn item = new WorkingOn(this, task);
-            this.workingOn.add(item);
-            this.save();
-        }
-        return this;
-    }
-
-    public Member stopWorkingOn(Task task) {
-        WorkingOn.removeWorkingOn(this, task);
-
-        return this;
-    }
-
     public static Member connect(String username, String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return null;
         return Member.find("from Member m where m.username = ? and m.password = ?", username, password).first();
