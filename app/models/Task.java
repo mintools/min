@@ -29,7 +29,6 @@ public class Task extends Model {
     public Long sortOrder;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Fetch(FetchMode.SUBSELECT)
     public Set<Tag> tags = new HashSet<Tag>();
 
@@ -41,18 +40,15 @@ public class Task extends Model {
     public String content;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Fetch(FetchMode.SUBSELECT)
     public List<Attachment> attachments = new ArrayList<Attachment>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
     public List<WorkingOn> workingOn = new ArrayList<WorkingOn>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("createdDate DESC")
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Fetch(FetchMode.SUBSELECT)
     public List<Comment> comments = new ArrayList<Comment>();
 

@@ -26,12 +26,10 @@ public class TagGroup extends Model {
     public Boolean mutex;
 
     @OneToOne(optional = true)
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     public Tag defaultTag;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     @OrderBy("sortOrder DESC") 
-    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Fetch(FetchMode.SUBSELECT)
     public List<Tag> tags = new ArrayList<Tag>();
 
