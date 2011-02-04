@@ -1,5 +1,9 @@
 package models;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Model;
@@ -25,6 +29,8 @@ public class Task extends Model {
     public Long sortOrder;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Fetch(FetchMode.SUBSELECT)
     public Set<Tag> tags = new HashSet<Tag>();
 
     @Required
@@ -35,13 +41,19 @@ public class Task extends Model {
     public String content;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Fetch(FetchMode.SUBSELECT)
     public List<Attachment> attachments = new ArrayList<Attachment>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @BatchSize(size = 20)
     public List<WorkingOn> workingOn = new ArrayList<WorkingOn>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval=true)
     @OrderBy("createdDate DESC")
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Fetch(FetchMode.SUBSELECT)
     public List<Comment> comments = new ArrayList<Comment>();
 
     public Task tagItWith(String name) {

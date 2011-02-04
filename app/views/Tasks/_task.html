@@ -39,7 +39,7 @@
             #{if task?.tags}
                 <div class="tags">
                 #{list models.TagGroup.getAll(), as: "tagGroup"}
-                    <ol class="tagGroup">                        
+                    <ol class="tagGroup">
                         #{list tagGroup.tags, as: "tag"}
                             #{if task?.tags?.contains(tag)}
                                 <li class="tag">${tag.name}</li>
@@ -49,7 +49,7 @@
                 #{/list}
                 </div>
             #{/if}
-            
+
         </div>
         <div class="comments">
             <div class="commentsList">

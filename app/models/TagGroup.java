@@ -1,5 +1,9 @@
 package models;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
@@ -14,6 +18,7 @@ import java.util.Set;
  * Date: Dec 21, 2010
  */
 @Entity
+@BatchSize(size = 20)
 public class TagGroup extends Model {
     @Required
     public String name;
@@ -21,10 +26,13 @@ public class TagGroup extends Model {
     public Boolean mutex;
 
     @OneToOne(optional = true)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     public Tag defaultTag;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     @OrderBy("sortOrder DESC") 
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @Fetch(FetchMode.SUBSELECT)
     public List<Tag> tags = new ArrayList<Tag>();
 
     public Integer sortOrder;
