@@ -14,7 +14,12 @@
         <img class="delete" src="/public/images/delete.png"/>
         <div class="thumb">
 			<a href="/public/files/${attachment.filename}" target="_blank" class="file">
-				<img src="/public/images/unknownFile.png" alt="${attachment.title}" title="${attachment.title}">
+				#{if "pdf".equals(attachment?.type)}
+                    <img src="/public/files/thumbnail_${attachment.name}.png" alt="${attachment.title}" title="${attachment.title}">
+                #{/if}
+                #{else}
+                    <img src="/public/images/unknownFile.png" alt="${attachment.title}" title="${attachment.title}">
+                #{/else}
 			</a>
 		</div>
 	#{/else}

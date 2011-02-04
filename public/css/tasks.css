@@ -175,11 +175,11 @@ div.taskContainer.expandMode .attachments {
 }
 
 div.taskContainer .attachments .attachment {
-	float: left; margin: 5px; padding: 5px; width: 110px; height: 110px; border: 1px #cccccc solid; background-color: white; text-align: center;
+	float: left; margin: 5px 1px; width: 90px; height: 90px; text-align: center;
 }
 
 div.taskContainer .attachments .attachment img {
-	width: 100px; height: 100px;
+	width: 80px; height: 80px;
 }
 
 /*
@@ -194,7 +194,7 @@ div.taskContainer .thumbnails {
 }
 
 div.taskContainer .attachment img.delete {
-	position: absolute; width: 20px; height: 20px;
+	position: absolute; width: 15px; height: 15px;
 }
 
 div.taskContainer.editMode .task {

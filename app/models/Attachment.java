@@ -1,6 +1,9 @@
 package models;
 
 import com.mortennobel.imagescaling.ResampleOp;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.util.PDFImageWriter;
 import play.Play;
 import play.db.jpa.Model;
 
@@ -13,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -66,6 +70,26 @@ public class Attachment extends Model {
 
             // write the thumbnail
             ImageIO.write(thumbnail, "png", new File(dir, "thumbnail_" + uuid + ".png"));
+        }
+        else if ("pdf".equalsIgnoreCase(extension)) {
+            attachment.type = "pdf";
+
+            PDDocument document = PDDocument.load(file);
+
+            // ignore encrypted pdfs
+            if (!document.isEncrypted()) {
+                List pages = document.getDocumentCatalog().getAllPages();
+
+                PDPage firstPage = (PDPage) pages.get(0);
+                BufferedImage image = firstPage.convertToImage(BufferedImage.TYPE_INT_RGB, 96);
+
+                // scale to thumbnail
+                ResampleOp resampleOp = new ResampleOp(100, 100);
+                BufferedImage thumbnail = resampleOp.filter(image, null);
+
+                // write the thumbnail
+                ImageIO.write(thumbnail, "png", new File(dir, "thumbnail_" + uuid + ".png"));
+            }
         }
 
         // todo: is there a better way?
