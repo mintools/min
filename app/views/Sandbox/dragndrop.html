@@ -1,0 +1,26 @@
+#{extends "main.html"/}
+
+#{set 'moreScripts' }
+        
+<script type="text/javascript" src="@{'/public/js/sandbox/jquery.dnd-file-upload.js'}"></script>
+<script type="text/javascript" src="@{'/public/js/sandbox/jquery.client.js'}"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#drop-div").dropzone({
+            url : "@{Sandbox.upload}"
+        });
+
+        $.fn.dropzone.uploadFinished = function(fileIndex, file, time) {
+            $("#result").text(file.fileName + " uploaded in " + time + "ms");
+	    };
+    });
+</script>
+
+#{/set}
+
+<div id="drop-div" style="width: 200px; height: 200px; border: thin solid black;">
+    Drop files here!
+</div>
+
+<div id="result"></div>

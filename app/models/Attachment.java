@@ -4,6 +4,7 @@ import com.mortennobel.imagescaling.ResampleOp;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.util.PDFImageWriter;
+import org.hibernate.envers.Audited;
 import play.Play;
 import play.db.jpa.Model;
 
@@ -24,6 +25,7 @@ import java.util.UUID;
  * Date: Dec 21, 2010
  */
 @Entity
+@Audited
 public class Attachment extends Model {
     private static final String FILES_DIR = Play.configuration.getProperty("fileStorage.location");
     

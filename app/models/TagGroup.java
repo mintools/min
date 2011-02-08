@@ -4,6 +4,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.envers.Audited;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
@@ -19,6 +20,7 @@ import java.util.Set;
  */
 @Entity
 @BatchSize(size = 20)
+@Audited
 public class TagGroup extends Model {
     @Required
     public String name;

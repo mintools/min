@@ -1,5 +1,6 @@
 package models;
 
+import org.hibernate.envers.Audited;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
 import play.db.jpa.Model;
@@ -14,6 +15,7 @@ import java.util.Date;
  * Date: Jan 10, 2011
  */
 @Entity
+@Audited
 public class Comment extends Model {
     @Required
     public Date createdDate;

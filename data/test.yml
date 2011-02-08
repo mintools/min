@@ -124,7 +124,7 @@ Task(Task6):
   content:          This task has tag 1 and 13. It's used to test checked tags in different groups
   tags:
                     - Tag1
-                    - Tag13                    
+                    - Tag13
 
 
 Attachment(Attachment1):
@@ -133,14 +133,6 @@ Attachment(Attachment1):
   name:             UUID
   task:             Task1
   title:            OriginalFilename.pdf
-
-TaskInterest(TaskInterest1):
-  member:           Member2
-  task:             Task1
-
-TaskInterest(TaskInterest2):
-  member:           Member1
-  task:             Task1
 
 Comment(Comment1):
   member:           Member1
@@ -152,4 +144,4 @@ Comment(Comment2):
   member:           Member2
   task:             Task1
   createdDate:      2010-12-08
-  content:          This is another test comment  
+  content:          This is another test comment

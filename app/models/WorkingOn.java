@@ -1,5 +1,6 @@
 package models;
 
+import org.hibernate.envers.Audited;
 import play.db.jpa.Model;
 
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import java.util.Date;
  * Date: Jan 10, 2011
  */
 @Entity
+@Audited
 public class WorkingOn extends Model {
     @ManyToOne(optional = false)
     public Member member;

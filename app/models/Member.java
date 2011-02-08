@@ -1,6 +1,7 @@
 package models;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.envers.Audited;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.db.jpa.Model;
@@ -18,6 +19,7 @@ import java.util.List;
  * Date: Dec 21, 2010
  */
 @Entity
+@Audited
 public class Member extends Model {
     @Required
     public String username;

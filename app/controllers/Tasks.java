@@ -1,10 +1,7 @@
 package controllers;
 
 import controllers.utils.TaskIndex;
-import models.Attachment;
-import models.Comment;
-import models.Member;
-import models.Task;
+import models.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
@@ -15,6 +12,7 @@ import play.mvc.With;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -47,7 +45,7 @@ public class Tasks extends BaseController {
         renderTemplate("Tasks/_task.html", task, editMode);
     }
 
-    public static void save(@Valid Task task, File[] attachments, String newComment, Long[] workerIds) throws Exception {
+    public static void save(@Valid Task task, File[] attachments, String newComment, List<Long> workerIds, List<Long> selectedTagIds) throws Exception {
 
         Member loggedInMember = getLoggedInMember();
 
@@ -75,6 +73,12 @@ public class Tasks extends BaseController {
                 }
             }
 
+            // set tags
+            if (selectedTagIds != null) {
+                task.setTags(selectedTagIds);
+            }
+
+
             // add comment
             if (!StringUtils.isEmpty(newComment)) {
                 task.addComment(loggedInMember, newComment);
@@ -82,19 +86,8 @@ public class Tasks extends BaseController {
 
             // add workers
             if (workerIds != null) {
-                List<Member> workers = new ArrayList<Member>();
-                for (int i = 0; i < workerIds.length; i++) {
-                    Long workerId = workerIds[i];
-                    if (workerId != null) {
-                        Member member = Member.findById(workerId);
-                        workers.add(member);
-                    }
-                }
-                task.setWorkers(workers);
+                task.setWorkers(workerIds);
             }
-//            if (workers != null) {
-//                task.setWorkers(workers);
-//            }
 
             task.isActive = true;
             task.save();

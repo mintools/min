@@ -1,0 +1,20 @@
+#{extends "main.html"/}
+
+#{set 'moreScripts' }
+#{/set}
+
+#{list auditResult, as: "result"}
+        #{set task: result[0]/}
+    <div>
+        <li>Task: ${task.title}</li>
+        <li>Changed by: ${result[1].username}</li>
+        <li>Type: ${result[2]}</li>
+
+        <li>
+            <div>
+                ${task.tags}
+            </div>
+        </li>
+    </div>
+    <hr/>
+#{/list}

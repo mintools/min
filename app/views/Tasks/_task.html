@@ -107,7 +107,7 @@
             <div class="workingOn">
                 Being worked on by:
                 <select name="workerIds" multiple="multiple">
-                    <option value=""></option>
+                    <option value="null"></option>
                     #{list models.Member.findAll(), as: "member"}
                         <option value="${member.id}" #{if task?.workers?.contains(member)}selected#{/if}>${member.username}</option>
                     #{/list}
@@ -132,8 +132,8 @@
                     <div class="tagGroup">
                         <label for="blah">${tagGroup.name}</label>
                         <br/>
-                        <select name="task.tags.id" #{if !tagGroup.mutex}multiple="multiple"#{/if}>
-                            <option value=""></option>
+                        <select name="selectedTagIds" #{if !tagGroup.mutex}multiple="multiple"#{/if}>
+                            <option value="null"></option>
                             #{list tagGroup.tags, as: "tag"}
                                 #{if task?.tags}
                                     <option value="${tag.id}" #{if task.tags.contains(tag)}selected#{/if}>${tag.name}</option>

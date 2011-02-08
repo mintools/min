@@ -3,10 +3,12 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
+import org.hibernate.envers.Audited;
 import play.data.validation.Required;
 import play.db.jpa.*;
 
 @Entity
+@Audited
 public class Tag extends Model implements Comparable<Tag> {
 
     @Required
