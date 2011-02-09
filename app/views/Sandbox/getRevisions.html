@@ -1,0 +1,31 @@
+#{extends "main.html"/}
+
+#{set 'moreScripts' }
+    <script type="text/javascript">
+        $(function() {
+            $(".seeChanges").click(function() {
+                var link = $(this);
+
+                $.get('@{getChanges()}', {
+                    revision : link.attr("data-revision"),
+                    taskId : link.attr("data-taskId")
+                }, function(data) {
+                    link.replaceWith(data);
+                });
+            })
+        });
+    </script>
+#{/set}
+
+#{list auditResult, as: "result"}
+    #{set task: result[0]/}
+    <div>
+
+        ${result[2]} on ${new Date(result[1].timestamp)} by ${result[1].username} (Revision: ${result[1].id})
+
+        #{if result[1].id > 1}
+        <div class="seeChanges" data-revision="${result[1].id}" data-taskId="${task.id}">See changes</div>
+        #{/if}
+    </div>
+<hr/>
+#{/list}
