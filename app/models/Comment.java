@@ -39,4 +39,8 @@ public class Comment extends Model {
         this.member = member;
         this.content = content;
     }
+
+    public String toString() {
+        return content;
+    }
 }

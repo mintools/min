@@ -12,9 +12,13 @@ import javax.persistence.Entity;
  */
 @Entity
 @RevisionEntity(MinRevisionListener.class)
-public class MinRevisionEntity extends DefaultRevisionEntity {
+public class MinRevisionEntity extends DefaultRevisionEntity implements Comparable {
 	private String username;
 
 	public String getUsername() { return username; }
 	public void setUsername(String username) { this.username = username; }
+
+    public int compareTo(Object o) {
+        return ((MinRevisionEntity) o).getId() - this.getId();
+    }
 }

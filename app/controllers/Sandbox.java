@@ -1,23 +1,26 @@
 package controllers;
 
+import models.MinRevisionEntity;
 import models.Tag;
 import models.Task;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.Session;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
+import org.hibernate.envers.exception.RevisionDoesNotExistException;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import play.db.DB;
 import play.db.jpa.JPA;
 import play.mvc.Controller;
 
+import javax.persistence.NoResultException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: soyoung
@@ -41,18 +44,72 @@ public class Sandbox extends Controller {
         AuditReader reader = AuditReaderFactory.get(session);
         AuditQuery query = reader.createQuery().forRevisionsOfEntity(Task.class, false, true);
 
-        List auditResult = query.addOrder(AuditEntity.revisionNumber().desc()).add(AuditEntity.id().eq(taskId)).getResultList();
+        List auditResult = query.addOrder(AuditEntity.revisionNumber().asc()).add(AuditEntity.id().eq(taskId)).getResultList();
+
+        Map<MinRevisionEntity, List<Delta>> changeMap = new TreeMap<MinRevisionEntity, List<Delta>>();
+
+        Task previousTask = null;
 
         for (Iterator iterator = auditResult.iterator(); iterator.hasNext();) {
             Object[] auditItem = (Object[]) iterator.next();
             Task task = (Task) auditItem[0];
-            Object tags = task.tags;
+//            Task task = reader.find(Task.class, taskId, revision);
 
-            System.out.println(tags);
+            MinRevisionEntity revisionEntity = (MinRevisionEntity) auditItem[1];
+
+//            RevisionType type = (RevisionType) auditItem[2];
+//            int revision = revisionEntity.getId();
+
+            // compare properties
+            if (previousTask != null) {
+
+                Map properties = BeanUtils.describe(task);
+
+                List<Delta> deltas = new ArrayList<Delta>();
+
+                for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+                    String key = (String) i.next();
+                    Object oldValue = PropertyUtils.getProperty(previousTask, key);
+                    Object newValue = PropertyUtils.getProperty(task, key);
+
+                    if (oldValue == null && newValue == null) {
+                        // do nothing
+                    }
+                    else if (oldValue == null && newValue != null) {
+                        deltas.add(new Delta(key, 0, newValue.toString()));
+                    }
+                    else if (oldValue != null && newValue == null) {
+                        deltas.add(new Delta(key, 2, oldValue.toString()));
+                    }
+                    else if (!oldValue.equals(newValue)) {
+                        deltas.add(new Delta(key, 1, oldValue.toString() + " to " + newValue.toString()));
+                    }
+                }
+
+                changeMap.put(revisionEntity, deltas);
+            }
+
+            previousTask = task;
         }
 
-        render(auditResult);
+        render(changeMap);
     }
+//
+//    protected List<Revision> fetchRevisions(final AuditQuery query, final AuditReader reader) {
+//        try {
+//            final Object resultList = query.getResultList();
+//            final List<Object[]> queryResult = (List<Object[]>) resultList;
+//            final List<Revision<T, REVINFO>> result = new ArrayList<Revision<T, REVINFO>>(queryResult.size());
+//            for (final Object[] array : queryResult) {
+//                result.add(new RevisionImpl<T, REVINFO>((T) array[0], (REVINFO) array[1], (RevisionType) array[2]));
+//            }
+//            return result;
+//        } catch (final RevisionDoesNotExistException ex) {
+//            return null;
+//        } catch (final NoResultException ex) {
+//            return null;
+//        }
+//    }
 
     public static void getChanges(Integer revision, Long taskId) throws Exception {
         Session session = (Session) JPA.em().getDelegate();
@@ -63,7 +120,7 @@ public class Sandbox extends Controller {
         AuditQuery query = reader.createQuery().forEntitiesAtRevision(Task.class, revision).add(AuditEntity.id().eq(taskId));
         Task currentTaskRevision = (Task) query.getSingleResult();
 
-        query = reader.createQuery().forEntitiesAtRevision(Task.class, revision - 1);
+        query = reader.createQuery().forEntitiesAtRevision(Task.class, revision - 1).add(AuditEntity.id().eq(taskId));
         Task previousTaskRevision = (Task) query.getSingleResult();
 
         if (!currentTaskRevision.title.equals(previousTaskRevision.title)) {

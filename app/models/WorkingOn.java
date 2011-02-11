@@ -35,4 +35,8 @@ public class WorkingOn extends Model {
     public static void removeWorkingOn(Member member, Task task) {
         WorkingOn.delete("from WorkingOn as t where t.member = ? and t.task = ?", member, task);
     }
+
+    public String toString() {
+        return member.username;
+    }
 }
