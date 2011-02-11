@@ -108,4 +108,8 @@ public class Attachment extends Model {
         out.close();
         return attachment;
     }
+
+    public String toString() {
+        return title;
+    }
 }
