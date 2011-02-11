@@ -1,9 +1,21 @@
 #{extends "main.html"/}
 
 #{set 'moreScripts' }
+<script type="text/javascript">
+    $(function() {
+        $(".seeChanges").click(function() {
+            alert("blah");
+            var link = this;
+            $.get(this.attr("href"), function(data) {
+                 link.append(data);
+                link.remove();
+            });
 
+            return false;
+        })
+    });
+</script>
 #{/set}
-
 
 
 #{list changeMap, as: "mapEntry"}
@@ -17,3 +29,16 @@
 
     <hr/>        
 #{/list}
+
+
+
+#{/set}
+
+#{list auditResult, as: "result"}
+    #{set task: result[0]/}
+    <div>
+
+        ${result[2]} on ${new Date(result[1].timestamp)} by ${result[1].username} (Revision: ${result[1].id})
+
+        <a class="seeChanges" href="@{getChanges(result[1].id, task.id)}">See changes</a>
+    </div>

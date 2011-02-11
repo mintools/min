@@ -54,10 +54,14 @@ function task(taskElement, taskList, locked) {
 
 		$(".multi", cTask).MultiFile();
 
-		/*
-		 * Buttons
-		 */
-		$('.title,.main,.comments', cTask).click(function() {
+        /*
+           * Buttons
+           */
+        $(".showHistoryButton", cTask).click(function(e) {
+            current.showHistory(this);
+        });
+
+		$('.title,.description,.comments', cTask).click(function() {
 			if (!current.editMode) {
 				current.toggle();
 			}
@@ -266,6 +270,15 @@ function task(taskElement, taskList, locked) {
 
 	this.showLongSummary = function() {
 		$('.description ', cTask).removeClass("descriptionSummary");
+	};
+
+    this.showHistory = function(element) {        
+        $.get("/tasks/getRevisions", {
+			taskId : current.id
+		}, function(data) {
+		    $(element).replaceWith(data);
+            current.expand(true);
+		});
 	};
 }
 

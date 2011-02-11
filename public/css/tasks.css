@@ -91,6 +91,31 @@ div.taskContainer .assignedTo select {
 	width: 100%;
 }
 
+div.taskContainer .showHistoryButton {
+	display: none;
+    cursor: pointer;
+}
+
+div.taskContainer.expandMode .showHistoryButton {
+	display: block;
+    margin-top:10px;
+}
+
+div.taskContainer .revisionsList {
+    display: none;
+}
+
+div.taskContainer.expandMode .revisionsList {
+    display: block;
+    margin-top:10px;
+    font-size: 9pt;
+    color: #999999;
+}
+
+div.taskContainer .revisionsList .revisions {
+    margin-bottom: 10px;
+}
+
 div.taskContainer .workingOn {
     display: none;
     color: gray; font-size: .7em; margin-top: 5px; font-size: .7em; width: 100%;

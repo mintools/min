@@ -1,0 +1,13 @@
+<div class="revisionsList">
+#{list changeMap, as: "mapEntry"}
+    <div class="revisions">
+        #{set revision: mapEntry.key/}
+        #{set deltas: mapEntry.value/}
+        <div>Changed on <b>${new Date(revision.timestamp).format("dd MMM yy hh:mm a")}</b> by <b>${revision.username}</b></div>
+
+        #{list deltas, as: "delta"}
+            <li>${delta.changeType} <b>${delta.entity}</b>: ${delta.attribute}</li>
+        #{/list}
+    </div>
+#{/list}
+</div>

@@ -2,18 +2,23 @@ package controllers;
 
 import controllers.utils.TaskIndex;
 import models.*;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
+import org.hibernate.Session;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
+import play.db.jpa.JPA;
 import play.mvc.With;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: soyoung
@@ -188,4 +193,97 @@ public class Tasks extends BaseController {
             task.save();
         }
     }
+
+    public static void getRevisions(Long taskId) throws Exception {
+        Session session = (Session) JPA.em().getDelegate();
+
+        AuditReader reader = AuditReaderFactory.get(session);
+        AuditQuery query = reader.createQuery().forRevisionsOfEntity(Task.class, false, true);
+
+        List auditResult = query.addOrder(AuditEntity.revisionNumber().asc()).add(AuditEntity.id().eq(taskId)).getResultList();
+
+        Map<MinRevisionEntity, List<Delta>> changeMap = new TreeMap<MinRevisionEntity, List<Delta>>();
+
+        Task previousTask = null;
+
+        for (Iterator iterator = auditResult.iterator(); iterator.hasNext();) {
+            Object[] auditItem = (Object[]) iterator.next();
+            Task task = (Task) auditItem[0];
+//            Task task = reader.find(Task.class, taskId, revision);
+
+            MinRevisionEntity revisionEntity = (MinRevisionEntity) auditItem[1];
+
+//            RevisionType type = (RevisionType) auditItem[2];
+//            int revision = revisionEntity.getId();
+
+            // compare properties
+            if (previousTask != null) {
+
+                Map properties = BeanUtils.describe(task);
+
+                List<Delta> deltas = new ArrayList<Delta>();
+
+                for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+                    String key = (String) i.next();
+                    Object oldValue = PropertyUtils.getProperty(previousTask, key);
+                    Object newValue = PropertyUtils.getProperty(task, key);
+
+                    if (oldValue == null && newValue == null) {
+                        // do nothing
+                    }
+                    else if (oldValue == null && newValue != null) {
+                        deltas.add(new Delta(key, 0, newValue.toString()));
+                    }
+                    else if (oldValue != null && newValue == null) {
+                        deltas.add(new Delta(key, 2, oldValue.toString()));
+                    }
+                    else if (!oldValue.equals(newValue)) {
+                        deltas.add(new Delta(key, 1, oldValue.toString() + " to " + newValue.toString()));
+                    }
+                }
+
+                changeMap.put(revisionEntity, deltas);
             }
+
+            previousTask = task;
+        }
+
+        render(changeMap);
+    }
+
+    public static class Delta {
+        private String entity;
+        private String changeType;
+        private String attribute;
+
+        public Delta(String entity, Integer changeType, String attribute) {
+            this.entity = entity;
+
+            switch (changeType) {
+                case 0:
+                    this.changeType = "Added";
+                    break;
+                case 1:
+                    this.changeType = "Modified";
+                    break;
+                case 2:
+                    this.changeType = "Deleted";
+                    break;
+            }
+
+            this.attribute = attribute;
+        }
+
+        public String getEntity() {
+            return entity;
+        }
+
+        public String getChangeType() {
+            return changeType;
+        }
+
+        public String getAttribute() {
+            return attribute;
+        }
+    }
+}
