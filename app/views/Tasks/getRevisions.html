@@ -1,16 +1,21 @@
 <link rel="stylesheet" type="text/css" href="@{'/public/css/tasks.css'}" media='screen'/>
 
 <div class="revisionsList">
-<h1>Change Log</h1>
-#{list changeMap, as: "mapEntry"}
-    <div class="revisions">
-        #{set revision: mapEntry.key/}
-        #{set deltas: mapEntry.value/}
-        <div>Changed on <b>${new Date(revision.timestamp).format("dd MMM yy hh:mm a")}</b> by <b>${revision.username}</b></div>
+   #{if changeMap.isEmpty()}
+        <h1>No Changes</h1>
+   #{/if}
+   #{else}
+        <h1>Change Log</h1>
+        #{list changeMap, as: "mapEntry"}
+            <div class="revisions">
+                #{set revision: mapEntry.key/}
+                #{set deltas: mapEntry.value/}
+                <div>Changed on <b>${new Date(revision.timestamp).format("dd MMM yy hh:mm a")}</b> by <b>${revision.username}</b></div>
 
-        #{list deltas, as: "delta"}
-            <li>${delta.changeType} <b>${delta.entity}</b>: ${delta.attribute}</li>
-        #{/list}
-    </div>
-#{/list}
+                #{list deltas, as: "delta"}
+                    <li>${delta.changeType} <b>${delta.entity}</b>: ${delta.attribute}</li>
+                #{/list}
+            </div>
+        #{/list}    
+   #{/else}
 </div>
