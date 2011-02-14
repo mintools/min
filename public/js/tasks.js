@@ -272,13 +272,12 @@ function task(taskElement, taskList, locked) {
 		$('.description ', cTask).removeClass("descriptionSummary");
 	};
 
-    this.showHistory = function(element) {        
-        $.get("/tasks/getRevisions", {
-			taskId : current.id
-		}, function(data) {
-		    $(element).replaceWith(data);
-            current.expand(true);
-		});
+    this.showHistory = function(element) {
+        var day = new Date();
+        var id = day.getTime();
+        var URL = "/tasks/getRevisions?taskId=" + current.id;
+
+        eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=500,left = 470,top = 200');");
 	};
 }
 

@@ -94,6 +94,8 @@ div.taskContainer .assignedTo select {
 div.taskContainer .showHistoryButton {
 	display: none;
     cursor: pointer;
+    font-size: 8pt;
+    color: gray;
 }
 
 div.taskContainer.expandMode .showHistoryButton {
@@ -101,19 +103,20 @@ div.taskContainer.expandMode .showHistoryButton {
     margin-top:10px;
 }
 
-div.taskContainer .revisionsList {
-    display: none;
-}
-
-div.taskContainer.expandMode .revisionsList {
-    display: block;
-    margin-top:10px;
+.revisionsList {
+    padding: 20px;
     font-size: 9pt;
+    font-family: sans-serif;
     color: #999999;
 }
 
-div.taskContainer .revisionsList .revisions {
-    margin-bottom: 10px;
+.revisionsList h1 {
+    color: #408dda;
+    margin: 0;
+}
+
+.revisionsList .revisions {
+    margin-top:10px;
 }
 
 div.taskContainer .workingOn {
