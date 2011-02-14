@@ -4,6 +4,7 @@ import controllers.utils.TaskIndex;
 import models.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
@@ -228,17 +229,33 @@ public class Tasks extends BaseController {
                     Object oldValue = PropertyUtils.getProperty(previousTask, key);
                     Object newValue = PropertyUtils.getProperty(task, key);
 
-                    if (oldValue == null && newValue == null) {
-                        // do nothing
+                    if (oldValue instanceof Collection) {
+                        Collection oldCollection = (Collection) oldValue;
+                        Collection newCollection = (Collection) newValue;
+
+                        Collection newEntries = CollectionUtils.subtract(newCollection, oldCollection);
+                        Collection deletedEntries = CollectionUtils.subtract(oldCollection, newCollection);
+
+                        if (!newEntries.isEmpty()) {
+                            deltas.add(new Delta(key, 0, newEntries.toString()));
+                        }
+                        if (!deletedEntries.isEmpty()) {
+                            deltas.add(new Delta(key, 2, deletedEntries.toString()));
+                        }
                     }
-                    else if (oldValue == null && newValue != null) {
-                        deltas.add(new Delta(key, 0, newValue.toString()));
-                    }
-                    else if (oldValue != null && newValue == null) {
-                        deltas.add(new Delta(key, 2, oldValue.toString()));
-                    }
-                    else if (!oldValue.equals(newValue)) {
-                        deltas.add(new Delta(key, 1, oldValue.toString() + " to " + newValue.toString()));
+                    else {
+                        if (oldValue == null && newValue == null) {
+                            // do nothing
+                        }
+                        else if (oldValue == null && newValue != null) {
+                            deltas.add(new Delta(key, 0, newValue.toString()));
+                        }
+                        else if (oldValue != null && newValue == null) {
+                            deltas.add(new Delta(key, 2, oldValue.toString()));
+                        }
+                        else if (!oldValue.equals(newValue)) {
+                            deltas.add(new Delta(key, 1, oldValue.toString() + " to " + newValue.toString()));
+                        }
                     }
                 }
 
