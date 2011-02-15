@@ -71,9 +71,7 @@ Task(Task1):
   owner:            Member1
   title:            Task1 Title
   content:          This task has two tags in group1 but no tags in group2
-  tags:
-                    - Tag1
-                    - Tag2
+
 
 Task(Task2):
   isActive:         true
@@ -82,10 +80,6 @@ Task(Task2):
   owner:            Member1
   title:            Task2 Title
   content:          This task has two tags in group1 and one tag in group2
-  tags:
-                    - Tag1
-                    - Tag3
-                    - Tag4
 
 Task(Task3):
   isActive:         true
@@ -102,8 +96,6 @@ Task(Task4):
   owner:            Member2
   title:            Task4 Title
   content:          This task has tag 13. It's used to test tag matching in lucene
-  tags:
-                    - Tag13
 
 Task(Task5):
   isActive:         true
@@ -112,8 +104,6 @@ Task(Task5):
   owner:            Member2
   title:            Task4 Title
   content:          This task has tag 2. It's used to test checked tags in same group
-  tags:
-                    - Tag2
 
 Task(Task6):
   isActive:         true
@@ -122,9 +112,6 @@ Task(Task6):
   owner:            Member2
   title:            Task6 Title
   content:          This task has tag 1 and 13. It's used to test checked tags in different groups
-  tags:
-                    - Tag1
-                    - Tag13
 
 
 Attachment(Attachment1):
