@@ -52,6 +52,9 @@
                         <th>
                             Assigned To
                         </th>
+                        <th>
+                            Working On
+                        </th>
                     </tr>
                     </thead>
                     #{list allMembers, as: "member"}
@@ -65,6 +68,9 @@
                         <td>
                             <input type="checkbox" name="assignedTo" value="${member.id}" #{if flash.assignedTo?.contains(member.id.toString())}checked#{/if}/>
                         </td>
+                        <td>
+                            <input type="checkbox" name="workingOn" value="${member.id}" #{if flash.workingOn?.contains(member.id.toString())}checked#{/if}/>
+                        </td>
                     </tr>
                     #{/list}
                     <tr>
@@ -75,6 +81,9 @@
                         </td>
                         <td>
                             <input type="checkbox" name="assignedTo" value="unassigned" #{if flash.assignedTo?.contains('unassigned')}checked#{/if}/>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="workingOn" value="unassigned" #{if flash.workingOn?.contains('unassigned')}checked#{/if}/>
                         </td>
                     </tr>
                 </table>

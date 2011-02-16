@@ -20,10 +20,7 @@ import play.db.jpa.JPA;
 import play.db.jpa.JPABase;
 
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -166,37 +163,10 @@ public class TaskIndex {
         }
 
         // add assignedTo predicate
-        List<Predicate> assignedToPredicates = new ArrayList<Predicate>();
-        if (assignedTo != null) {
-            ArrayList<Long> memberIds = new ArrayList<Long>();
-            for (int i = 0, l = assignedTo.length; i < l; i++) {
-                String s = assignedTo[i];
+        addMembersPredicate(assignedTo, builder, taskRoot.get("assignedTo"), predicates);
 
-                if ("unassigned".equalsIgnoreCase(s)) {
-                    // treat unassigned differently
-                    assignedToPredicates.add(builder.isNull(taskRoot.get("assignedTo")));
-                }
-                else {
-                    memberIds.add(Long.parseLong(s));
-                }
-            }
-
-            if (memberIds.size() > 0) {
-                assignedToPredicates.add(taskRoot.get("assignedTo").get("id").in(memberIds));
-            }
-
-            // OR the unassigned and asignedTo predicates
-            if (assignedToPredicates.size() > 0) {
-               Iterator i = assignedToPredicates.iterator();
-                Predicate finalPredicate = (Predicate) i.next();
-
-                while (i.hasNext()) {
-                    finalPredicate = builder.or(finalPredicate, (Predicate) i.next());
-                }
-
-                predicates.add(finalPredicate);
-            }
-        }
+        // add workingOn predicate
+        //    addMembersPredicate(workingOn, builder, taskRoot.get("workingOn").get("member"), predicates);
 
         // add lucene-related predicate
         BooleanQuery luceneQuery = new BooleanQuery();
@@ -308,5 +278,39 @@ public class TaskIndex {
             tasks = q.getResultList();
         }
         return tasks;
+    }
+
+    private static void addMembersPredicate(String[] members, CriteriaBuilder builder, Path path, List<Predicate> predicates) {
+        if (members != null) {
+            List<Predicate> tempPredicates = new ArrayList<Predicate>();
+            ArrayList<Long> memberIds = new ArrayList<Long>();
+            for (int i = 0, l = members.length; i < l; i++) {
+                String s = members[i];
+
+                if ("unassigned".equalsIgnoreCase(s)) {
+                    // treat unassigned differently
+                    tempPredicates.add(builder.isNull(path));
+                }
+                else {
+                    memberIds.add(Long.parseLong(s));
+                }
+            }
+
+            if (memberIds.size() > 0) {
+                tempPredicates.add(path.get("id").in(memberIds));
+            }
+
+            // OR the unassigned and asignedTo predicates
+            if (tempPredicates.size() > 0) {
+               Iterator i = tempPredicates.iterator();
+                Predicate finalPredicate = (Predicate) i.next();
+
+                while (i.hasNext()) {
+                    finalPredicate = builder.or(finalPredicate, (Predicate) i.next());
+                }
+
+                predicates.add(finalPredicate);
+            }
+        }
     }
 }

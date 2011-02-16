@@ -3,15 +3,15 @@ html {
 }
 
 body {
-	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif; font-size: .8em;
+	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif; font-size: .8em; margin: 3px 0 0 5px;
 }
 
-body textarea, body select, body input {
+body textarea,body select,body input {
 	font-family: 'Lucida Grande', Verdana, 'Bitstream Vera Sans', Arial, sans-serif; font-size: .9em;
 }
 
 .header {
-	font-size: .7em; font-weight: bold; margin: 0.5%;
+	font-size: .7em; font-weight: bold; margin: 0%;
 }
 
 a {
@@ -19,7 +19,7 @@ a {
 }
 
 h1 {
-	margin: 0 0 0.5% 5px;
+	margin: 0;
 }
 
 h3 {
@@ -27,9 +27,12 @@ h3 {
 }
 
 div.tasks {
-	float: left; width: 98%; margin: 0 0.5%;
+	float: left; width: 100%; margin: 0;
 }
 
+.taskSpacing{
+	padding-right:25px;
+	}
 .right {
 	float: right;
 }
@@ -50,8 +53,12 @@ div.tasks {
 	font-weight: bold; font-size: 80%;
 }
 
+.loggedInAs {
+	margin-right:5px;
+	}
+
 div.taskContainer {
-	border: 1px solid #DDDDDD; padding: 5px 5px 3px 0px; margin: 0px 0px 4px 20px; background-color: white; -moz-box-shadow: 0 1px 1px #DDDDDD; 
+	border: 1px solid #DDDDDD; padding: 3px 2px 2px 2px; margin: 0 0 1px 0; background-color: white; -moz-box-shadow: 0 1px 1px #DDDDDD; -moz-border-radius: 5px; border-radius: 5px;
 }
 
 div.taskPlaceholder {
@@ -59,7 +66,7 @@ div.taskPlaceholder {
 }
 
 div.task .title {
-	width: 8%; margin-right: 2%; padding: 2px 0px; float: left;
+	width: 8%; margin-right: 1%; padding: 2px 0px; float: left;
 }
 
 div.taskContainer.editMode .title {
@@ -67,8 +74,7 @@ div.taskContainer.editMode .title {
 }
 
 div.addAttachment {
-    margin-top: 10px;
-	float: left;
+	margin-top: 10px; float: left;
 }
 
 div.addAttachment .MultiFile-list {
@@ -76,7 +82,7 @@ div.addAttachment .MultiFile-list {
 }
 
 div.taskContainer .createdBy {
-	display: none;
+	display: none; font-size: 0.8em;
 }
 
 div.taskContainer.expandMode .createdBy {
@@ -84,7 +90,7 @@ div.taskContainer.expandMode .createdBy {
 }
 
 div.taskContainer .assignedTo {
-	color: gray; font-size: .7em; margin: 5px 0; font-size: .7em; width: 100%;
+	color: gray; font-size: .7em; margin: 0 0 1px 0; padding: 2px; font-size: .7em; width: 100%; background-color: #FFEFF3; -moz-border-radius: 5px; border-radius: 5px;
 }
 
 div.taskContainer .assignedTo select {
@@ -92,40 +98,31 @@ div.taskContainer .assignedTo select {
 }
 
 div.taskContainer .showHistoryButton {
-	display: none;
-    cursor: pointer;
-    font-size: 8pt;
-    color: gray;
+	display: none; cursor: pointer; font-size: 8pt; color: gray;
 }
 
 div.taskContainer.expandMode .showHistoryButton {
-	display: block;
-    margin-top:10px;
+	display: block; margin-top: 10px;
 }
 
 .revisionsList {
-    padding: 20px;
-    font-size: 9pt;
-    font-family: sans-serif;
-    color: #999999;
+	padding: 20px; font-size: 9pt; font-family: sans-serif; color: #999999;
 }
 
 .revisionsList h1 {
-    color: #408dda;
-    margin: 0;
+	color: #408dda; margin: 0;
 }
 
 .revisionsList .revisions {
-    margin-top:10px;
+	margin-top: 10px;
 }
 
 div.taskContainer .workingOn {
-    display: none;
-    color: gray; font-size: .7em; margin-top: 5px; font-size: .7em; width: 100%;
+	color: gray; display: block; font-size: .7em; margin: 0 0 1px 0; padding: 2px; font-size: .7em; width: 100%; -moz-border-radius: 5px; border-radius: 5px; list-style: none; height: 20px; max-height: 20px; overflow: hidden;
 }
 
 div.taskContainer.expandMode .workingOn {
-    display: block;
+	display: block; height: auto; max-height: none; overflow: auto;
 }
 
 div.taskContainer .interests {
@@ -142,24 +139,19 @@ div.taskContainer .main {
 }
 
 div.taskContainer .comments {
-    width: 23%;
-    margin-right: 1%;
-    float: left;
-    overflow: hidden;
-    height: 65px;
+	width: 23%; margin-right: 1%; float: left; overflow: hidden; max-height: 35px;
 }
 
 div.taskContainer.ediMode .comments {
-    height: auto;
+	height: auto;
 }
 
 div.taskContainer.expandMode .comments {
-    height: auto;
+	height: auto;
 }
 
 div.taskContainer .comments .commentsList {
-    font-size: 0.8em;
-    overflow: hidden;
+	font-size: 0.8em; overflow: hidden;
 }
 
 div.taskContainer.editMode .comments textarea {
@@ -186,18 +178,15 @@ div.taskContainer .editButton {
 }
 
 div.taskContainer .tagsButtons {
-    position: absolute;
-    right: 40px;
+	position: absolute; right: 32px;
 }
 
 div.taskContainer.editMode .tagsButtons {
-    position: relative;
-	float: right; margin-top: 2px; width: 30%;
-    right: 0;
+	position: relative; float: right; margin-top: 2px; width: 30%; right: 0;
 }
 
 div.taskContainer .tagsButtons .button,a.newButton {
-	padding: 0.1em 1em; font: normal normal normal 80%/normal 'Trebuchet MS', sans-serif; position: relative; text-decoration: none; margin-left: 5px; margin-top: 5px;
+	padding: 0.1em 1em; font: normal normal normal 80%/normal 'Trebuchet MS', sans-serif; position: relative; text-decoration: none; margin-top: 5px;
 }
 
 /*
@@ -227,7 +216,7 @@ div.taskContainer .thumbnailsButtons {
 }
 
 div.taskContainer .thumbnails {
-	text-align: right; width: 100px; float: left; clear: right;
+	text-align: right; width: 7%; float: left; clear: right;
 }
 
 div.taskContainer .attachment img.delete {
@@ -238,8 +227,8 @@ div.taskContainer.editMode .task {
 	padding: 0;
 }
 
-div.taskContainer.editMode .description textarea{
-	width:99%;
+div.taskContainer.editMode .description textarea {
+	width: 99%;
 }
 
 div.taskContainer.editMode .description .taskContentField {
@@ -247,8 +236,7 @@ div.taskContainer.editMode .description .taskContentField {
 }
 
 div.taskContainer.editMode .titleField textarea {
-	width: 100%;
-	font-weight: bold;
+	width: 100%; font-weight: bold;
 }
 
 div.taskContainer.editMode .titleField .taskTitleField {
@@ -276,15 +264,15 @@ div.preview {
 }
 
 div.taskBar {
-	padding: 0 0.5% 10px 0.5%;
+	padding: 0 0.5% 10px 0;
 }
 
 div.taskContainer .description {
-	min-height: 45px; overflow: hidden;
+	min-height: 19px; overflow: hidden;
 }
 
 div.taskContainer .descriptionSummary {
-	height: 45px; overflow: hidden;
+	height: 19px; overflow: hidden;
 }
 
 div.taskContainer .showIcon,div.taskContainer .hideIcon {
@@ -292,7 +280,7 @@ div.taskContainer .showIcon,div.taskContainer .hideIcon {
 }
 
 div.taskContainer .hoverActions {
-	float: left; width: 20px; margin-left: -20px;
+	float: left; width: 20px;
 }
 
 div.taskContainer .hoverActions .moveUpButton {
@@ -312,11 +300,11 @@ div.taskContainer .hoverActions .insertBelowButton {
 }
 
 div.taskContainer .move {
-	float: left; cursor: move; position: relative; margin: 30px 0px 0px 3px; width: 1%;
+	float: left; cursor: move; position: relative; margin: 5px 0 0 3px; width: 15px; height: 39px; background: url(../images/arrow-move.png) repeat-y left top;
 }
 
 div.taskContainer .move img {
-	position: absolute; top: 50%;
+	
 }
 
 div.taskContainer .contents {
@@ -339,7 +327,7 @@ div.taskContainer .edit input,div.taskContainer .edit textarea {
  * Tags
  */
 div.taskContainer .tags {
-	padding: 5px; font-size: 0.8em; color: gray; overflow: hidden; height: 15px;
+	padding: 0 0 2px; font-size: 0.8em; color: gray; overflow: hidden; height: 15px;
 }
 
 div.taskContainer.expandMode .tags {
@@ -351,11 +339,11 @@ div.taskContainer.editMode .tags {
 }
 
 .tags .tagGroup {
-	padding: 3px 2px 10px 2px; width: 100px; text-align: center; list-style: none; float: left; margin: 0;
+	float: left; list-style: none outside none; margin: 0; padding: 0 3px 0 0; text-align: center; width: 100px;
 }
 
 .tags .tagGroup .tag {
-	-webkit-border-radius: 10px; background-color: #f3e6f5; margin-bottom: 2px; padding: 2px 2px;
+	-moz-border-radius: 5px; border-radius: 5px; -webkit-border-radius: 10px; background-color: #f3e6f5; margin-bottom: 2px; padding: 2px 2px;
 }
 
 .tags .tagGroup select {
@@ -372,6 +360,7 @@ div.taskContainer .tags .close {
 
 div.taskContainer.expandMode .tags,div.taskContainer.editMode .tags {
 	display: block;
+	margin-top:4px;
 }
 
 div.tags ul {
@@ -435,7 +424,8 @@ div.tags li {
 }
 
 .actions a {
-	margin-right: 15px;
+	margin-left: 10px;
+	margin-right: 5px;
 }
 
 fieldset {
@@ -479,20 +469,13 @@ label {
 }
 
 .filterActions {
-    overflow: hidden;
-    padding: 5px;
-    color: gray;
-    font-size: smaller;
+	overflow: hidden; padding: 5px; color: gray; font-size: smaller;
 }
 
 .filterActions .clearButton {
-    float: right;
-    margin-left: 10px;
-    cursor: pointer;
+	float: right; margin-left: 10px; cursor: pointer;
 }
 
 .filterActions .bookmarkButton {
-    float: right;
-    margin-left: 20px;
-    cursor: pointer;
+	float: right; margin-left: 20px; cursor: pointer;
 }
