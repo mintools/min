@@ -32,17 +32,17 @@ function task(taskElement, taskList, locked) {
 		 * Events
 		 */
         if (!locked) {
-            $(cTask).mouseenter(function(e) {
-                if (!current.isNew) {
-                    $(".hoverAction", cTask).show();
-                }
-            });
-
-            $(cTask).mouseleave(function(e) {
-                if (!current.isNew) {
-                    $(".hoverAction", cTask).hide();
-                }
-            });
+//            $(cTask).mouseenter(function(e) {
+//                if (!current.isNew) {
+//                    $(".hoverAction", cTask).show();
+//                }
+//            });
+//
+//            $(cTask).mouseleave(function(e) {
+//                if (!current.isNew) {
+//                    $(".hoverAction", cTask).hide();
+//                }
+//            });
         }
 
 		/*

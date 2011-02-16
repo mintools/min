@@ -2,36 +2,37 @@
 <div class="task" data-id="${task?.id}" data-editMode="${editMode}" data-isNew="${isNew}">
     #{if !editMode}
     <div class="hoverActions">
-        <div class="hoverAction moveUpButton hide">
+        <div class="hoverAction moveUpButton">
         </div>
         <div class="hoverAction taskId hide">
             ${task?.id}
         </div>
-        <div class="hoverAction insertBelowButton hide">
+        <div class="hoverAction moveDownButton">
         </div>
-        <div class="hoverAction moveDownButton hide">
+		        <div class="hoverAction insertBelowButton">
         </div>
     </div>
     <div class="move">
-        <img src="@{'/public/images/arrow-move.png'}"/>
+        
     </div>
     <div class="display">
         <div class="title">
-            <h3>${task.title?.escape().nl2br()}</h3>
+            
             <div class="assignedTo">
                 #{if task?.assignedTo}Assigned to ${task?.assignedTo}#{/if}#{else}Unassigned#{/else}
             </div>
-            <div class="createdBy">
-                Creator: ${task?.owner}
-            </div>
+
             <div class="workingOn">
-                Being worked on by:
                 #{list task?.workers, as: "member"}
                     <li>${member.username}</li>
                 #{/list}
             </div>
+			<div class="createdBy">
+                Creator: ${task?.owner}
+            </div>
         </div>
         <div class="main">
+        	<h3>${task.title?.escape().nl2br()}</h3>
             <div class="description descriptionSummary">
                 ${task.content?.escape().nl2br()}
             </div>
@@ -71,11 +72,12 @@
             #{/if}
 
         </div>
-        <div class="tagsButtons">
-            <a href="javascript:void(0);" class="editButton button ui-state-default ui-corner-all right">Edit</a>
-        </div>
+
 
     </div>
+	        <div class="tagsButtons">
+            <a href="javascript:void(0);" class="editButton button ui-state-default ui-corner-all right">Edit</a>
+        </div>
     <div class="clear">
     </div>
     #{/if}
