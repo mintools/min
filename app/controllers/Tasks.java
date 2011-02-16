@@ -51,7 +51,7 @@ public class Tasks extends BaseController {
         renderTemplate("Tasks/_task.html", task, editMode);
     }
 
-    public static void save(@Valid Task task, File[] attachments, String newComment, List<Long> workerIds, List<Long> selectedTagIds) throws Exception {
+    public static void save(@Valid Task task, File[] attachments, String newComment, List<Long> interests, List<Long> workerIds, List<Long> selectedTagIds) throws Exception {
 
         Member loggedInMember = getLoggedInMember();
 
@@ -93,6 +93,11 @@ public class Tasks extends BaseController {
             // add workers
             if (workerIds != null) {
                 task.setWorkers(workerIds);
+            }
+
+            // add interests
+            if (interests != null) {
+                task.setInteresteds(interests);
             }
 
             task.isActive = true;

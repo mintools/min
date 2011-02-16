@@ -26,6 +26,8 @@ public class Member extends Model {
     @Required
     public String password;
 
+    public Long sortOrder;
+
     @Required
     @Email
     public String email;
@@ -43,10 +45,14 @@ public class Member extends Model {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     public List<WorkingOn> workingOn;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    public List<Interest> interests;
+
     public Member() {
         this.raisedTasks = new ArrayList<Task>();
         this.assignedTasks = new ArrayList<Task>();
         this.workingOn = new ArrayList<WorkingOn>();
+        this.interests = new ArrayList<Interest>();
     }
 
     public String toString() {
@@ -64,12 +70,23 @@ public class Member extends Model {
         return false;
     }
 
+    public boolean isInterestedIn(Task task) {
+        if (task != null) {
+            for (Iterator<Interest> iterator = interests.iterator(); iterator.hasNext();) {
+                Interest item = iterator.next();
+                if (item.task == task) return true;
+            }
+        }
+
+        return false;
+    }
+
     public static Member connect(String username, String password) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return null;
         return Member.find("from Member m where m.username = ? and m.password = ?", username, password).first();
     }
 
     public static List<Member> getMembers() {
-        return Member.find("from Member m order by m.username asc").fetch();
+        return Member.find("from Member m order by m.sortOrder desc").fetch();
     }
 }

@@ -30,6 +30,12 @@
                     <li>${member.username}</li>
                 #{/list}
             </div>
+            <div class="interests">
+                Interested members:
+                #{list task?.interesteds, as: "member"}
+                    <li>${member.username}</li>
+                #{/list}
+            </div>
         </div>
         <div class="main">
             <div class="description descriptionSummary">
@@ -111,6 +117,15 @@
                     <option value="null"></option>
                     #{list models.Member.findAll(), as: "member"}
                         <option value="${member.id}" #{if task?.workers?.contains(member)}selected#{/if}>${member.username}</option>
+                    #{/list}
+                </select>
+            </div>
+            <div class="interests">
+                Interested Members:
+                <select name="interests" multiple="multiple">
+                    <option value="null"></option>
+                    #{list models.Member.findAll(), as: "member"}
+                        <option value="${member.id}" #{if task?.interesteds?.contains(member)}selected#{/if}>${member.username}</option>
                     #{/list}
                 </select>
             </div>

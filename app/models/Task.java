@@ -1,7 +1,6 @@
 package models;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
@@ -50,6 +49,10 @@ public class Task extends Model {
     public List<WorkingOn> workingOn = new ArrayList<WorkingOn>();
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 20)
+    public List<Interest> interests = new ArrayList<Interest>();
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("createdDate DESC")
     @Fetch(FetchMode.SUBSELECT)
     public List<Comment> comments = new ArrayList<Comment>();
@@ -83,6 +86,14 @@ public class Task extends Model {
             return null;
         }
         return Member.find("select m from Member m join m.workingOn t where t.task = ?", this).fetch();
+    }
+
+    public List<Interest> getInteresteds() {
+        // can only call this method after the Task has been persisted
+        if (this.id == null) {
+            return null;
+        }
+        return Member.find("select m from Member m join m.interests t where t.task = ?", this).fetch();
     }
 
     public void setTags(List<Long> tagIds) {
@@ -150,6 +161,40 @@ public class Task extends Model {
             WorkingOn newWorker = new WorkingOn(Member.<Member>findById(memberId), this);
 
             this.workingOn.add(newWorker);
+        }
+    }
+
+    public void setInteresteds(List<Long> memberIds) {
+         // add interests (it would be easier to remove all workers then add the new ones again, but this screws up the auditing in Envers
+
+        // first, remove workers that have been deselected
+        List removedInterests = new ArrayList();
+
+        for (Iterator<Interest> i = this.interests.iterator(); i.hasNext();) {
+            Interest interest = i.next();
+
+            boolean found = false;
+            for (int j = 0; j < memberIds.size(); j++) {
+                Long selectedMemberId = memberIds.get(j);
+                if (interest.member.id.equals(selectedMemberId)) {
+                    found = true;
+                    memberIds.remove(j);
+                    break;
+                }
+            }
+            if (!found) {
+                // delete it
+                i.remove();
+                this.interests.remove(interest);
+            }
+        }
+
+        // add the left over ones in selectTagIds
+        for (Iterator<Long> iterator = memberIds.iterator(); iterator.hasNext();) {
+            Long memberId = iterator.next();
+            Interest newInterest = new Interest(Member.<Member>findById(memberId), this);
+
+            this.interests.add(newInterest);
         }
     }
 
