@@ -4,9 +4,14 @@
     <div class="filterContainer">
         <div class="filterActions">
             <div class="bookmarkButton">Bookmark</div>
-            <div class="clearButton">Clear Filters</div>            
+            <div id="bookmarkFrame" class="hide" style="width: 400px; position:absolute; background-color: white; border: 1px gray solid; padding: 20px;">
+                Copy and bookmark this url:<br/><br/>
+                <input id="urlText" type="text" maxlength="100" style="width: 350px"/>
+                <a id="doneLink">Done</a>
+            </div>
+            <div class="clearButton">Clear Filters</div>
         </div>
-        
+
         <fieldset>
             <legend>Filter Text</legend>
 
@@ -78,5 +83,5 @@
         <div class="clear">
         </div>
     </div>
-       
+
 #{/form}

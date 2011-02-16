@@ -52,13 +52,21 @@
         });
 
         $("#filterForm .bookmarkButton").click(function() {
-            alert("Bookmark this url: http://" + window.location.host + "?" + $("#filterForm input:checkbox,input:text").serialize());
+            $("#bookmarkFrame #urlText").attr("value", "http://" + window.location.host + "?" + $("#filterForm input:checkbox,input:text").serialize());
+            $("#bookmarkFrame").show();
+            $("#bookmarkFrame #urlText").focus().select();
         });
+
+        $("#bookmarkFrame #doneLink").click(function () {
+            $("#bookmarkFrame").hide();
+        })
+        
     });
 </script>
 #{/set}
 
-<div id="debug"></div>        
+<div id="debug"></div>
+
 
 <div id="filter-div">
     <a class="handle" href="#">Content</a>
