@@ -1,7 +1,9 @@
 package controllers;
 
 import controllers.utils.TaskIndex;
+import jobs.EmailJob;
 import models.*;
+import notifiers.Mails;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -16,6 +18,7 @@ import org.hibernate.envers.query.AuditQuery;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.db.jpa.JPA;
+import play.db.jpa.JPAPlugin;
 import play.mvc.With;
 
 import java.io.File;
@@ -29,10 +32,17 @@ import java.util.*;
 public class Tasks extends BaseController {
 
 
-    public static void index(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+    public static void index(Long id, String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
         flash.clear();
 
-        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
+        List<Task> tasks = new ArrayList<Task>();
+
+        if (id != null) {
+            tasks.add(Task.<Task>findById(id));
+        }
+        else {
+            tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
+        }
 
         params.flash();
         render(tasks);
@@ -56,6 +66,8 @@ public class Tasks extends BaseController {
         Member loggedInMember = getLoggedInMember();
 
         notFoundIfNull(loggedInMember);
+
+        boolean isNew = (task.id == null);
 
         if (Validation.hasErrors()) {
             boolean editMode = true;
@@ -111,6 +123,16 @@ public class Tasks extends BaseController {
             }
 
             TaskIndex.addTaskToIndex(task);
+
+            // send email
+            if (isNew) {
+//            Mails.newTask(task);                
+            }
+            else {
+                // delay 10 secs to allow transaction to finish (so mail can pick up the latest change log)
+                EmailSpec email = new EmailSpec(task.id);
+                email.save();
+            }
 
             boolean editMode = false;
             renderTemplate("Tasks/_task.html", task, editMode);
@@ -201,111 +223,10 @@ public class Tasks extends BaseController {
     }
 
     public static void getRevisions(Long taskId) throws Exception {
-        Session session = (Session) JPA.em().getDelegate();
+        Task task = Task.findById(taskId);
 
-        AuditReader reader = AuditReaderFactory.get(session);
-        AuditQuery query = reader.createQuery().forRevisionsOfEntity(Task.class, false, true);
-
-        List auditResult = query.addOrder(AuditEntity.revisionNumber().asc()).add(AuditEntity.id().eq(taskId)).getResultList();
-
-        Map<MinRevisionEntity, List<Delta>> changeMap = new TreeMap<MinRevisionEntity, List<Delta>>();
-
-        Task previousTask = null;
-
-        for (Iterator iterator = auditResult.iterator(); iterator.hasNext();) {
-            Object[] auditItem = (Object[]) iterator.next();
-            Task task = (Task) auditItem[0];
-//            Task task = reader.find(Task.class, taskId, revision);
-
-            MinRevisionEntity revisionEntity = (MinRevisionEntity) auditItem[1];
-
-//            RevisionType type = (RevisionType) auditItem[2];
-//            int revision = revisionEntity.getId();
-
-            // compare properties
-            if (previousTask != null) {
-
-                Map properties = BeanUtils.describe(task);
-
-                List<Delta> deltas = new ArrayList<Delta>();
-
-                for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
-                    String key = (String) i.next();
-                    Object oldValue = PropertyUtils.getProperty(previousTask, key);
-                    Object newValue = PropertyUtils.getProperty(task, key);
-
-                    if (oldValue instanceof Collection) {
-                        Collection oldCollection = (Collection) oldValue;
-                        Collection newCollection = (Collection) newValue;
-
-                        Collection newEntries = CollectionUtils.subtract(newCollection, oldCollection);
-                        Collection deletedEntries = CollectionUtils.subtract(oldCollection, newCollection);
-
-                        if (!newEntries.isEmpty()) {
-                            deltas.add(new Delta(key, 0, newEntries.toString()));
-                        }
-                        if (!deletedEntries.isEmpty()) {
-                            deltas.add(new Delta(key, 2, deletedEntries.toString()));
-                        }
-                    }
-                    else {
-                        if (oldValue == null && newValue == null) {
-                            // do nothing
-                        }
-                        else if (oldValue == null && newValue != null) {
-                            deltas.add(new Delta(key, 0, newValue.toString()));
-                        }
-                        else if (oldValue != null && newValue == null) {
-                            deltas.add(new Delta(key, 2, oldValue.toString()));
-                        }
-                        else if (!oldValue.equals(newValue)) {
-                            deltas.add(new Delta(key, 1, oldValue.toString() + " to " + newValue.toString()));
-                        }
-                    }
-                }
-
-                changeMap.put(revisionEntity, deltas);
-            }
-
-            previousTask = task;
-        }
+        Map changeMap = task.retrieveRevisions();
 
         render(changeMap);
-    }
-
-    public static class Delta {
-        private String entity;
-        private String changeType;
-        private String attribute;
-
-        public Delta(String entity, Integer changeType, String attribute) {
-            this.entity = entity;
-
-            switch (changeType) {
-                case 0:
-                    this.changeType = "Added";
-                    break;
-                case 1:
-                    this.changeType = "Modified";
-                    break;
-                case 2:
-                    this.changeType = "Deleted";
-                    break;
-            }
-
-            this.attribute = attribute;
-        }
-
-        public String getEntity() {
-            return entity;
-        }
-
-        public String getChangeType() {
-            return changeType;
-        }
-
-        public String getAttribute() {
-            return attribute;
-        }
-    }
+    }    
 }

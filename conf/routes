@@ -6,6 +6,7 @@
 
 # Home page
 GET     /                                       Tasks.index
+GET     /{id}                                   Tasks.index
 
 GET     /members/{username}                     Members.showByUsername
 

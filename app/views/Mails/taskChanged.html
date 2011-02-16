@@ -1,0 +1,19 @@
+<html>
+<body>
+    <div class="revisionsList">
+        The following fields have been changed:
+        #{set mapEntry: changeMap.firstEntry()/}
+        <div class="revisions">
+            #{set revision: mapEntry.key/}
+            #{set deltas: mapEntry.value/}
+            <div>Changed on <b>${new Date(revision.timestamp).format("dd MMM yy hh:mm a")}</b> by <b>${revision.username}</b></div>
+
+            #{list deltas, as: "delta"}
+                <li>${delta.changeType} <b>${delta.entity}</b>: ${delta.attribute}</li>
+            #{/list}
+        </div>
+    </div>
+
+    Direct Link: <a href="http://${host}/index/${task.id}">http://localhost:9000/index/${task.id}</a>
+</body>
+</html>

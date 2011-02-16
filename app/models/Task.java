@@ -1,11 +1,20 @@
 package models;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Session;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
+import play.db.jpa.JPA;
 import play.db.jpa.Model;
 
 import javax.persistence.*;
@@ -88,7 +97,7 @@ public class Task extends Model {
         return Member.find("select m from Member m join m.workingOn t where t.task = ?", this).fetch();
     }
 
-    public List<Interest> getInteresteds() {
+    public List<Member> getInteresteds() {
         // can only call this method after the Task has been persisted
         if (this.id == null) {
             return null;
@@ -198,6 +207,79 @@ public class Task extends Model {
         }
     }
 
+    public Map retrieveRevisions() throws Exception {
+        Session session = (Session) JPA.em().getDelegate();
+
+        AuditReader reader = AuditReaderFactory.get(session);
+        AuditQuery query = reader.createQuery().forRevisionsOfEntity(Task.class, false, true);
+
+        List auditResult = query.addOrder(AuditEntity.revisionNumber().asc()).add(AuditEntity.id().eq(this.id)).getResultList();
+
+        Map<MinRevisionEntity, List<Delta>> changeMap = new TreeMap<MinRevisionEntity, List<Delta>>();
+
+        Task previousTask = null;
+
+        for (Iterator iterator = auditResult.iterator(); iterator.hasNext();) {
+            Object[] auditItem = (Object[]) iterator.next();
+            Task task = (Task) auditItem[0];
+//            Task task = reader.find(Task.class, taskId, revision);
+
+            MinRevisionEntity revisionEntity = (MinRevisionEntity) auditItem[1];
+
+//            RevisionType type = (RevisionType) auditItem[2];
+//            int revision = revisionEntity.getId();
+
+            // compare properties
+            if (previousTask != null) {
+
+                Map properties = BeanUtils.describe(task);
+
+                List<Delta> deltas = new ArrayList<Delta>();
+
+                for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
+                    String key = (String) i.next();
+                    Object oldValue = PropertyUtils.getProperty(previousTask, key);
+                    Object newValue = PropertyUtils.getProperty(task, key);
+
+                    if (oldValue instanceof Collection) {
+                        Collection oldCollection = (Collection) oldValue;
+                        Collection newCollection = (Collection) newValue;
+
+                        Collection newEntries = CollectionUtils.subtract(newCollection, oldCollection);
+                        Collection deletedEntries = CollectionUtils.subtract(oldCollection, newCollection);
+
+                        if (!newEntries.isEmpty()) {
+                            deltas.add(new Delta(key, 0, newEntries.toString()));
+                        }
+                        if (!deletedEntries.isEmpty()) {
+                            deltas.add(new Delta(key, 2, deletedEntries.toString()));
+                        }
+                    }
+                    else {
+                        if (oldValue == null && newValue == null) {
+                            // do nothing
+                        }
+                        else if (oldValue == null && newValue != null) {
+                            deltas.add(new Delta(key, 0, newValue.toString()));
+                        }
+                        else if (oldValue != null && newValue == null) {
+                            deltas.add(new Delta(key, 2, oldValue.toString()));
+                        }
+                        else if (!oldValue.equals(newValue)) {
+                            deltas.add(new Delta(key, 1, oldValue.toString() + " to " + newValue.toString()));
+                        }
+                    }
+                }
+
+                changeMap.put(revisionEntity, deltas);
+            }
+
+            previousTask = task;
+        }
+
+        return changeMap;
+    }
+
     public static List<Task> findTaggedWith(String tag) {
         return Task.find("select distinct t from Task t join t.tags as g where t.isActive = true and g.name = ?", tag).fetch();
     }
@@ -218,5 +300,41 @@ public class Task extends Model {
 
     public static List<Task> findInactive() {
         return Task.find("from Task t where t.isActive = false order by sortOrder desc").fetch();
+    }
+
+    public static class Delta {
+        private String entity;
+        private String changeType;
+        private String attribute;
+
+        public Delta(String entity, Integer changeType, String attribute) {
+            this.entity = entity;
+
+            switch (changeType) {
+                case 0:
+                    this.changeType = "Added";
+                    break;
+                case 1:
+                    this.changeType = "Modified";
+                    break;
+                case 2:
+                    this.changeType = "Deleted";
+                    break;
+            }
+
+            this.attribute = attribute;
+        }
+
+        public String getEntity() {
+            return entity;
+        }
+
+        public String getChangeType() {
+            return changeType;
+        }
+
+        public String getAttribute() {
+            return attribute;
+        }
     }
 }
