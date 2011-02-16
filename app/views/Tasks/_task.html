@@ -27,15 +27,16 @@
                     <li>${member.username}</li>
                 #{/list}
             </div>
-			<div class="createdBy">
-                Creator: ${task?.owner}
-            </div>
             <div class="interests">
                 Interested members:
                 #{list task?.interesteds, as: "member"}
                     <li>${member.username}</li>
                 #{/list}
             </div>
+			<div class="createdBy">
+                Creator: ${task?.owner}
+            </div>
+        </div>
         <div class="main">
         	<h3>${task.title?.escape().nl2br()}</h3>
             <div class="description descriptionSummary">
