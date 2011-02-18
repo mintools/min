@@ -14,4 +14,8 @@ public class Security extends Secure.Security {
     static String connected() {
         return session == null ? null : session.get("username");
     }
+
+    public static void switchUser(String username) {
+        session.put("username", username);
+    }
 }

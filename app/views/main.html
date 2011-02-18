@@ -28,6 +28,23 @@
         </script>
         <script type="text/javascript" src="@{'/public/js/jquery.MultiFile.js'}">
         </script>
+
+        <script type="text/javascript">
+            $(function() {
+                $("#userSelector").change(function() {
+                    var username = $(this).attr("value");
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@{Security.switchUser()}',
+                        data: {'username':username},
+                        success: function(data) {
+                            // do nothing
+                        }
+                    });
+                });
+            });
+        </script>
         #{get 'moreScripts' /}
     </head>
     <body class="main">
@@ -39,7 +56,9 @@
             </div>
 			<div class="loggedInAs right">
                 #{if controllers.Security.connected()}
-                    Logged in as <a href="@{Members.showByUsername(controllers.Security.connected())}">${controllers.Security.connected()}</a>
+                    Logged in as #{select 'username', id:'userSelector', items: models.Member.findAll(), valueProperty:'username', value: controllers.Security.connected(), labelProperty:'username'}
+                                #{/select}
+                               
 					(<a href="/logout">Log out</a>)
                 #{/if}
             </div>

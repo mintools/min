@@ -2,6 +2,7 @@ package models;
 
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.envers.Audited;
+import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.db.jpa.Model;
@@ -81,9 +82,15 @@ public class Member extends Model {
         return false;
     }
 
+//    public static Member connect(String username, String password) {
+//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return null;
+//        return Member.find("from Member m where m.username = ? and m.password = ?", username, password).first();
+//    }
+
     public static Member connect(String username, String password) {
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) return null;
-        return Member.find("from Member m where m.username = ? and m.password = ?", username, password).first();
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || !password.equals(Play.configuration.getProperty("groupPassword"))) return null;
+
+        return Member.find("from Member m where m.username = ?", username).first();
     }
 
     public static List<Member> getMembers() {

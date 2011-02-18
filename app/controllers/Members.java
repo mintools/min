@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,6 +23,12 @@ import java.util.UUID;
  */
 public class Members extends BaseController {
     private static final String FILES_DIR = Play.configuration.getProperty("avatarStorage.location");
+
+    public static void maintain() {
+        List<Member> members = Member.findAll();
+
+        render(members);
+    }
 
     public static void show(Long id) {
         Member member = Member.findById(id);
