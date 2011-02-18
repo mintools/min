@@ -19,6 +19,8 @@ public class Tag extends Model implements Comparable<Tag> {
 
     public Integer sortOrder;
 
+    public String colour;
+
     public String toString() {
         return name;
     }

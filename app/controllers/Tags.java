@@ -29,6 +29,12 @@ public class Tags extends BaseController {
         index();
     }
 
+    public static void setColor(Long id, String colour) {
+        Tag tag = Tag.findById(id);
+        tag.colour = colour;
+        tag.save();
+    }
+
     public static void delete(Long id) {
         Tag tag = Tag.findById(id);
 

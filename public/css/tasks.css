@@ -204,6 +204,10 @@ div.taskContainer .attachments .attachment {
 	float: left; margin: 5px 1px; width: 90px; height: 90px; text-align: center;
 }
 
+div.taskContainer .attachments .attachment .preview img {
+	width: auto; height: auto;
+}
+
 div.taskContainer .attachments .attachment img {
 	width: 80px; height: 80px;
 }
