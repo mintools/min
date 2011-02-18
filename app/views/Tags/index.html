@@ -90,7 +90,7 @@
 //                $(".colorDisplay", element).css('backgroundColor', '#' + hex);
                 $(element).css('backgroundColor', '#' + hex);
                 $(element).ColorPickerHide();
-                $.post("/tags/setColor", {id:$(element).attr("data-tagId"), colour:hex });
+                $.post("/tags/setColor", {id:$(element).attr("data-tagId"), color:hex });
             }
         });
 
@@ -172,8 +172,7 @@
                         #{list tagGroup.tags, as: "tag"}
                             <li class="tag" id="tags-${tag.id}"><div class="handle"></div>${tag.name}
                                 <div style="float:right;">
-                                    <input class="colorSelector" size="6" type="text" value="${tag.colour}" data-tagId="${tag.id}" style="background-color: #${tag.colour?tag.colour:'FFFFFF'};"/>
-                                    <!--<div class="colorSelector" data-tagId="${tag.id}"><div class="colorDisplay" style="background-color: #${tag.colour?tag.colour:'000000'};"></div></div>-->
+                                    <input class="colorSelector" size="6" type="text" value="${tag.color}" data-tagId="${tag.id}" style="background-color: #${tag.color?tag.color:'FFFFFF'};"/>
                                    #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}
                                    #{/select}<a onclick="return confirm('Are you sure you want to delete this tag?');" href="@{Tags.delete(tag.id)}">delete</a>
                                     <input type="radio" class="defaultSelector" name="${tagGroup.id}" value="${tag.id}" #{if tagGroup.defaultTag?.equals(tag)}checked#{/if}/>
