@@ -57,7 +57,7 @@
             </div>
 			<div class="loggedInAs right">
                 #{if controllers.Security.connected()}
-                    Logged in as #{select 'username', id:'userSelector', items: models.Member.findAll(), valueProperty:'username', value: controllers.Security.connected(), labelProperty:'username'}
+                    Logged in as #{select 'username', id:'userSelector', items: models.Member.getMembers(), valueProperty:'username', value: controllers.Security.connected(), labelProperty:'username'}
                                 #{/select}
                                
 					(<a href="/logout">Log out</a>)

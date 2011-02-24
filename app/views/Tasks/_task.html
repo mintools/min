@@ -1,4 +1,5 @@
 #{set isNew: !task?.id/}
+#{set allMembers: models.Member.getMembers()/}
 <div class="task" data-id="${task?.id}" data-editMode="${editMode}" data-isNew="${isNew}">
     #{if !editMode}
     <div class="hoverActions">
@@ -109,7 +110,7 @@
             </div>
             <div class="assignedTo">
                 Assign to:
-                #{select 'task.assignedTo.id', items: models.Member.findAll(), valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
+                #{select 'task.assignedTo.id', items: allMembers, valueProperty:'id', value: task?.assignedTo?.id, labelProperty:'username'}
                     #{option} Unassigned #{/option}
                 #{/select}
             </div>
@@ -117,7 +118,7 @@
                 Being worked on by:
                 <select name="workerIds" multiple="multiple">
                     <option value="null"></option>
-                    #{list models.Member.findAll(), as: "member"}
+                    #{list allMembers, as: "member"}
                         <option value="${member.id}" #{if task?.workers?.contains(member)}selected#{/if}>${member.username}</option>
                     #{/list}
                 </select>
@@ -126,7 +127,7 @@
                 Interested Members:
                 <select name="interests" multiple="multiple">
                     <option value="null"></option>
-                    #{list models.Member.findAll(), as: "member"}
+                    #{list allMembers, as: "member"}
                         <option value="${member.id}" #{if task?.interesteds?.contains(member)}selected#{/if}>${member.username}</option>
                     #{/list}
                 </select>
