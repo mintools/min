@@ -28,12 +28,14 @@
                     <li>${member.username}</li>
                 #{/list}
             </div>
+            #{if !task?.interesteds?.isEmpty() }
             <div class="interests">
                 Interested members:
                 #{list task?.interesteds, as: "member"}
                     <li>${member.username}</li>
                 #{/list}
             </div>
+            #{/if}
 			<div class="createdBy">
                 Creator: ${task?.owner}
             </div>
