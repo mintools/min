@@ -1,8 +1,3 @@
 <a class="avatar" href="@{Members.show(member.id)}">
-    #{if member.avatarFilename}
-    <img src="/public/avatars/${member.avatarFilename}" alt=""/>
-    #{/if}
-    #{else}
-    <img src="/public/avatars/unknown.png" alt=""/>
-    #{/else}
+    <img src="${member.gravatarUrl}" alt="${member.username}"/>
 </a>    

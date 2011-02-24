@@ -8,6 +8,7 @@
 GET     /                                       Tasks.index
 GET     /{id}                                   Tasks.index
 
+GET     /members/{action}                      Members.{action}  
 GET     /members/{username}                     Members.showByUsername
 
 # Authentication

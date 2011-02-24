@@ -6,6 +6,7 @@ import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.db.jpa.Model;
+import utils.MD5Util;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -27,13 +28,11 @@ public class Member extends Model {
     @Required
     public String password;
 
-    public Long sortOrder;
+    public Integer sortOrder;
 
     @Required
     @Email
     public String email;
-
-    public String avatarFilename;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @OrderBy("sortOrder DESC")
@@ -80,6 +79,20 @@ public class Member extends Model {
         }
 
         return false;
+    }
+
+    public String getGravatarUrl() {
+        return getGravatarUrl(50);
+    }
+
+    public String getGravatarUrl(int size) {
+        if (email == null) {
+            return "http://www.gravatar.com/avatar/?s=" + size;
+        }
+        else {
+            String hash = MD5Util.md5Hex(email);
+            return "http://www.gravatar.com/avatar/" + hash + "?s=" + size;
+        }
     }
 
 //    public static Member connect(String username, String password) {

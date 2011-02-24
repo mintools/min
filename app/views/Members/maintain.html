@@ -1,13 +1,79 @@
 #{extends 'main.html' /}
 
 #{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" href="@{'/public/js/colorPicker/css/colorpicker.css'}" />
+<style type="text/css">
+    ul {
+        list-style: none;
+    }
 
+    li {
+        padding: 5px;
+        margin: 5px;
+        -webkit-border-radius: 5px;
+        background-color: #eff3f7;
+        color: gray;
+    }
+
+    #pageContainer {
+        overflow: hidden;
+    }
+
+    #membersContainer {
+        float: left;
+        width: 30%;
+        background-color: white;
+        padding: 10px;
+        margin: 5px;
+        margin-left: 40px;
+        -webkit-border-radius: 5px;
+        border: 1px solid #cccccc;
+    }
+
+    .member {
+        margin-left: 0;
+    }
+
+    .handle {
+        width: 15px;
+        height: 15px;
+        float:left;
+        margin-right: 10px;
+        background-image: url("/public/images/drag-icon.gif");
+        cursor: move;
+    }
+
+</style>
 #{/set}
 
 #{set 'moreScripts'}
-
+<script type="text/javascript">
+    $(function() {
+        $('.members').sortable({
+            items : ".member",
+            handle : $(".handle"),
+            placeholder : 'placeholder',
+            update : function(event, ui) {
+                $.post("/members/sort", $(this).sortable('serialize'));
+            }
+        });
+    });
+</script>
 #{/set}
 
 <div id="pageContainer">
-    <h1>Maintain Members</h1>
+    <h1>Members <a href="@{Members.create()}">(add new member)</a></h1>
+    <div id="membersContainer">
+        <ul class="members">
+            #{list members, as: "member"}
+                <li class="member" id="members-${member.id}"><div class="handle"></div>
+                    <img src="${member.getGravatarUrl(20)}" alt="${member.username}"/>
+                    ${member.username}
+                    <div style="float:right;">
+                        <a href="@{Members.edit(member.id)}">Edit</a>
+                    </div>
+                </li>
+            #{/list}
+        </ul>
+    </div>
 </div>
