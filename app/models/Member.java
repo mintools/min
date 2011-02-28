@@ -34,6 +34,8 @@ public class Member extends Model {
     @Email
     public String email;
 
+    public String avatarFilename;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @OrderBy("sortOrder DESC")
     public List<Task> raisedTasks;

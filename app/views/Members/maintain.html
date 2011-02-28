@@ -67,7 +67,6 @@
         <ul class="members">
             #{list members, as: "member"}
                 <li class="member" id="members-${member.id}"><div class="handle"></div>
-                    <img src="${member.getGravatarUrl(20)}" alt="${member.username}"/>
                     ${member.username}
                     <div style="float:right;">
                         <a href="@{Members.edit(member.id)}">Edit</a>

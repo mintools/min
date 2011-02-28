@@ -75,7 +75,7 @@ public class Maintain extends Controller {
 
         DB.execute("INSERT INTO MinRevisionEntity (id, timestamp, username) values (1, " + time + " , \"InitialImport\")");
 
-        DB.execute("INSERT INTO Member_AUD (id,password,username,email,REV, REVTYPE) SELECT id,password,username,email,1,0 FROM Member");
+        DB.execute("INSERT INTO Member_AUD (id,password,username,avatarFilename,email,REV, REVTYPE) SELECT id,password,username,avatarFilename,email,1,0 FROM Member");
 
         DB.execute("INSERT INTO TagGroup_AUD (id,name,sortOrder,mutex,defaultTag_id,REV, REVTYPE) SELECT id,name,sortOrder,mutex,defaultTag_id,1,0 FROM TagGroup");
         DB.execute("INSERT INTO Tag_AUD (id,name,group_id,sortOrder,REV, REVTYPE) SELECT id,name,group_id,sortOrder,1,0 FROM Tag");
