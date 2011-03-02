@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <!--link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}"-->#{get 'moreStyles' /}
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
+        <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/smoothness/jquery-ui-1.8.7.custom.css'}" media="screen"/>
+        <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/jquery.ui.autocomplete.custom.css'}" />
+        <link rel="stylesheet" type="text/css" href="@{'/public/css/tasks.css'}" media='screen'/>
+        <link rel="stylesheet" type="text/css" href="@{'/public/css/requirements.css'}" media='screen'/>
+        <script type="text/javascript" src="@{'/public/js/jquery/jquery-1.4.4.min.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery-ui/jquery-ui-1.8.7.custom.min.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.tools.min.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.form.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/tags.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/dialog.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.filestyle.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.tabSlideOut.v1.3.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.scrollTo-min.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/jquery.MultiFile.js'}">
+        </script>
+        <script type="text/javascript" src="@{'/public/js/requirements.js'}">
+        </script>
+
+        <script type="text/javascript">
+            $(function() {
+                $("#userSelector").change(function() {
+                    var username = $(this).attr("value");
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@{Security.switchUser()}',
+                        data: {'username':username},
+                        success: function(data) {
+                            // do nothing
+                        }
+                    });
+                });
+            });
+        </script>
+        #{get 'moreScripts' /}
+    </head>
+    <body class="main">
+        <div class="header right">
+            <div class="actions">
+				<a href="@{Tasks.trash()}">See Trashed Tasks</a>
+                <a href="@{Tags.index()}">Maintain Tags</a>
+                <a href="@{Members.maintain()}">Maintain Members</a>
+                #{get 'headerActions' /}
+            </div>
+			<div class="loggedInAs right">
+                #{if controllers.Security.connected()}
+                    Logged in as #{select 'username', id:'userSelector', items: models.Member.getMembers(), valueProperty:'username', value: controllers.Security.connected(), labelProperty:'username'}
+                                #{/select}
+                               
+					(<a href="/logout">Log out</a>)
+                #{/if}
+            </div>
+        </div>
+        <div class="header left">
+            <h1 class="logo"><a href="@{Tasks.index()}">Min Task Manager</a></h1>
+        </div>
+        <div class="clear">
+        </div>
+        #{doLayout /}
+        <div id="dialog">
+        </div>
+    </body>
+</html>
