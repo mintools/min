@@ -76,7 +76,6 @@
                 { requirementId: topLevelRequirementId ,linkedRequirementId: linkedRequirementId,stepLabel:stepLabel},
                 function(data) {
                     if (data.result.okay) {
-                        alert("BLAH");
                         $('#primaryPath-container').load('@{Requirements.ajaxFetchPrimaryPath()}', {requirementId:topLevelRequirementId});
                     }
                 });
@@ -143,7 +142,6 @@
                         $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
                         flushAutoCompleteCaches();
                     } else {
-
                         unlinkOrDeleteDialog(data.result.message, data.result.fragment, data.result.showUnlinkBtn,
                                 function() {
                                     $.getJSON('@{Requirements.ajaxUnlinkPrimaryStep()}', {

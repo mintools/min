@@ -154,11 +154,20 @@ public class Requirement extends Model implements Comparable {
      * delete the requirement and all steps pointing to it
      */
     public void deepDelete() {
-        List<Step> steps = Step.find("byRequirement", this).fetch();
-        for (Iterator<Step> iterator = steps.iterator(); iterator.hasNext();) {
+        List<Step> incomingSteps = Step.find("byRequirement", this).fetch();
+        for (Iterator<Step> iterator = incomingSteps.iterator(); iterator.hasNext();) {
             Step step = iterator.next();
             step.delete();
             // todo: what to do about orphaned requirements that this step was extended by
+//            step.requirement.deepDelete();
+        }
+
+        List<Step> outgoingSteps = Step.find("byParent", this).fetch();
+        for (Iterator<Step> iterator = outgoingSteps.iterator(); iterator.hasNext();) {
+            Step step = iterator.next();
+            step.delete();
+            // todo: what to do about orphaned requirements that this step was extended by
+//            step.requirement.deepDelete();
         }
 
         this.delete();

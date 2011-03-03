@@ -70,7 +70,8 @@ public class Requirements extends Controller {
     public static void ajaxRemovePrimaryStep(Long id) throws Exception {
         Step stepToDelete = Step.findById(id);
 
-        Requirement requirement = stepToDelete.parent;
+        Requirement parent = stepToDelete.parent;
+        Requirement requirement = stepToDelete.requirement;
 
         if (stepToDelete != null && requirement != null) {
 
@@ -80,8 +81,9 @@ public class Requirements extends Controller {
                 boolean hasReferences = stepToDelete.requirementReferencesCheck();
 
                 if (!hasChildren && !hasReferences) {
-                    requirement.removeStep(stepToDelete, true);
-                    requirement.save();
+
+                    parent.removeStep(stepToDelete, true);
+                    parent.save();
                     renderJSON("{ \"result\":{\"okay\": true} }");
                 } else {
 
@@ -92,7 +94,7 @@ public class Requirements extends Controller {
                         message = "WARNING: This requirement has both child requirements and is referenced by other parent requirements.";
 
                         Template template = TemplateLoader.load(template("Requirements/_requirementsList.html"));
-                        Set<Requirement> requirements = stepToDelete.requirement.allOtherParentRequirements(requirement);
+                        Set<Requirement> requirements = stepToDelete.requirement.allOtherParentRequirements(parent);
 
                         Map params = new HashMap();
                         params.put("requirements", requirements);
