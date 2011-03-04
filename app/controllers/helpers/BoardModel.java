@@ -8,8 +8,12 @@ import models.TagGroup;
 import models.Task;
 import models.WorkingOn;
 
+/**
+ * A utility class that helps model the Task Board.
+ * 
+ * @author Dan
+ */
 public class BoardModel {
-	
 	public TagGroup tagGroup;
 	public List<BoardChannel> channels = new ArrayList<BoardChannel>();
 }

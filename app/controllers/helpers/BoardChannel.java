@@ -6,8 +6,12 @@ import java.util.List;
 import models.Tag;
 import models.Task;
 
-public class BoardChannel {
-	
+/**
+ * A utility class that helps with the Task Board. 
+ * 
+ * @author Dan
+ */
+public class BoardChannel {	
 	public Tag tag;
 	public List<Task> tasks = new ArrayList<Task>();
 }

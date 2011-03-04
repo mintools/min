@@ -18,6 +18,11 @@ import controllers.utils.TaskIndex;
 @With(Secure.class)
 public class Board extends BaseController {
 
+	/**
+	 * Main entry point for the Task Board.
+	 * 
+	 * @throws Exception
+	 */
 	public static void index() throws Exception {
 		List<TagGroup> tagGroups = TagGroup.getAllMutuallyExclusive();
 
@@ -40,14 +45,33 @@ public class Board extends BaseController {
 			throw new Exception("There are no mutually exclusive Tag Groups!");
 		}
 	}
-	
-    public static void updateBoard(Long taskId, Long toTagId, Long[] toSortOrder, Long fromTagId, Long[] fromSortOrder) throws Exception {
-    	updateBoardForTag(taskId, toTagId, toSortOrder);
-    	updateBoardForTag(taskId, fromTagId, fromSortOrder);
-    }
 
+	/**
+	 * Allows us to group essentially two calls to updateBoardForTag(). Task is
+	 * dragged 'from' a channel 'to' another.
+	 * 
+	 * @param taskId
+	 * @param toTagId
+	 * @param toSortOrder
+	 * @param fromTagId
+	 * @param fromSortOrder
+	 * @throws Exception
+	 */
+	public static void updateBoard(Long taskId, Long toTagId, Long[] toSortOrder, Long fromTagId, Long[] fromSortOrder) throws Exception {
+		updateBoardForTag(taskId, toTagId, toSortOrder);
+		updateBoardForTag(taskId, fromTagId, fromSortOrder);
+	}
+
+	/**
+	 * A task (taskId) is drop to a channel (representing a tagId), and the
+	 * order of the channel is specified by order.
+	 * 
+	 * @param taskId
+	 * @param tagId
+	 * @param order
+	 * @throws Exception
+	 */
 	public static void updateBoardForTag(Long taskId, Long tagId, Long[] order) throws Exception {
-	
 		Task task = Task.findById(taskId);
 		Tag tag = Tag.findById(tagId);
 
@@ -62,15 +86,18 @@ public class Board extends BaseController {
 		task.setTags(tagIds);
 		task.save();
 		TaskIndex.addTaskToIndex(task);
-				
+
 		// Then sort.
 		if (order != null && order.length > 0) {
 			Tasks.sort(order);
-		}	
+		}
 	}
 
+	/**
+	 * @param id
+	 * @throws Exception
+	 */
 	public static void showBoardforTagGroup(Long id) throws Exception {
-		System.out.println("Board id " + id);
 		List<TagGroup> tagGroups = TagGroup.getAllMutuallyExclusive();
 		TagGroup tagGroup = TagGroup.findById(id);
 		session.put("boardTagGroupId", tagGroup.id);
@@ -85,11 +112,11 @@ public class Board extends BaseController {
 		BoardModel boardModel = createBoardModel(tagGroup);
 		render("Board/index.html", boardModel, tagGroups);
 	}
-	
-	public static void refresh() throws Exception {		
+
+	public static void refresh() throws Exception {
 		TagGroup tagGroup = TagGroup.findById(NumberUtils.toLong(session.get("boardTagGroupId")));
 		BoardModel boardModel = createBoardModel(tagGroup);
-		render("Board/_board.html", boardModel);		
+		render("Board/_board.html", boardModel);
 	}
 
 	/**
