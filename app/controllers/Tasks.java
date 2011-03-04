@@ -36,7 +36,7 @@ public class Tasks extends BaseController {
         flash.clear();
 
         List<Task> tasks = new ArrayList<Task>();
-
+        
         if (id != null) {
             tasks.add(Task.<Task>findById(id));
         }
@@ -211,7 +211,7 @@ public class Tasks extends BaseController {
 
         ArrayList<Long> ordering = new ArrayList<Long>();
         for (Task task : tasks) {
-            ordering.add(task.sortOrder);
+            ordering.add(task.sortOrder);            
         }
 
         // assign ordering

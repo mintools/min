@@ -138,7 +138,12 @@ public class TaskIndex {
 
     // todo: add "workingOn" to filter
     public static List<Task> filterTasks(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
-        CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
+        
+    	
+    	
+    	
+    	
+    	CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
 
         CriteriaQuery<Task> query = builder.createQuery(Task.class);
 

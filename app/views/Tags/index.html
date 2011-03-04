@@ -121,6 +121,22 @@
                 }
             });
         });
+        
+        $(".visibleOnBoardCheckbox").change(function(e) {
+            var groupId = $(this).attr("value");
+            var visibleOnBoard = $(this).attr("checked");
+
+            $.ajax({
+                type: 'POST',
+                url: '@{Tags.changeVisibleOnBoard()}',
+                data: {'visibleOnBoard':visibleOnBoard,'groupId':groupId},
+                success: function(data) {
+                    location.reload();
+                }
+            });
+        });
+        
+        
 
         $(".defaultSelector").change(function(e) {
             var groupId = $(this).attr("name");
@@ -153,6 +169,32 @@
                 $.post("/tags/sortGroup", $(this).sortable('serialize'));
             }
         });
+        
+        
+        
+        
+        $("#avatar-form").dialog({
+            autoOpen: false,
+            height: 220,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Upload": function() {
+                    $("#avatar-form > form").submit();                   
+                },
+                Cancel: function() {
+                    $(this).dialog( "close" );
+                }
+            },
+            close: function() {                
+            }
+        });
+
+        $(".addAvatar").click(function() {            
+            $("#avatar-form-tagId").val($(this).attr("meta"));
+            $("#avatar-form").dialog( "open" );
+        });
+        
     });
 </script>
 #{/set}
@@ -165,17 +207,42 @@
             #{list models.TagGroup.getAll(), as: "tagGroup"}
                <li class="tagGroup grouped" id="tagGroups-${tagGroup.id}">
                    <div class="handle"></div>
+                   
                    <div style="float:right;"><input class="mutexCheckbox" type="checkbox" name="mutex" value="${tagGroup.id}" #{if tagGroup.mutex}checked#{/if}/> Mutually exclusive tags</div>
+                   <div style="float:right;">
+                        <input class="visibleOnBoardCheckbox" type="checkbox" name="visibleOnBoard" value="${tagGroup.id}" #{if tagGroup.visibleOnBoard}checked#{/if}/>
+                        Show on Task Board
+                   </div>
+                   
+                   
                    <div class="name">${tagGroup.name}</div>
                    <div style="text-align: right;">Default</div>
                    <ul class="tags">
                         #{list tagGroup.tags, as: "tag"}
                             <li class="tag" id="tags-${tag.id}"><div class="handle"></div>${tag.name}
                                 <div style="float:right;">
-                                    <input class="colorSelector" size="6" type="text" value="${tag.color}" data-tagId="${tag.id}" style="background-color: #${tag.color?tag.color:'FFFFFF'};"/>
-                                   #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}
-                                   #{/select}<a onclick="return confirm('Are you sure you want to delete this tag?');" href="@{Tags.delete(tag.id)}">delete</a>
-                                    <input type="radio" class="defaultSelector" name="${tagGroup.id}" value="${tag.id}" #{if tagGroup.defaultTag?.equals(tag)}checked#{/if}/>
+                                   
+                                   <input class="colorSelector" size="6" type="text" value="${tag.color}" data-tagId="${tag.id}" style="background-color: #${tag.color?tag.color:'FFFFFF'};"/>
+                                   
+                                   #{select tag.id, items: models.TagGroup.findAll(), valueProperty:'id', value: tag.group?.id, labelProperty:'title', class: 'groupSelector'}                                                                     
+                                   #{/select}
+                                   
+                                   <button onclick="if(confirm('Are you sure you want to delete this tag?')) { window.location='@{Tags.delete(tag.id)}'; }" value="Delete">Delete Tag</button>                                                                        
+                                    
+                                    
+                                    <!--  
+                                        Avatar control. Dan: This needs a redesign along with the rest of this bit.                                   
+                                    -->
+                                    <div style="display:inline-block;width:122px;">
+                                        #{if tag.avatar.exists()}
+                                            <button onclick="window.location='@{Tags.removeAvatar(tag.id)}'">Remove Avatar</button>                                    
+                                            <img src="@{Tags.getAvatar(tag.id)}"  height="20px" width="20px" style="float:right;"/>                                            
+                                        #{/if}
+                                        #{else}                                    
+                                            <input class="addAvatar" type="button" value="Add Avatar" meta="${tag.id}">
+                                        #{/else}
+                                    </div>                                                                                                                                                                   
+                                    <input type="radio" class="defaultSelector" name="${tagGroup.id}" value="${tag.id}" #{if tagGroup.defaultTag?.equals(tag)}checked#{/if}/>                                    
                                 </div>
                             </li>
                         #{/list}
@@ -185,3 +252,17 @@
         </ul>
     </div>
 </div>
+
+
+
+<div id="avatar-form" title="Add a Tag Avatar">
+    <p>No effort has been put into the design of this form.</p>
+    
+    #{form @Tags.addAvatar(), enctype:'multipart/form-data'}
+        <input type="file" name="avatar" />
+        <input id="avatar-form-tagId" type="hidden" name="id" value=""/>
+    #{/form}
+</div>
+
+
+

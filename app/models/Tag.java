@@ -20,6 +20,8 @@ public class Tag extends Model implements Comparable<Tag> {
     public Integer sortOrder;
 
     public String color;
+    
+    public Blob avatar;  
 
     public String toString() {
         return name;

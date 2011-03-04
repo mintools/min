@@ -26,6 +26,8 @@ public class TagGroup extends Model {
     public String name;
 
     public Boolean mutex;
+    
+    public Boolean visibleOnBoard;
 
     @OneToOne(optional = true)
     public Tag defaultTag;
@@ -62,6 +64,10 @@ public class TagGroup extends Model {
 
     public static List<TagGroup> getAll() {
         return TagGroup.find("order by sortOrder desc").fetch();
+    }
+    
+    public static List<TagGroup> getAllMutuallyExclusive() {
+        return TagGroup.find("from TagGroup group where group.mutex = true order by sortOrder desc").fetch();
     }
 
     public static List<Tag> getDefaultTags() {
