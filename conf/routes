@@ -11,6 +11,9 @@ GET     /{id}                                   Tasks.index
 GET     /members/{action}                      Members.{action}  
 GET     /members/{username}                     Members.showByUsername
 
+GET     /requirements/{action}                  Requirements.{action}
+GET     /requirements/show/{id}                 Requirements.show
+
 # Authentication
 GET     /login                                  Secure.login
 GET     /logout                                 Secure.logout

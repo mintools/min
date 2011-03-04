@@ -1,0 +1,289 @@
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    $("#extensionPathSortable").sortable({update : function(element, ui) {
+
+      var serializedOrder = $("#extensionPathSortable").sortable('serialize');
+
+      $.getJSON('@{Requirements.ajaxUpdateExtensionPathDisplayOrder()}' + "?" + serializedOrder,
+      {requirementId : topLevelRequirementId},
+              function(data) {
+                if (!data.result.okay) {
+                  alert('Could not update the order the list of Extensions. Please refresh the page and try again.');
+                } else {
+                  $('#extensions').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                }
+              });
+    }});
+  });
+
+
+  function addNewExtensionStep(extensionId) {
+    var extNewStepAddId = '#ext-new-step' + extensionId + '-add';
+    $(extNewStepAddId).show();
+    var extNewStepInputId = '#ext-new-step' + extensionId + '-input';
+    $(extNewStepInputId).focus();
+  }
+
+
+  function saveNewExtensionStep(extensionId) {
+
+    var extStepInputId = '#ext-new-step' + extensionId + '-input';
+    var extStepContainerId = '#ext-steps' + extensionId + '-container';
+
+    var labelValue = $(extStepInputId).val();
+
+    $.getJSON('@{Requirements.ajaxAddExtensionStep()}',
+    { id: extensionId , label: labelValue},
+            function(data) {
+              if (data.result.okay) {
+                $(extStepContainerId).html(data.result.fragment);
+                $(extStepInputId).val('');
+                $(extStepInputId).focus();
+              }
+            });
+    return false;
+  }
+
+
+  function editExtensionLabel(extensionId) {
+    var viewId = '#ext' + extensionId + '-view';
+    var editId = '#ext' + extensionId + '-edit';
+    var labelId = '#ext' + extensionId + '-label';
+    var inputId = '#ext' + extensionId + '-input';
+
+    var labelVal = $(labelId).html();
+    $(inputId).val($.trim(labelVal));
+    $(viewId).hide();
+    $(editId).show();
+
+  }
+
+  function saveExtensionLabel(extensionId) {
+    var viewId = '#ext' + extensionId + '-view';
+    var editId = '#ext' + extensionId + '-edit';
+    var labelId = '#ext' + extensionId + '-label';
+    var inputId = '#ext' + extensionId + '-input';
+    var newLabelVal = $(inputId).val();
+
+    $.getJSON('@{Requirements.ajaxUpdateExtensionLabel()}',
+    { id: extensionId , label:newLabelVal},
+            function(data) {
+              if (data.result.okay) {
+                $(labelId).html(newLabelVal);
+                $(viewId).show();
+                $(editId).hide();
+                flushAutoCompleteCaches();
+              }
+            });
+  }
+
+  function cancelExtensionLabelEdit(extensionId) {
+    var viewId = '#ext' + extensionId + '-view';
+    var editId = '#ext' + extensionId + '-edit';
+    var labelId = '#ext' + extensionId + '-label';
+    var inputId = '#ext' + extensionId + '-input';
+    var labelVal = $(labelId).html();
+    $(inputId).val($.trim(labelVal));
+    $(viewId).show();
+    $(editId).hide();
+  }
+
+
+  function editExtensionStepLabel(extensionStepId) {
+    var viewId = '#ext-step' + extensionStepId + '-view';
+    var editId = '#ext-step' + extensionStepId + '-edit';
+    var labelId = '#ext-step' + extensionStepId + '-label';
+    var inputId = '#ext-step' + extensionStepId + '-input';
+
+    var labelVal = $(labelId).html();
+    $(inputId).val($.trim(labelVal));
+    $(viewId).hide();
+    $(editId).show();
+    $(editId).find(".toggle").css("display","block");
+    $(editId).parent().css("border-color","#A6C9E2");
+
+  }
+
+
+  function saveExtensionStepLabel(extensionStepId) {
+    var viewId = '#ext-step' + extensionStepId + '-view';
+    var editId = '#ext-step' + extensionStepId + '-edit';
+    var labelId = '#ext-step' + extensionStepId + '-label';
+    var inputId = '#ext-step' + extensionStepId + '-input';
+    var newLabelVal = $(inputId).val();
+
+    $.getJSON('@{Requirements.ajaxUpdateExtensionStepLabel()}',
+    { id: extensionStepId , label:newLabelVal},
+            function(data) {
+              if (data.result.okay) {
+                $(labelId).html(newLabelVal);
+                $(viewId).show();
+                $(editId).hide();
+                flushAutoCompleteCaches();
+              }
+            });
+  }
+
+  function cancelExtensionStepLabelEdit(extensionStepId) {
+    var viewId = '#ext-step' + extensionStepId + '-view';
+    var editId = '#ext-step' + extensionStepId + '-edit';
+    var labelId = '#ext-step' + extensionStepId + '-label';
+    var inputId = '#ext-step' + extensionStepId + '-input';
+    var labelVal = $(labelId).html();
+    $(inputId).val($.trim(labelVal));
+    $(viewId).show();
+    $(editId).hide();
+    $(editId).parent().attr("style","");
+  }
+
+
+  function deleteExtensionStep(extensionId, extensionStepId) {
+
+    var extStepContainerId = '#ext-steps' + extensionId + '-container';
+
+    $.getJSON('@{Requirements.ajaxDeleteExtensionStep()}',
+    { id: extensionId , extsId: extensionStepId},
+            function(data) {
+              if (data.result.okay) {
+                $(extStepContainerId).html(data.result.fragment);
+              }
+            });
+    return false;
+  }
+
+
+  function deleteExtension(extensionId) {
+    $.getJSON('@{Requirements.ajaxDeleteExtension()}',
+    { id: extensionId},
+            function(data) {
+              if (data.result.okay) {
+                $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+              } else {
+                alert(data.result.message);
+              }
+            });
+  }
+
+  $(document).ready(function() {
+    $("#extensionPath").sortable({handle: 'span.extensionPathMover', update : function(element, ui) {
+      var serializedOrder = $("#extensionPath").sortable('serialize');
+      $.getJSON('@{Requirements.ajaxUpdateExtensionPathDisplayOrder()}?' + serializedOrder,
+      {requirementId : topLevelRequirementId},
+              function(data) {
+                if (!data.result.okay) {
+                  alert('Could not update the order the list of Extensions. Please refresh the page and try again.');
+                }
+              });
+    }});
+  });
+
+  function ext_addLinkStep(extId, itemId) {
+    $.getJSON('@{Requirements.ajaxAddLinkedStepToExtension()}',
+    { id: extId , requirementId: itemId},
+            function(data) {
+              if (data.result.okay) {
+                $('#ext' + extId + '-steps').html(data.result.fragment);
+              }
+            });
+  }
+
+</script>   
+
+<ul id="extensionPathSortable" class="ui-helper-clearfix extension-list sortable">
+
+    #{if !extensions.isEmpty()}
+    #{list extensions, as: "extension"}
+    <li id="ext_${extension.id}">
+
+        <div class="ui-widget">
+            <div class="ui-widget-header ui-corner-top">
+
+                <div class="extension-header-panel">
+
+                    <div id="ext${extension.id}-view" class="extension-label-panel">
+
+                        <div class="number">
+
+                            #{if extension.allSteps}*#{/if}
+                            #{elseif extension.extendedSteps.isEmpty()}Orphaned#{/elseif}
+                            #{else}
+                            (
+                            #{list extension.extendedSteps, as:"step"}
+                            ${step.sortOrder+1}
+                            #{if !step_isLast},#{/if}
+                            #{/list}
+                            )
+                            #{/else}
+                        </div>
+
+                        <a href="@{Requirements.show(extension.id)}">
+                        <div id="ext${extension.id}-label" class="label">${extension.label}
+                        </div>
+                        </a>    
+
+                        <div class="controls">
+                      <span class="toggle icon-button-group">
+                        <span class="icon-button">
+                          <a class="ui-icon ui-icon-trash" href="#" onclick="deleteExtension(${extension.id});
+                          return false;">&nbsp;</a>
+                        </span>
+                        <span class="icon-button">
+                          <a class="ui-icon ui-icon-pencil" href="#" onclick="editExtensionLabel('${extension.id}');
+                          return false;">&nbsp;</a>
+                        </span>
+                      </span>
+                        </div>
+
+                    </div>
+
+                    <div id="ext${extension.id}-edit" class="extension-edit-panel" style="display:none;">
+
+                        <div class="number">
+                          #{if extension.allSteps}*#{/if}
+                          #{elseif extension.extendedSteps.isEmpty()}Orphaned#{/elseif}
+                          #{else}
+                            (
+                            #{list extension.extendedSteps, as:"step"}
+                            ${step.sortOrder+1}
+                            #{if !step_isLast},#{/if}
+                            #{/list}
+                            )
+                            #{/else}
+                        </div>
+
+                        <div class="input">
+                          <input class="tb" id="ext${extension.id}-input" type="text" value="${extension.label}" onkeyup="bindReturn($(this), $('#ext${extension.id}-save'), event)"/>
+                        </div>
+
+                        <div class="controls">
+
+                          <span class="toggle icon-button-group">
+                            <span class="icon-button">
+                              <a class="ui-icon ui-icon-disk" href="#" id="ext-${extension.id}-save" onclick="saveExtensionLabel(${extension.id});
+                              return false;
+                              return false;">&nbsp;</a>
+                            </span>
+                            <span class="icon-button">
+                              <a class="ui-icon ui-icon-close" href="#" onclick="cancelExtensionLabelEdit(${extension.id});
+                              return false;">&nbsp;</a>
+                            </span>
+
+                          </span>
+
+                        </div>
+
+                      </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </li>
+
+    #{/list}
+    #{/if}
+</ul>

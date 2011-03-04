@@ -1,0 +1,383 @@
+#{extends "requirements.html"/}
+
+<style type="text/css">
+    .navigation {
+        text-align: left;
+        margin: 20px 0;
+    }
+    .requirement {
+    }
+
+    .requirement .label {
+        font-size: 16pt;
+        color: red;
+    }
+
+    .requirement .steps {
+        border: 1px gray solid;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    .requirement .extensions .extension {
+        border: 1px gray solid;
+        padding: 10px;
+        margin: 10px;
+    }
+
+    #delete-warning-requirement-list {
+        margin-top: 1em;
+    }
+
+    #delete-warning-requirement-list li {
+        list-style-type: disc;
+        padding-left: 1em;
+        list-style-position: inside;
+    }
+
+</style>
+
+
+<script type="text/javascript">
+
+    var topLevelRequirementId = '${requirement.id}';
+
+    function flushAutoCompleteCaches() {
+        $("#stepLabel").flushCache();
+    }
+
+    function formatItem(item) {
+        return item.label;
+    }
+
+    function parseData(data) {
+        var pdata = eval("(" + data + ")");
+        var parsed = [];
+        for (var i = 0; i < pdata.results.length; i++) {
+
+            parsed[parsed.length] = {
+                data: pdata.results[i],
+                value: pdata.results[i].label,
+                result: pdata.results[i].label
+            };
+        }
+        return parsed;
+    }
+
+    function addStep(form) {
+
+        var linkedRequirementId = $('#linkedRequirementId').val();
+        var stepLabel = $('#stepLabel').val();
+
+        if (linkedRequirementId == '' && stepLabel == '') {
+            alert("You must enter a new requirement or link to an existing one.");
+        } else {
+            $.getJSON('@{Requirements.ajaxAddPrimaryStep()}',
+                { requirementId: topLevelRequirementId ,linkedRequirementId: linkedRequirementId,stepLabel:stepLabel},
+                function(data) {
+                    if (data.result.okay) {
+                        $('#primaryPath-container').load('@{Requirements.ajaxFetchPrimaryPath()}', {requirementId:topLevelRequirementId});
+                    }
+                });
+
+            $('#stepLabel').val("");
+            $('#linkedRequirementId').val("");
+        }
+
+        return false;
+    }
+
+    function addExtension() {
+
+        var extensionLabel = $('#extensionLabel').val();
+
+        if (extensionLabel == '') {
+            alert("You must enter a name for the new extension");
+        } else {
+            $.getJSON('@{Requirements.ajaxAddExtension()}?' + $('input[name=\'pps\']').serialize(),
+            { requirementId: topLevelRequirementId ,extensionLabel:extensionLabel},
+                    function(data) {
+                        if (data.result.okay) {
+
+                            $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                        }
+                    });
+
+            $('#extensionLabel').val("");
+        }
+        return false;
+    }
+
+    function editTopLevelRequirementName() {
+        var labelVal = $('#requirement-label').text();
+        $('#requirement-label-input').val(labelVal);
+        $('#requirement-label-view-panel').hide();
+        $('#requirement-label-edit-panel').show();
+    }
+
+    function saveTopLevelRequirementNameEdit() {
+
+        var newLabelVal = $('#requirement-label-input').val();
+
+        $.getJSON('@{Requirements.ajaxUpdateLabel()}',
+        { id: topLevelRequirementId , label:newLabelVal},
+                function(data) {
+                    if (data.result.okay) {
+                        $('#requirement-label').html(newLabelVal);
+                        $('#requirement-label-view-panel').show();
+                        $('#requirement-label-edit-panel').hide();
+                        flushAutoCompleteCaches();
+                    }
+                }
+                );
+    }
+
+    function deleteStep(stepId) {
+
+        $.getJSON('@{Requirements.ajaxRemovePrimaryStep()}',
+        { id: stepId, requirementId: topLevelRequirementId},
+                function(data) {
+                    if (data.result.okay) {
+                        $('#primaryPath-container').load('@{Requirements.ajaxFetchPrimaryPath()}', {requirementId:topLevelRequirementId});
+                        $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                        flushAutoCompleteCaches();
+                    } else {
+                        unlinkOrDeleteDialog(data.result.message, data.result.fragment, data.result.showUnlinkBtn,
+                                function() {
+                                    $.getJSON('@{Requirements.ajaxUnlinkPrimaryStep()}', {
+                                        id: stepId, requirementId: topLevelRequirementId},
+                                            function(data) {
+                                                if (data.result.okay) {
+                                                    $('#primaryPath-container').load('@{Requirements.ajaxFetchPrimaryPath()}', {requirementId:topLevelRequirementId});
+                                                    $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                                                } else {
+                                                    alert(data.result.message);
+                                                }
+                                            }
+                                            );
+                                },
+                                function() {
+                                    $.getJSON('@{Requirements.ajaxDeepDeletePrimaryStep()}', {
+                                        id: stepId, requirementId: topLevelRequirementId},
+                                            function(data) {
+                                                if (data.result.okay) {
+                                                    $('#primaryPath-container').load('@{Requirements.ajaxFetchPrimaryPath()}', {requirementId:topLevelRequirementId});
+                                                    $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                                                } else {
+                                                    alert(data.result.message);
+                                                }
+                                            }
+                                            );
+                                });
+                    }
+                }
+                );
+    }
+
+    function editStepLabel(stepId) {
+        var viewId = '#req' + stepId + '-view';
+        var editId = '#req' + stepId + '-edit';
+        var labelId = '#req' + stepId + '-label';
+        var inputId = '#req' + stepId + '-input';
+        var labelVal = $(labelId).text();
+        $(inputId).val($.trim(labelVal));
+        $(viewId).hide();
+        $(editId).show();
+        $(editId).find(".toggle").css("display", "block");
+        $(editId).parent().css("border-color", "#A6C9E2");
+
+    }
+
+    function cancelStepLabelEdit(requirementId, stepId) {
+        var viewId = '#req' + stepId + '-view';
+        var editId = '#req' + stepId + '-edit';
+        $(editId).parent().attr("style", "");
+        $(viewId).show();
+        $(editId).hide();
+    }
+
+    function saveStepLabelEdit(requirementId, stepId) {
+        var viewId = '#req' + stepId + '-view';
+        var editId = '#req' + stepId + '-edit';
+        var labelId = '#req' + stepId + '-label';
+        var inputId = '#req' + stepId + '-input';
+        var newLabelVal = $.trim($(inputId).val());
+
+        $.getJSON('@{Requirements.ajaxUpdateLabel()}',
+        { id: requirementId , label:newLabelVal},
+                function(data) {
+                    if (data.result.okay) {
+                        $(labelId).html(newLabelVal);
+                        $(viewId).show();
+                        $(editId).hide();
+                        flushAutoCompleteCaches();
+                    }
+                });
+    }
+
+    function toggleExtensionSteps(extId) {
+        $('#ext' + extId + '-body').toggle();
+    }
+
+
+    function showCombineStepsDialog() {
+
+        $("#combine-dialog").dialog("open");
+
+    }
+
+    function showAddExtensionDialog() {
+
+        $("#add-extension-dialog").dialog("open");
+
+    }
+
+    $(document).ready(function() {
+
+    //    $("#stepLabel").autocomplete('@{Requirements.ajaxSearchJSON()}', {
+    //        minChars: 3,
+    //        max: 12,
+    //        autoFill: false,
+    //        mustMatch: false,
+    //        matchContains: false,
+    //        scrollHeight: 220,
+    //        parse:parseData,
+    //        formatItem:formatItem
+    //
+    //
+    //    }).result(function(event, item) {
+    //        $('#linkedRequirementId').val(item.id);
+    //
+    //    });
+
+
+        $('#stepLabel').keypress(function(e) {
+            if (e.which != 13) {
+                $('#linkedRequirementId').val("");
+            }
+        });
+
+        $("#message-dialog").dialog({
+            bgiframe: true,
+            autoOpen: false,
+            height: 250,
+            width: 600,
+            modal: true
+        });
+
+        $("#combine-dialog").dialog({
+            bgiframe: true,
+            autoOpen: false,
+            height: 0,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Combine": function() {
+                    var combinedStepName = $("input[name=combineDialog_stepName]").val();
+
+                    var stepIds = [];
+                    $('input[name=pps]:checked').each(function (i, val) {
+                        stepIds.push($(this).val());
+                    });
+
+
+                    $.getJSON('@{Requirements.ajaxCombine()}',
+                    {requirementId: topLevelRequirementId, newName: combinedStepName , steps:stepIds.join(",")},
+                            function(data) {
+                                if (data.result.okay) {
+                                    flushAutoCompleteCaches();
+                                    $('#primaryPath-container').load('@{Requirements.ajaxFetchPrimaryPath()}', {requirementId:topLevelRequirementId});
+                                    $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                                    $("#combine-dialog").dialog("close");
+                                }
+                            });
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $("#add-extension-dialog").dialog({
+            bgiframe: true,
+            autoOpen: false,
+            height: 0,
+            width: 400,
+            modal: true,
+            buttons: {
+                "Add": function() {
+                    addExtension();
+                    $(this).dialog("close");
+                },
+                "Cancel": function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+
+    });
+</script>
+     
+
+<div id="message-dialog" title="Attention">
+    <div class="content">This is an information message</div>
+</div>
+
+<div id="combine-dialog" title="Enter new Requirement label">
+    <div class="dialog-content">
+        <input type="text" size="20" name="combineDialog_stepName"/>
+    </div>
+</div>
+
+<div id="add-extension-dialog" title="Enter new Extension label">
+    <div class="dialog-content">
+        <input type="text" size="20" name="extensionLabel" id="extensionLabel"/>
+    </div>
+</div>
+
+
+#{if requirement.parent}
+    <div class="navigation">
+        Extends Requirement: <a href="@{Requirements.show(requirement.parent.id)}">${requirement.parent.label}</a>
+    </div>
+#{/if}
+        
+#{if stepParent}
+    <div class="navigation">
+        Back to: <a href="@{Requirements.show(stepParent.id)}">${stepParent.label}</a>
+    </div>
+#{/if}
+
+<div id="primary-path" class="ui-widget">
+    <div class="ui-widget-header ui-corner-top">
+        <div class="primary-path-header-panel">${requirement.label}</div>
+    </div>
+    <div class="ui-helper-clearfix ui-widget-content ui-corner-bottom">
+
+
+        <div id="primaryPath-container">
+            #{include "Requirements/_primaryPath.html"/}
+        </div>
+
+
+        <div id="primary-path-toolbar" class="button-panel">
+
+            <a class="ui-state-default ui-corner-all button" href="#"
+               onclick="showCombineStepsDialog();return false;"><span
+                    class="ui-icon ui-icon-seek-next"></span>Combine</a>
+
+            <a class="ui-state-default ui-corner-all button" href="#"
+               onclick="showAddExtensionDialog();return false;"><span class="ui-icon ui-icon-seek-next"></span>Add
+                Extension</a>
+
+        </div>
+
+    </div>
+</div>
+
+<div id="extensions-container">
+    #{set extensions: requirement.extensions/}
+    #{include "Requirements/_extensions.html"/}
+</div>
+

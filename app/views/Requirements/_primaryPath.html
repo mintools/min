@@ -1,0 +1,110 @@
+<ul id="primaryPathSortable" class="ui-helper-clearfix path-list sortable">
+
+  #{list requirement.steps, as: "step"}
+    <li id="linkId_${step.id}">
+
+      <div id="req${step.id}-view" class="label-panel" >
+
+        <div class="controls">
+          <span class="toggle icon-button-group">
+            <span class="icon-button">
+              <a class="ui-icon ui-icon-trash" href="#" onclick="deleteStep(${step.id});
+              return false;" title="Delete Step">&nbsp;</a>
+            </span>
+            <span class="icon-button">
+              <a class="ui-icon ui-icon-pencil" href="#" onclick="editStepLabel('${step.id}');
+              return false;" title="Edit requirement label">&nbsp;</a>
+            </span>
+          </span>
+        </div>
+
+        <div class="checkbox"><input type="checkbox" name="pps" class="tool-pathElementCheckbox" value="${step.id}"/></div>
+
+        <div class="number">${step.sortOrder + 1}/</div>
+
+        <div class="label"><a id="req${step.id}-label" href="@{Steps.show(step.id)}">${step.requirement.label}</a></div>
+
+      </div>
+
+      <div id="req${step.id}-edit" class="edit-panel" style="display:none;">
+
+        <div class="controls">
+          <span class="toggle icon-button-group">
+            <span class="icon-button">
+              <a class="ui-icon ui-icon-disk" href="#" id="req${step.id}-save" onclick="saveStepLabelEdit('${step.requirement.id}', '${step.id}');
+              return false;">&nbsp;</a>
+            </span>
+            <span class="icon-button">
+              <a class="ui-icon ui-icon-close" href="#" onclick="cancelStepLabelEdit('${step.requirement.id}', '${step.id}');
+              return false;">&nbsp;</a>
+            </span>
+
+          </span>
+        </div>
+
+        <div class="checkbox"><input type="checkbox" name="pps" class="tool-pathElementCheckbox" value="${step.id}"/></div>
+
+        <div class="number">${step.sortOrder + 1}/</div>
+
+        <div class="input">
+          <input id="req${step.id}-input" type="text" value="${step.requirement.label}" onkeyup="bindReturn($(this), $('#req${step.id}-save'), event)" class="tb"/>
+        </div>
+
+      </div>
+    </li>
+  #{/list}
+</ul>
+
+<div class="add-panel">
+
+  <div class="ui-helper-clearfix edit-panel">
+
+  <div class="controls">&nbsp;</div>
+
+  <div class="checkbox">&nbsp;</div>
+
+  <div class="number">${requirement.steps?.size() + 1}/</div>
+
+  <div class="input ">
+    <form action="" onsubmit="return addStep(this);">
+      <input type="hidden" id="linkedRequirementId" name="linkedRequirementId" value=""/>
+      <input id="stepLabel" name="stepLabel" type="text" class="tb" tabindex="1" value="Enter new step..." onfocus="this.value = ''" onblur="this.value='Enter new step...'">
+    </form>
+  </div>
+
+</div>
+
+</div>
+
+
+
+<script type="text/javascript">
+  $(function() {
+    $("#primaryPathSortable").sortable({
+
+      update : function(element, ui) {
+        var serializedOrder = $("#primaryPathSortable").sortable('serialize');
+        $.getJSON('@{Requirements.ajaxUpdatePrimaryPathOrder()}?' + serializedOrder,
+        {requirementId : topLevelRequirementId},
+                function(data) {
+                  if (!data.result.okay) {
+                    alert('Could not update the order of the Primary Path. Please refresh the page and try again.');
+                  } else {
+                    $('#primaryPath-container').html(data.result.fragment);
+                    $('#extensions-container').load('@{Requirements.ajaxFetchExtensions()}', {requirementId:topLevelRequirementId});
+                  }
+                });
+      },
+      start: function(event, ui) {
+        //ui.item.css('background-color', '#A6C9E2');
+      },
+      end: function(event, ui) {
+        //ui.item.css('background-color', '#FFF');
+      }
+    });
+
+    $("#stepLabel").focus();
+
+
+  });
+</script>        

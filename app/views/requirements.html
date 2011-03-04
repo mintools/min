@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/smoothness/jquery-ui-1.8.7.custom.css'}" media="screen"/>
         <link rel="stylesheet" type="text/css" href="@{'/public/css/jquery-ui/jquery.ui.autocomplete.custom.css'}" />
         <link rel="stylesheet" type="text/css" href="@{'/public/css/tasks.css'}" media='screen'/>
+        <link rel="stylesheet" type="text/css" href="@{'/public/css/requirements.css'}" media='screen'/>
         <script type="text/javascript" src="@{'/public/js/jquery/jquery-1.4.4.min.js'}">
         </script>
         <script type="text/javascript" src="@{'/public/js/jquery-ui/jquery-ui-1.8.7.custom.min.js'}">
@@ -28,6 +29,8 @@
         </script>
         <script type="text/javascript" src="@{'/public/js/jquery.MultiFile.js'}">
         </script>
+        <script type="text/javascript" src="@{'/public/js/requirements.js'}">
+        </script>
 
         <script type="text/javascript">
             $(function() {
@@ -45,14 +48,11 @@
                 });
             });
         </script>
-        
         #{get 'moreScripts' /}
-        #{get 'moreCSS' /}
     </head>
     <body class="main">
         <div class="header right">
             <div class="actions">
-                <a href="@{Board.index()}">Task Board</a>
 				<a href="@{Tasks.trash()}">See Trashed Tasks</a>
                 <a href="@{Tags.index()}">Maintain Tags</a>
                 <a href="@{Members.maintain()}">Maintain Members</a>

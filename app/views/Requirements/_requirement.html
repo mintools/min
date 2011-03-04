@@ -1,0 +1,46 @@
+<div class="requirement">
+    <div class="label">
+        ${requirement.label}
+    </div>
+
+    #{if requirement.parent}
+        <div class="navigation">
+            Extended Requirement: <a href="@{Requirements.show(requirement.parent.id)}">${requirement.parent.label}</a>
+        </div>
+    #{/if}
+
+    #{if stepParent}
+        <div class="navigation">
+            Back to: <a href="@{Requirements.show(stepParent.id)}">${stepParent.label}</a>
+        </div>
+    #{/if}
+
+    <div class="steps">
+        <div>Steps</div>
+        #{list requirement.steps, as: "step"}
+            <div class="step"><a href ="@{Steps.show(step.id)}">Step ${step_index}: ${step.requirement.label}</a></div>
+        #{/list}
+    </div>
+
+
+    #{if !requirement.extensions.isEmpty()}
+        <div class="extensions">
+            #{list requirement.extensions, as: "requirement"}
+                <div class="extension">
+                    <a href ="@{Requirements.show(requirement.id)}">
+                        #{if requirement.extendedSteps.isEmpty()}*#{/if}
+                        #{else}
+                            (
+                            #{list requirement.extendedSteps, as:"step"}
+                                ${step.sortOrder}
+                                #{if !step_isLast},#{/if}
+                            #{/list}
+                            )
+                        #{/else}
+                        ${requirement.label}
+                    </a>
+                </div>
+            #{/list}
+        </div>    
+    #{/if}
+</div>
