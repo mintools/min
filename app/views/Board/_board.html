@@ -1,0 +1,54 @@
+        
+#{list boardModel.channels, as: "channel"}
+    <div class="channel" id="${channel.tag.id}">
+        <div class="heading">
+            ${channel.tag.name}
+        </div>         
+        <ul class="channel-sortable">
+           #{list channel.tasks, as: "task"}                           
+               <li id="${task.id}" class="postit">
+                    #{set tagGroupAdded:false /}  
+                    #{list task.tags, as: "tag"}
+                        #{if !tagGroupAdded && tag.group != boardModel.tagGroup && tag.group.visibleOnBoard}
+                            <div class="tagGroup">                                                        
+                                ${tag.group.name}
+                                #{set tagGroupAdded:true /}                                    
+                            </div>     
+                        #{/if}                             
+                    #{/list}        
+                                                                              
+                    <div class="title">${task.title}</div>
+                    
+                    <div class="members">
+                        #{if (task.assignedTo)}
+                            <div class="member shadowed">
+                                <img src="${task.assignedTo.getGravatarUrl(30)}"/>
+                                <div class="label">${task.assignedTo.username}</div>
+                            </div>                 
+                        #{/if}                                      
+                        #{list task.getWorkers(), as: "worker"}                         
+                            #{if worker != task.assignedTo} 
+                                <div class="member shadowed">
+                                    <img src="${worker.getGravatarUrl(30)}"/>
+                                    <div class="label">${worker.username}</div>
+                                </div>          
+                            #{/if}
+                        #{/list}
+                    </div>   
+                    
+                    <div class="tagAvatars">
+                        #{list task.tags, as: "tag"}
+                            #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}                                 
+                                <div class="tagAvatar">
+                                    <img src="@{Tags.getAvatar(tag.id)}"  height="20px" width="20px" title="${tag.name}"/>                                                              
+                                </div>
+                            #{/if}
+                        #{/list}
+                    </div>
+               </li>
+           #{/list}
+        </ul>               
+    </div>        
+#{/list}    
+
+<div style="clear:both;"></div>

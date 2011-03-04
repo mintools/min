@@ -1,0 +1,162 @@
+#{extends 'main.html' /}
+#{set title:'Task Board' /}
+
+#{set 'moreCSS'}
+    <link rel="stylesheet" type="text/css" href="@{'/public/css/board.css'}" media='screen'/>
+#{/set}
+
+#{set 'moreScripts'}
+    <script type="text/javascript">
+    
+        var fromTagId = null;
+              
+        $(function() {
+            initialiseBoard();
+            
+            $(".channel-sortable").each(function(){
+                $(this).data("order", $(this).sortable("toArray"));
+            });         
+                                     
+            $("#boardSelector").change(function() {                
+                window.location = "/board/showboardfortaggroup?id=" + $(this).attr("value");               
+            });
+            
+            $("#autoRefresh").change(function() {                
+                toggleRefreshMode();
+            });
+            toggleRefreshMode();                                                                                                                                       
+        });  
+        
+        function initialiseBoard() {            
+                   
+            $(".channel-sortable .postit").click(function() {
+                $(".channel-sortable .postit").removeClass("active");
+                $(this).addClass("active");
+            });                        
+                   
+            $(".channel-sortable").sortable({
+                revert:true,
+                connectWith: ".channel-sortable",
+                placeholder: "placeholder",               
+                items: "li:not(.spacer)",
+                start: function(event, ui){
+                    fromTagId = $(this).parents(".channel").attr("id");                                        
+                },
+                update: function(event, ui){                
+                    var taskId = $(ui.item).attr("id");
+                    var toTagId = $(this).parents(".channel").attr("id");
+                                    
+                    if($("#" +taskId, this).length > 0) {
+                        scaleBoard();
+                                                                        
+                        var toSortOrder = $(this).sortable("toArray");                                                                                          
+                        var fromSortOrder= $("#" + fromTagId + " > .channel-sortable").sortable("toArray");
+                        
+                        $.post('/board/updateboard', {
+                            taskId: taskId,
+                            toTagId: toTagId,
+                            toSortOrder : toSortOrder,
+                            fromTagId: fromTagId,
+                            fromSortOrder : fromSortOrder
+                        }, function() {                        
+                        });                                                                     
+                    }                                                          
+                }                                                                           
+            });  
+            
+            scaleBoard();   
+            $(window).resize(function(){
+                scaleBoard();    
+            }); 
+        }
+        
+        function toggleRefreshMode() {
+            var $board = $(".board");
+            if($("#autoRefresh:checked").val() != undefined) {
+                
+                //Enter refresh mode.                            
+                var timeout = setTimeout("refreshBoard()", 5000);
+                $board.data("loading.timeout", timeout);   
+                $(".loading").show();  
+                
+                $(".channel-sortable .postit").removeClass("active");
+                $(".channel-sortable").sortable("disable");        
+            } else {
+                
+                //Leave refresh mode.                                              
+                clearTimeout($board.data("loading.timeout"));
+                $(".loading").hide();
+                $(".channel-sortable").sortable("enable");
+            }
+        }
+        
+        /*
+         * Returns the diff of two arrays.
+         */
+        function diff(array1, array2) {
+            var sortOrder = [];                     
+            $(array1).each(function(i, v) {
+	            if(v != array2[i]) {
+	                sortOrder.push(array2[i]);
+	            } 
+            });
+            return sortOrder;
+        } 
+        
+        /*
+         * Rescales certain elements on the Board. There may be ways to work around this stuff
+         * with CSS, but I want the sortables to be 100% heigh (because they're drop-targets)
+         * and I only want the board to take up the space it requires to render the tasks.
+         */
+        function scaleBoard() {
+            var $board = $(".board");
+            
+            // Rescale the board.
+            var maxHeight = 0;
+            $(".postit", $board).each(function() {
+                var $this = $(this);
+                var y = $this.position().top + $this.height();                
+                if(y > maxHeight) {
+                    maxHeight = y;                    
+                }
+            });                                              
+            $board.height((maxHeight - 30) + "px");
+            
+            // Rescale the columns.
+            var columnWidth = $board.width() / $(".channel", $board).length  - 1;            
+            $(".channel:last", $board).css("border-right", "none");
+            $(".channel", $board).each(function() {
+                var $this = $(this);        
+                $this.width(columnWidth + "px");        
+            });                                       
+        } 
+        
+        function refreshBoard() {
+            var $board = $(".board");            
+            $board.load('@{Board.refresh()}', function() {
+                initialiseBoard();                
+            });
+            var timeout = setTimeout("refreshBoard()", 5000);
+            $board.data("loading.timeout", timeout);
+        }
+               
+    </script>
+#{/set}
+
+<div class="boardSwitch">
+	<label>
+	    Board Tag Group:
+	</label>	
+	#{select boardModel.tagGroup.id, id:'boardSelector', items:tagGroups, value:boardModel.tagGroup.id}    
+	#{/select}
+	
+	<label style="margin-left: 10px">
+        Auto Refresh:
+    </label>
+    <input id="autoRefresh" type="checkbox"/>
+</div>
+
+<div class="loading"></div>
+<div class="board">    
+    #{include "Board/_board.html"/}       
+</div>    
