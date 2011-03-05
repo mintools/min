@@ -6,11 +6,26 @@
 #{/set}
 
 #{set 'moreScripts'}
+    <script src="@{'/public/js/jquery.ui.touch.js'}"></script>
+    
     <script type="text/javascript">
     
         var fromTagId = null;
               
         $(function() {
+               
+	        $('#filter-div').tabSlideOut({
+	            tabHandle: '.handle',
+	            pathToTabImage: '/public/images/filters2.gif', 
+	            imageHeight: '200px',                     
+	            imageWidth: '18px',                       
+	            tabLocation: 'right',                     
+	            topPos: 50,
+	            speed: 300,                               
+	            action: 'click',                          
+	            fixedPosition: true
+	        });
+               
             initialiseBoard();                                 
                                      
             $("#boardSelector").change(function() {                
@@ -139,14 +154,20 @@
         function refreshBoard() {
             var $board = $(".board");            
             $board.load('@{Board.refresh()}', function() {
-                initialiseBoard();                
+                initialiseBoard();
+                $(".channel-sortable").sortable("disable");                  
             });
             var timeout = setTimeout("refreshBoard()", 5000);
             $board.data("loading.timeout", timeout);
         }
-               
+           
     </script>
 #{/set}
+
+<div id="filter-div">
+    <a class="handle" href="#">Content</a>
+    #{include "Tasks/_filterForm.html"/}
+</div>
 
 <div class="boardSwitch">
 	<label>

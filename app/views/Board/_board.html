@@ -1,11 +1,45 @@
+
+
+
+
+
 #{list boardModel.channels, as: "channel"}
     <div class="channel" id="${channel.tag.id}">
         <div class="heading">
             ${channel.tag.name}
         </div>         
         <ul class="channel-sortable">
-           #{list channel.tasks, as: "task"}                           
-               <li id="${task.id}" class="postit">
+           #{list channel.tasks, as: "task"}          
+           
+                                                                          
+               #{set labeMarginTop:""/} 
+               #{set taskMarginTop:""/}            
+               #{list task.tags, as: "tag"}
+                   #{if !tagGroupAdded && tag.group != boardModel.tagGroup && tag.group.visibleOnBoard}                      
+                        #{set labelMarginTop: "margin-top:13px;" /}
+                        #{set taskMarginTop:"margin-top:15px;"/}                                                                                                           
+                   #{/if}                             
+               #{/list} 
+                              
+               #{set labelMarginRight:""/}               
+               #{set tagAvatarAdded:false /}                
+               #{list task.tags, as: "tag"}
+                   #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}
+                       #{set labelMarginRight: "margin-right:20px;" /}                                                
+                   #{/if}
+               #{/list}               
+                             
+               #{set taskMarginBottom:""/}                 
+               #{if (task.assignedTo)} 
+                    #{set taskMarginBottom:"margin-bottom:21px;" /}              
+               #{/if}                  
+               #{list task.tags, as: "tag"}
+                   #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}
+                       #{set taskMarginBottom:"margin-bottom:21px;" /}                       
+                   #{/if}
+               #{/list}
+                                                                           
+               <li id="${task.id}" class="postit" style="${taskMarginTop}${taskMarginBottom}">                                   
                     #{set tagGroupAdded:false /}  
                     #{list task.tags, as: "tag"}
                         #{if !tagGroupAdded && tag.group != boardModel.tagGroup && tag.group.visibleOnBoard}
@@ -16,7 +50,9 @@
                         #{/if}                             
                     #{/list}        
                                                                               
-                    <div class="title">${task.title}</div>
+                    <div class="title" style="${labelMarginTop}${labelMarginRight};">${task.title}</div>
+                    
+                    
                     
                     <div class="members">
                         #{if (task.assignedTo)}
@@ -35,15 +71,17 @@
                         #{/list}
                     </div>   
                     
+                    #{set tagAvatarAdded:false /}
                     <div class="tagAvatars">
                         #{list task.tags, as: "tag"}
-                            #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}                                 
+                            #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}
+                                #{set tagAvatarAdded:true /}                                 
                                 <div class="tagAvatar">
                                     <img src="@{Tags.getAvatar(tag.id)}"  height="20px" width="20px" title="${tag.name}"/>                                                              
                                 </div>
                             #{/if}
                         #{/list}
-                    </div>
+                    </div>                                        
                </li>
            #{/list}
         </ul>               

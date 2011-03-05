@@ -7,7 +7,7 @@ import models.Tag;
 import models.Task;
 
 /**
- * A utility class that helps with the Task Board. 
+ * A utility class that helps model the Task Board. 
  * 
  * @author Dan
  */
