@@ -46,15 +46,8 @@
                     #{/list}        
                                                                               
                     <div class="title" style="${labelMarginTop}${labelMarginRight};">
-                    ${task.title}
-                    
-                    #{list task.tags, as: "tag"}
-                            <br/>${tag} 
-                        #{/list}
-                    
+                        ${task.title}                                        
                     </div>
-                    
-                    
                     
                     <div class="members">
                         #{if (task.assignedTo)}
