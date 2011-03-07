@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.Tag;
@@ -10,9 +11,12 @@ import models.Task;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
+import play.cache.Cache;
 import play.mvc.With;
+import play.mvc.Scope.Session;
 import controllers.helpers.BoardChannel;
 import controllers.helpers.BoardModel;
+import controllers.helpers.TaskFilter;
 import controllers.utils.TaskIndex;
 
 @With(Secure.class)
@@ -44,6 +48,18 @@ public class Board extends BaseController {
 		} else {
 			throw new Exception("There are no mutually exclusive Tag Groups!");
 		}
+	}
+
+	public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+		TaskFilter filter = new TaskFilter();
+		filter.assignedTo = assignedTo;
+		filter.checkedTags = checkedTags;
+		filter.noTag = noTag;
+		filter.raisedBy = raisedBy;
+		filter.searchText = searchText;
+		filter.workingOn = workingOn;
+		Cache.set(taskFilterCacheKey(), filter);
+		refresh();
 	}
 
 	/**
@@ -84,7 +100,7 @@ public class Board extends BaseController {
 			tagIds.add(t.id);
 		}
 		task.setTags(tagIds);
-		task.save();
+		task.save();	
 		TaskIndex.addTaskToIndex(task);
 
 		// Then sort.
@@ -126,17 +142,56 @@ public class Board extends BaseController {
 	 */
 	public static BoardModel createBoardModel(TagGroup tagGroup) throws Exception {
 		tagGroup = TagGroup.findById(tagGroup.id);
-
 		BoardModel boardModel = new BoardModel();
 		boardModel.tagGroup = tagGroup;
 		for (Tag tag : tagGroup.tags) {
 			BoardChannel channel = new BoardChannel();
 			channel.tag = tag;
 
-			// channel.tasks = Task.findTaggedWith(tag.name);
-			channel.tasks = TaskIndex.filterTasks(new String[] { "" + tag.id }, null, null, null, null, null);
+			// Use the current cached filter.
+			TaskFilter taskFilter = (TaskFilter) Cache.get(taskFilterCacheKey());
+			if (taskFilter != null) {
+
+				// The checked tags list MUST contain the channels tag id.
+				String[] checkedTagsArray = null;
+				if (taskFilter.checkedTags != null) {					
+					checkedTagsArray = taskFilter.checkedTags;
+				} else {
+					checkedTagsArray = new String[] { String.valueOf(tag.id) };
+				}		
+							
+				// Get the filtered tasks.
+				channel.tasks = TaskIndex.filterTasks(checkedTagsArray, taskFilter.searchText, taskFilter.noTag, taskFilter.raisedBy, taskFilter.assignedTo, taskFilter.workingOn);
+				
+				// This would be better done in Lucene. TODO - notags?
+				for(int i=0;i<channel.tasks.size(); i++) {					
+					boolean relevant = false;
+					for (Tag t : channel.tasks.get(i).tags) {						
+						if(t.id.equals(tag.id)) {						
+							relevant = true;
+							break;
+						}
+					}										
+					if(!relevant) {					
+						channel.tasks.remove(i);
+						i--;
+					}
+				}							
+			} else {				
+				channel.tasks = TaskIndex.filterTasks(new String[] { "" + tag.id }, null, null, null, null, null);
+			}
 			boardModel.channels.add(channel);
 		}
 		return boardModel;
+	}
+
+	public static String taskFilterCacheKey() {
+		return taskFilterCacheKey(session);
+
+	}
+
+	public static String taskFilterCacheKey(Session session) {
+		return session.getId() + ".taskFilter";
+
 	}
 }

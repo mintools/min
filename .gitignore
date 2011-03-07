@@ -8,4 +8,5 @@ index
 eclipse
 tmp
 public
+data/attachments/*
 .DS_Store

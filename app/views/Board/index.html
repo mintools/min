@@ -7,7 +7,7 @@
 
 #{set 'moreScripts'}
     <script src="@{'/public/js/jquery.ui.touch.js'}"></script>
-    
+        
     <script type="text/javascript">
     
         var fromTagId = null;
@@ -24,6 +24,29 @@
 	            speed: 300,                               
 	            action: 'click',                          
 	            fixedPosition: true
+	        });
+	        
+	        $("#filterForm input:checkbox").change(function() {
+	            $("#filterForm").submit();
+	        });
+	
+	        $("#filterForm").submit(function() {
+	            var options = {
+	                success : function(data) {
+	                    $(".board").html(data);
+	                    initialiseBoard();
+	                },
+	                type : 'post',
+	                timeout : 3000
+	            };
+	            $("#filterForm").ajaxSubmit(options);	
+	            return false;
+	        });
+	        
+	        $('#filterForm .clearFiltersButton').click(function() {
+                $("#filterForm input:checkbox").removeAttr('checked');
+                $("#filterForm input:text").val('');
+                $("#filterForm").submit();
 	        });
                
             initialiseBoard();                                 
@@ -166,7 +189,7 @@
 
 <div id="filter-div">
     <a class="handle" href="#">Content</a>
-    #{include "Tasks/_filterForm.html"/}
+    #{include "Board/_filterForm.html"/}
 </div>
 
 <div class="boardSwitch">
