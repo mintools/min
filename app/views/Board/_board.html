@@ -39,7 +39,7 @@
                     #{list task.tags, as: "tag"}
                         #{if !tagGroupAdded && tag.group != boardModel.tagGroup && tag.group.visibleOnBoard}
                             <div class="tagGroup">                                                        
-                                ${tag.group.name}
+                                ${tag.name}
                                 #{set tagGroupAdded:true /}                                    
                             </div>     
                         #{/if}                             
@@ -65,12 +65,10 @@
                             #{/if}
                         #{/list}
                     </div>   
-                    
-                    #{set tagAvatarAdded:false /}
+                                        
                     <div class="tagAvatars">
                         #{list task.tags, as: "tag"}
-                            #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}
-                                #{set tagAvatarAdded:true /}                                 
+                            #{if tag.group != boardModel.tagGroup && tag.avatar.exists()}                                                                
                                 <div class="tagAvatar">
                                     <img src="@{Tags.getAvatar(tag.id)}"  height="20px" width="20px" title="${tag.name}"/>                                                              
                                 </div>
