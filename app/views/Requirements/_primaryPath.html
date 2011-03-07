@@ -80,6 +80,30 @@
 
 <script type="text/javascript">
   $(function() {
+      $("#stepLabel").autocomplete('@{Requirements.ajaxSearchJSON()}', {
+          minChars: 3,
+          max: 12,
+          autoFill: false,
+          mustMatch: false,
+          matchContains: false,
+          scrollHeight: 220,
+          parse:parseData,
+          formatItem:formatItem
+
+
+      }).result(function(event, item) {
+          $('#linkedRequirementId').val(item.id);
+
+      });
+
+
+      $('#stepLabel').keypress(function(e) {
+          if (e.which != 13) {
+              $('#linkedRequirementId').val("");
+          }
+      });
+
+      
     $("#primaryPathSortable").sortable({
 
       update : function(element, ui) {

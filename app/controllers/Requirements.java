@@ -21,10 +21,6 @@ public class Requirements extends Controller {
         render(requirement);
     }
 
-    public static void edit(Long id) throws Exception {
-
-    }
-
     public static void ajaxAddPrimaryStep(Long requirementId, Long linkedRequirementId, String stepLabel) throws Exception {
         Requirement requirement = Requirement.findById(requirementId);
 
@@ -162,16 +158,11 @@ public class Requirements extends Controller {
         }
     }
 
-    public static void ajaxCombine() throws Exception {
-
-    }
-
     public static void ajaxAddExtension(String extensionLabel, Long requirementId, Long[] pps) throws Exception {
 
         if (extensionLabel != null) {
 
 //            extensionLabel = extensionLabel.capitalizeFirstLetter()
-
             Requirement requirement = Requirement.findById(requirementId);
 
             //Link to all primaryPathSteps.
@@ -200,11 +191,6 @@ public class Requirements extends Controller {
         } else {
             renderJSON("{\"result\": {\"okay\": false, \"message\": \"Label must not be empty.\"}}");
         }
-
-    }
-
-    public static void ajaxSearchJSON() throws Exception {
-
     }
 
     public static void ajaxUpdateExtensionPathDisplayOrder(Long requirementId, Long[] ext) throws Exception {
@@ -267,10 +253,6 @@ public class Requirements extends Controller {
         }
     }
 
-    public static void ajaxAddExtensionStep() throws Exception {
-
-    }
-
     public static void ajaxUpdateExtensionLabel(String label, Long id) throws Exception {
         if (!StringUtils.isEmpty(label)) {
             Requirement extension = Requirement.findById(id);
@@ -278,13 +260,6 @@ public class Requirements extends Controller {
             extension.save();
             renderJSON("{\"result\": {\"okay\": true}}");
         }
-    }
-
-    public static void ajaxUpdateExtensionStepLabel() throws Exception {
-
-    }
-
-    public static void ajaxDeleteExtensionStep() throws Exception {
     }
 
     public static void ajaxDeleteExtension(Long id) throws Exception {
@@ -297,10 +272,137 @@ public class Requirements extends Controller {
         }
 
         extension.delete();
-        renderJSON("{ \"result\": {\"okay\": true}}");               
+        renderJSON("{ \"result\": {\"okay\": true}}");
+    }
+
+    public static void ajaxUpdateExtensionStepLabel() throws Exception {
+
+    }
+
+    public static void ajaxDeleteExtensionStep() throws Exception {
+    }
+
+    public static void ajaxAddExtensionStep() throws Exception {
+
     }
 
     public static void ajaxAddLinkedStepToExtension() throws Exception {
 
+    }
+
+    public static void ajaxSearchJSON(String q) throws Exception {
+        List<Requirement> requirements = Requirement.find("from Requirement where label like ? order by label asc", "%" + q + "%").fetch(50);
+
+        renderTemplate("Requirements/_search.json", requirements);      
+    }
+
+    public static void ajaxCombine(String name, String steps, Long requirementId) throws Exception {
+
+        String[] stepIds = steps.split(",");
+        Requirement requirement = Requirement.findById(requirementId);
+
+        Requirement newRequirement = new Requirement();
+        newRequirement.label = name;
+        newRequirement.save();
+
+        // FIRST GET ALL THE PRIMARY PATH STEPS AND ALL THE EXTENSIONS ASSOCIATED WITH THEM.
+
+        int mergedStepRank = 0;
+
+        List<Step> primaryPathStepstoMerge = new ArrayList<Step>();
+        for (int i = 0; i < stepIds.length; i++) {
+            String stepId = stepIds[i];
+            Step step = Step.findById(Long.parseLong(stepId));
+            primaryPathStepstoMerge.add(step);
+        }
+
+        boolean allStepsSelected = primaryPathStepstoMerge.size() == requirement.primaryPathStepsSize();        
+
+        List<Requirement> allExtensions = new ArrayList<Requirement>();
+        for (Iterator<Step> iterator = primaryPathStepstoMerge.iterator(); iterator.hasNext();) {
+            Step step = iterator.next();
+            allExtensions.addAll(step.extensions);
+        }
+
+        //println "allExtensions: " + allExtensions
+
+        Set associatedExtensionsSet = new HashSet(allExtensions);
+
+        //println "associatedExtensionsSet: " + associatedExtensionsSet
+
+
+        // CREATE NEW PRIMARY PATH STEPS UNDER THE NEW REQUIREMENT
+
+        Map oldNewIds = new HashMap();
+
+//        Map idToNewPrimaryPathStep = [:]
+//
+//        primaryPathStepstoMerge.each {PrimaryPathStep primaryPathStepToMerge ->
+//
+//            // attach existing requirement of step to new requirement
+//
+//            Requirement requirementOfPrimaryPathStepToMerge = primaryPathStepToMerge.requirement
+//
+//            PrimaryPathStep newPrimaryPathStep = newRequirement.addPrimaryPathStep(requirementOfPrimaryPathStepToMerge)
+//
+//            oldNewIds[primaryPathStepToMerge.id] = newPrimaryPathStep.id
+//
+//            idToNewPrimaryPathStep[newPrimaryPathStep.id] = newPrimaryPathStep
+//
+//        }
+//
+//        // SAVE NEW PRIMARY PATH STEPS UNDER NEW REQUIREMENT
+//        newRequirement.save()
+//
+//        //println "oldNewIds: " + oldNewIds
+//        //println "idToPrimaryPathStep: " + idToPrimaryPathStep
+//
+//
+//
+//        // MIGRATE ALL EXTENSIONS OVER
+//
+//        associatedExtensionsSet.each {Extension extension ->
+//
+//            def oldPrimaryPathSteps =
+//            extension.primaryPathSteps.findAll {PrimaryPathStep pps ->
+//                return oldNewIds.keySet().contains(pps.id)
+//            }
+//
+//            //println "oldPrimaryPathSteps:" + oldPrimaryPathSteps
+//
+//
+//            Set newPrimaryPathSteps =
+//            oldPrimaryPathSteps.collect {PrimaryPathStep pps -> return idToNewPrimaryPathStep[oldNewIds[pps.id]] } as Set
+//
+//            //println "newPrimaryPathSteps:" + newPrimaryPathSteps
+//
+//            Extension newExtension = null;
+//            if (extension.allSteps && allStepsSelected) {
+//                newExtension = newRequirement.addExtension(extension.label, allSteps)
+//            } else {
+//                newExtension = newRequirement.addExtension(extension.label, newPrimaryPathSteps)
+//            }
+//
+//            if(extension.hasExtensionSteps()){
+//                extension.extensionSteps.each {ExtensionStep extensionStep ->
+//                    newExtension.addExtensionStep(extensionStep.requirement)
+//                }
+//            }
+//
+//
+//        }
+//
+//        // save extensions
+//        newRequirement.save()
+//
+//        // remove all old primaryPathSteps
+//        primaryPathStepstoMerge.each {PrimaryPathStep pps ->
+//            requirement.removePrimaryPathStep(pps, false)
+//        }
+//
+//        requirement.addPrimaryPathStep(newRequirement)
+//        requirement.save()
+//
+//        render(contentType: "text/json") { result(okay: true) }
     }
 }

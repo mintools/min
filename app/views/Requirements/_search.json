@@ -1,0 +1,12 @@
+{"results":
+    [
+    #{list requirements, as: "requirement"}
+       {
+            "id" : "${requirement.id}",
+            "label" : "${requirement.label.escapeJSON()}"
+       }
+       #{if !requirement_isLast},#{/if}
+    #{/list}
+    ]
+}
+

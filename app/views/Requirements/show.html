@@ -50,8 +50,7 @@
         return item.label;
     }
 
-    function parseData(data) {
-        var pdata = eval("(" + data + ")");
+    function parseData(pdata) {
         var parsed = [];
         for (var i = 0; i < pdata.results.length; i++) {
 
@@ -233,30 +232,6 @@
     }
 
     $(document).ready(function() {
-
-    //    $("#stepLabel").autocomplete('@{Requirements.ajaxSearchJSON()}', {
-    //        minChars: 3,
-    //        max: 12,
-    //        autoFill: false,
-    //        mustMatch: false,
-    //        matchContains: false,
-    //        scrollHeight: 220,
-    //        parse:parseData,
-    //        formatItem:formatItem
-    //
-    //
-    //    }).result(function(event, item) {
-    //        $('#linkedRequirementId').val(item.id);
-    //
-    //    });
-
-
-        $('#stepLabel').keypress(function(e) {
-            if (e.which != 13) {
-                $('#linkedRequirementId').val("");
-            }
-        });
-
         $("#message-dialog").dialog({
             bgiframe: true,
             autoOpen: false,
