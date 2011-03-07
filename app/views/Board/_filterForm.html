@@ -1,8 +1,7 @@
 <!-- 
-    Copying for now. Would be nice to share this.
+    Copying for now. Would be nice to share this. The Task Board version is based on a cached set of Filters.
  -->
-
-
+ 
 #{set taskFilter: play.cache.Cache.get(controllers.Board.taskFilterCacheKey())/}
 #{set allMembers: models.Member.getMembers()/}
 
