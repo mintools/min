@@ -423,8 +423,9 @@ div.tags li {
 	text-align: center;
 }
 
-#filter-div a {
-	border: 1px solid #abbfdd; -moz-box-shadow: -1px 0 1px #666666;
+#filter-div a.handle {
+	border: 1px solid #abbfdd; -moz-box-shadow: -1px 0 3px #CCC;
+	
 }
 
 .actions a {
@@ -449,7 +450,7 @@ span.tagMatches span {
 }
 
 .filterContainer {
-	overflow: scroll; padding: 20px; height: 450px;
+	overflow: auto; padding: 20px; height: 450px;
 }
 
 .filterContainer .column {
@@ -473,7 +474,7 @@ label {
 }
 
 .filterActions {
-	overflow: hidden; padding: 5px; color: gray; font-size: smaller;
+	overflow: hidden; padding: 5px; color: gray; font-size: smaller; text-align: right; 
 }
 
 .filterActions .clearButton {

@@ -45,11 +45,14 @@
                 });
             });
         </script>
+        
         #{get 'moreScripts' /}
+        #{get 'moreCSS' /}
     </head>
     <body class="main">
         <div class="header right">
             <div class="actions">
+                <a href="@{Board.index()}">Task Board</a>
 				<a href="@{Tasks.trash()}">See Trashed Tasks</a>
                 <a href="@{Tags.index()}">Maintain Tags</a>
                 <a href="@{Members.maintain()}">Maintain Members</a>

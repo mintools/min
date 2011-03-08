@@ -3,6 +3,9 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.test.Fixtures;
 
+/**
+ * Job that is executed on statup
+ */
 @OnApplicationStart
 public class Bootstrap extends Job {
 

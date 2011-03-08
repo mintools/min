@@ -1,0 +1,71 @@
+html, body { height: 100%; }
+
+.shadowed {-moz-box-shadow: 1px 1px 3px #888;-webkit-box-shadow: 1px 1px 3px #888;box-shadow: 1px 1px 3px #888;}
+
+.boardSwitch {-webkit-border-radius: 5px; -moz-border-radius: 5px;background-color: white;border: 1px solid #DDDDDD; display: inline;padding: 7px}
+.boardSwitch label {fon }
+
+.loading {		
+    background-image: url("../images/fb_loader_ccc.gif");
+    background-position: 6px 16px;
+    background-repeat: no-repeat;
+    display: none;
+    height: 30px;
+    position: absolute;
+    width: 40px;
+    z-index: 200;	
+}
+
+.board {-webkit-border-radius: 5px; -moz-border-radius: 5px;background-color: white;border: 1px solid #DDDDDD;margin:10px 25px 0 0;}
+.board .channel { float: left;border-right:1px solid #DDDDDD; height: 100%;}
+.board .channel ul {margin: 0px; padding: 0px;list-style: none;width: 100%;height: 100%;}
+.board .channel ul li { margin: 10px;}
+.board .channel .heading {text-align: center;font-weight: normal; border-bottom: 1px solid #DDDDDD; padding-bottom: 3px;margin-bottom: 6px;color: #3399FF}
+
+.board .channel-sortable .postit{
+    border:1px solid #FFF58b;         
+    background-color: #FFF58b;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 90%, from(#FFFcd4), to(#FFF7a8));
+    background-image: -moz-linear-gradient(#FFFcd4 0%, #FFF7a8 90%);                      
+    height: 120px;      
+    position: relative;  
+}
+
+.board .channel-sortable .postit.active {	
+	border:1px solid #FFF057; 	       
+    background-color: #FFF057;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 90%, from(#FFFAAE), to(#FFF057));
+    background-image: -moz-linear-gradient(#FFFAAE 0%, #FFF057 90%);    
+     -moz-box-shadow: 1px 1px 3px #888;
+    -webkit-box-shadow: 1px 1px 3px #888;
+    box-shadow: 1px 1px 3px #888;            
+}
+
+.board .channel-sortable .placeholder {border:1px solid yellow;    
+    background-color: rgba(60, 132, 198, 0.8);
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 90%, from(#fcfcfc), to(#E8E8E8));
+    background-image: -moz-linear-gradient(#fcfcfc 0%, #E8E8E8 90%);
+    border:1px solid #DDDDDD;        
+    height: 120px;      
+}
+
+.board .channel-sortable .postit .title { text-align: left; font-size: 12px; font-weight: bold;  margin: 5px;}
+.board .channel-sortable .postit .members { position: absolute; left: 3px; bottom: -6px;z-index: 100 } 
+.board .channel-sortable .postit .member {background-color: white; padding: 3px 3px 5px 3px; float: right;text-align: center; margin: 0 5px 0 0 ; } 
+.board .channel-sortable .postit .member .label {font-size: 8px; text-align: center; width: 30px; overflow: hidden;}
+.board .channel-sortable .postit .tagAvatars {position: absolute;right:-8px;top:3px;;width: 20px;}
+
+.board .channel-sortable .postit .tagGroup {
+    -webkit-border-radius: 10px; -moz-border-radius: 10px;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 90%, from(#95D6FF), to(#61B4EC)); 
+    background-image: -moz-linear-gradient(#95D6FF 0%, #61B4EC 90%);   
+    background-color: blue;
+    padding: 1px 4px;
+    position: absolute;
+    left:4px;
+    top:-10px;
+    color:#2B56B1;
+    border: 1px solid #2B56B1;
+    background-color: #7FB4EB;
+    font-size: 11px;         
+}

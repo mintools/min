@@ -103,8 +103,7 @@ public class Member extends Model {
 //    }
 
     public static Member connect(String username, String password) {
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || !password.equals(Play.configuration.getProperty("groupPassword"))) return null;
-
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || !password.equals(Play.configuration.getProperty("groupPassword"))) return null;		
         return Member.find("from Member m where m.username = ?", username).first();
     }
 

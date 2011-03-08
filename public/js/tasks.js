@@ -324,19 +324,17 @@ function tasks(options) {
                 update : function(event, ui) {
                     var current = 0;
                     var toSwap = [];
-                    // console.log(taskOrder);
-                    $('.taskContainer', tasksElement).each(function() {
-
+                    
+                    $('.taskContainer', tasksElement).each(function() {                    
                         var tempTask = new task($(this));
-                        tempTask.init();
-
+                        tempTask.init();                        
                         if (taskOrder[current] !== tempTask.id) {
                             toSwap.push(tempTask.id);
                             taskOrder[current] = tempTask.id;
                         }
                         current++;
-                    });
-
+                    });                                       
+                    
                     $.post('/tasks/sort', {
                         order : toSwap
                     }, function() {
