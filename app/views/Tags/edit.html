@@ -1,0 +1,18 @@
+#{extends 'main.html' /}
+
+<h1>Edit Tag</h1>
+#{form action:@Tags.update(), method:'post'}
+    #{if flash.error}
+        <p style="color:#c00">
+        ${flash.error}
+        </p>
+    #{/if}
+    <input type="hidden" name="tag.id" value="${tag?.id}">
+    Tag Name: <input name="tag.name" value="${tag.name}"/>
+    <span class="error">${errors.forKey('tag.name')}</span>
+
+    <div>
+        <a href="@{Tags.index()}">cancel</a>
+        <input type="submit" value="Update">
+    </div>
+#{/form}

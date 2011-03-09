@@ -70,7 +70,7 @@ public class Members extends BaseController {
 
             member.save();
 
-            renderTemplate("Members/show.html", member);
+            maintain();
         }
     }
 

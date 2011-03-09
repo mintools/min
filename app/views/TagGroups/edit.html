@@ -1,0 +1,18 @@
+#{extends 'main.html' /}
+
+<h1>Edit TagGroup</h1>
+#{form action:@TagGroups.update(), method:'post'}
+    #{if flash.error}
+        <p style="color:#c00">
+        ${flash.error}
+        </p>
+    #{/if}    
+    <input type="hidden" name="group.id" value="${group?.id}">
+    Group Name: <input name="group.name" value="${group?.name}"/>
+    <span class="error">${errors.forKey('group.name')}</span>
+
+    <div>
+        <a href="@{Tags.index()}">cancel</a>
+        <input type="submit" value="Update">
+    </div>
+#{/form}

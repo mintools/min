@@ -161,7 +161,7 @@ public class Board extends BaseController {
 				}		
 							
 				// Get the filtered tasks.
-				channel.tasks = TaskIndex.filterTasks(checkedTagsArray, taskFilter.searchText, taskFilter.noTag, taskFilter.raisedBy, taskFilter.assignedTo, taskFilter.workingOn);
+				channel.tasks = TaskIndex.filterTasks(checkedTagsArray, taskFilter.searchText, taskFilter.noTag, taskFilter.raisedBy, taskFilter.assignedTo, taskFilter.workingOn, null, null);
 				
 				// This would be better done in Lucene. TODO - notags?
 				for(int i=0;i<channel.tasks.size(); i++) {					
@@ -178,7 +178,7 @@ public class Board extends BaseController {
 					}
 				}							
 			} else {				
-				channel.tasks = TaskIndex.filterTasks(new String[] { "" + tag.id }, null, null, null, null, null);
+				channel.tasks = TaskIndex.filterTasks(new String[] { "" + tag.id }, null, null, null, null, null, null, null);
 			}
 			boardModel.channels.add(channel);
 		}

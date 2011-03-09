@@ -62,6 +62,11 @@ public class TagGroup extends Model {
         this.save();
     }
 
+    public void clearDefault() {
+        this.defaultTag = null;
+        this.save();
+    }
+
     public static List<TagGroup> getAll() {
         return TagGroup.find("order by sortOrder desc").fetch();
     }

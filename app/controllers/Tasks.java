@@ -1,28 +1,20 @@
 package controllers;
 
 import controllers.utils.TaskIndex;
-import jobs.EmailJob;
 import models.*;
-import notifiers.Mails;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
-import org.hibernate.Session;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.query.AuditEntity;
-import org.hibernate.envers.query.AuditQuery;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
-import play.db.jpa.JPA;
-import play.db.jpa.JPAPlugin;
 import play.mvc.With;
 
 import java.io.File;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * User: soyoung
@@ -32,25 +24,46 @@ import java.util.*;
 public class Tasks extends BaseController {
 
 
-    public static void index(Long id, String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+    public static void index(Long id, String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn, String start_date, String end_date) throws Exception {
         flash.clear();
 
+        Date startDate = null;
+        Date endDate = null;
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        if (!StringUtils.isEmpty(start_date) && !StringUtils.isEmpty(end_date)) {
+            startDate = format.parse(start_date);
+            endDate = format.parse(end_date);
+        }
+        else if (!StringUtils.isEmpty(start_date)) {
+            startDate = format.parse(start_date);
+        }
+
         List<Task> tasks = new ArrayList<Task>();
-        
+
         if (id != null) {
             tasks.add(Task.<Task>findById(id));
         }
         else {
-            tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
+            tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn, startDate, endDate);
         }
 
         params.flash();
         render(tasks);
     }
 
-    public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
+    public static void filter(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn, String start_date, String end_date) throws Exception {
+        Date startDate = null;
+        Date endDate = null;
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        if (!StringUtils.isEmpty(start_date) && !StringUtils.isEmpty(end_date)) {
+            startDate = format.parse(start_date);
+            endDate = format.parse(end_date);
+        }
+        else if (!StringUtils.isEmpty(start_date)) {
+            startDate = format.parse(start_date);
+        }
 
-        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn);
+        List<Task> tasks = TaskIndex.filterTasks(checkedTags, searchText, noTag, raisedBy, assignedTo, workingOn, startDate, endDate);
 
         params.flash();
         renderTemplate("Tasks/_tasks.html", tasks);
@@ -211,7 +224,7 @@ public class Tasks extends BaseController {
 
         ArrayList<Long> ordering = new ArrayList<Long>();
         for (Task task : tasks) {
-            ordering.add(task.sortOrder);            
+            ordering.add(task.sortOrder);
         }
 
         // assign ordering
@@ -227,6 +240,6 @@ public class Tasks extends BaseController {
 
         Map changeMap = task.retrieveRevisions();
 
-        render(changeMap);
-    }    
+        render(changeMap, task);
+    }
 }

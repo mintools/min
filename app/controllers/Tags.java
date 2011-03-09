@@ -26,6 +26,29 @@ public class Tags extends BaseController {
 		index();
 	}
 
+    public static void edit(Long id) {
+        Tag tag = Tag.findById(id);
+        notFoundIfNull(tag);
+
+        render(tag);
+    }
+
+    public static void update(Tag tag) throws Exception {
+        String name = tag.name;
+
+        // check if another tag already has this name
+        Tag testTag = Tag.find("byName", name).first();
+
+        if (testTag != null) {
+            flash.error("This name is already taken by another tag");
+            edit(tag.id);
+        }
+        else {
+            tag.save();
+            index();
+        }
+    }
+
 	public static void setColor(Long id, String color) {
 		Tag tag = Tag.findById(id);
 		tag.color = color;
@@ -73,13 +96,6 @@ public class Tags extends BaseController {
 		tagGroup.mutex = isMutex;
 
 		tagGroup.save();
-	}
-
-	public static void setDefault(Long groupId, Long tagId) {
-		TagGroup tagGroup = TagGroup.findById(groupId);
-		Tag tag = Tag.findById(tagId);
-
-		tagGroup.setDefault(tag);
 	}
 
 	public static void sort(List<Long> tags) {

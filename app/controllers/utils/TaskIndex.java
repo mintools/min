@@ -4,6 +4,7 @@ import models.Tag;
 import models.TagGroup;
 import models.Task;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -23,9 +24,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: soyoung
@@ -137,11 +136,7 @@ public class TaskIndex {
     }
 
     // todo: add "workingOn" to filter
-    public static List<Task> filterTasks(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn) throws Exception {
-        
-    	
-    	
-    	
+    public static List<Task> filterTasks(String[] checkedTags, String searchText, String[] noTag, String[] raisedBy, String[] assignedTo, String[] workingOn, Date startDate, Date endDate) throws Exception {
     	
     	CriteriaBuilder builder = JPA.em().getCriteriaBuilder();
 
@@ -153,6 +148,16 @@ public class TaskIndex {
 
         // task must be active
         predicates.add(builder.equal(taskRoot.get("isActive"), true));
+
+        // add dateRange predicate
+        if (startDate != null && endDate != null) {
+            predicates.add(builder.between(taskRoot.get("createdDate").as(Date.class), startDate, endDate));
+        }
+        else if (startDate != null) {
+            Date startDateBeginning = DateUtils.truncate(startDate, Calendar.DATE);
+            Date startDateEnd = DateUtils.ceiling(startDate, Calendar.DATE);
+            predicates.add(builder.between(taskRoot.get("createdDate").as(Date.class), startDateBeginning, startDateEnd));
+        }
 
         // add raisedBy predicate
         if (raisedBy != null) {

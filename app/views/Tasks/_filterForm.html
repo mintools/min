@@ -18,6 +18,18 @@
             <input type="text" name="searchText" value="${flash.searchText}" size="30"/><input type="submit" name="action" value="Filter"/>
         </fieldset>
 
+        <fieldset>
+            <legend>Date Range</legend>
+
+            <div class="rangePicker futureRange">
+                <label for="start_date">From:</label>
+                <input type="text" name="start_date" id="start_date" value="mm/dd/yyyy" />
+                <label for="end_date">To:</label>
+                <input type="text" name="end_date" id="end_date" value="mm/dd/yyyy" />
+            </div>
+            <input type="submit" name="action" value="Filter"/>
+        </fieldset>
+
         <div class="column">
             #{list models.TagGroup.getAll(), as: "tagGroup"}
                #{if !tagGroup.tags.isEmpty()}

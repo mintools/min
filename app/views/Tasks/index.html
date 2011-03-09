@@ -1,13 +1,39 @@
 #{extends 'main.html' /}
 #{set title:'Tasks' /}
 #{set isNew:false/}
+#{set 'moreStyles' }
+	<link type="text/css" href="@{'/public/js/datePicker/screen.css'}"  media="screen" rel="Stylesheet" />
+#{/set}
 #{set 'moreScripts' }
 <script type="text/javascript" src="@{'/public/js/tasks.js'}">
+</script>
+<script type="text/javascript" src="@{'/public/js/datePicker/ui.datepicker.js'}">
+</script>
+<script type="text/javascript" src="@{'/public/js/datePicker/init.js'}">
 </script>
 <script type="text/javascript">
     $(function(){
         theTasks = new tasks();
         theTasks.init();
+
+        // datepicker stuff
+        enhancedDomReady(function(){
+			$('.toggleRPpos').click(function(){
+				if($('div.rangePicker').css('float') == 'left') {
+					$('div.rangePicker').css('float', 'right');
+					$('.toggleRPpos').html('Align date picker to the left');
+				}
+				else {
+					$('div.rangePicker').css('float', 'left');
+					$('.toggleRPpos').html('Align date picker to the right');
+				}
+				return false;
+			});
+
+
+			// create date picker by replacing out the inputs
+		$('.rangePicker').html('<a href="#" class="range_prev"><span>Previous</span></a><a href="#" class="rangeDisplay"><span>Pick a Date</span></a><a href="#" class="range_next"><span>Next</span></a>').dateRangePicker({menuSet: 'pastRange'});						
+		});
 
         $.getJSON('@{Tags.getTags()}', function(data) {
             setGlobalTags(data);
